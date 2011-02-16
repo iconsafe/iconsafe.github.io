@@ -8,7 +8,7 @@ const initialState = {
   walletConnected: null,
   domainNames: null,
   walletProvider: null,
-  networkConnected: isDevelopment ? IconNetworks.LOCALHOST : IconNetworks.YEOUIDO,
+  networkConnected: isDevelopment ? IconNetworks.LOCALHOST : IconNetworks.MAINNET,
   multisigBalances: null,
   connectedWalletOwnerUid: null,
   forceReload: true,
