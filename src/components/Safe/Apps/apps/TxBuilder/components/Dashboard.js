@@ -79,12 +79,9 @@ const Dashboard = ({ subTransactions, setSubTransactions }) => {
     const { scoreCallMethodIndex, scoreCallDescription, scoreCallMethodParameters, scoreCallIcxAmount } = values
     const method = contract[scoreCallMethodIndex]
 
-    console.log("scoreCallMethodParameters=", scoreCallMethodParameters)
-
     const params = scoreCallMethodParameters
       ? JSON.stringify(scoreCallMethodParameters.map((value, index) => makeParam(scoreCallMethodIndex, index, value)))
       : null
-    console.log("params=", params)
 
     const subtx = new SubOutgoingTransaction(
       scoreAddress,
