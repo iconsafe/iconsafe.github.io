@@ -1,34 +1,67 @@
 {
   "name": "icon-multisig-wallet-gui",
-  "version": "0.1.0",
-  "private": true,
-  "dependencies": {
-    "@testing-library/jest-dom": "^4.2.4",
-    "@testing-library/react": "^9.3.2",
-    "@testing-library/user-event": "^7.1.2",
-    "react": "^16.13.1",
-    "react-dom": "^16.13.1",
-    "react-scripts": "3.4.3"
-  },
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "start": "webpack-dev-server --mode development",
+    "build": "webpack --mode production",
+    "standard": "standard"
   },
-  "eslintConfig": {
-    "extends": "react-app"
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/iconation/icon-multisig-wallet-gui.git"
   },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
+  "author": "ICONation",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/iconation/icon-multisig-wallet-gui/issues"
+  },
+  "homepage": "https://github.com/iconation/icon-multisig-wallet-gui#readme",
+  "devDependencies": {
+    "@babel/core": "^7.4.5",
+    "@babel/plugin-proposal-class-properties": "^7.4.4",
+    "@babel/preset-env": "^7.4.5",
+    "@babel/preset-react": "^7.0.0",
+    "@material-ui/core": "^4.0.0",
+    "@material-ui/icons": "^4.2.1",
+    "@material-ui/styles": "^4.1.2",
+    "babel-eslint": "^10.0.2",
+    "babel-loader": "^8.0.6",
+    "babel-plugin-root-import": "^6.2.0",
+    "babel-plugin-transform-regenerator": "^6.26.0",
+    "babel-polyfill": "^6.26.0",
+    "bignumber": "^1.1.0",
+    "css-loader": "^3.0.0",
+    "file-loader": "^4.0.0",
+    "file-saver": "^2.0.2",
+    "html-webpack-plugin": "^3.2.0",
+    "icon-sdk-js": "0.0.16",
+    "image-webpack-loader": "^5.0.0",
+    "mini-css-extract-plugin": "^0.7.0",
+    "node-sass": "^4.12.0",
+    "react": "^16.8.6",
+    "react-countdown-now": "^2.1.1",
+    "react-dom": "^16.8.6",
+    "react-redux": "^7.1.0",
+    "react-router-dom": "^5.0.1",
+    "redux": "^4.0.1",
+    "redux-thunk": "^2.3.0",
+    "sass-loader": "^7.1.0",
+    "standard": "*",
+    "style-loader": "^0.23.1",
+    "styled-components": "^4.3.2",
+    "webpack": "^4.32.2",
+    "webpack-cli": "^3.3.2",
+    "webpack-dev-server": "^3.4.1"
+  },
+  "dependencies": {
+    "classnames": "^2.2.6",
+    "ethereum-blockies-base64": "^1.0.2",
+    "polished": "^3.6.5",
+    "query-string": "^6.13.1",
+    "react-media": "^1.10.0",
+    "recompose": "^0.30.0",
+    "url-loader": "^4.1.0"
   }
 }
