@@ -1,23 +1,28 @@
 import React from 'react'
-import styled from 'styled-components'
 import Tooltip from '@material-ui/core/Tooltip'
 import { withStyles } from '@material-ui/core/styles'
 import { rgba } from 'polished'
 
 import theme from '../../theme'
 
-const StyledText = styled.p`
-  font-family: 'Averta';
-  display: ${({ tooltip }) =>
-    tooltip === undefined ? 'inline-block' : 'block'};
-  color: ${({ color, theme }) =>
-    color ? theme.colors[color] : theme.colors.text};
-  margin: 0;
-  font-weight: ${({ strong }) => (strong ? 'bold' : 'normal')};
-  font-size: ${({ size, theme }) => theme.text.size[size].fontSize};
-  line-height: ${({ size, theme }) => theme.text.size[size].lineHeight};
-  text-align: ${({ center }) => (center ? 'center' : 'start')};
-`
+const StyledText = ({ tooltip, color, size, strong, center, className, ...props }) => {
+  return (
+    <p
+      className={className}
+      style={{
+        fontFamily: 'Averta',
+        display: tooltip === undefined ? 'inline-block' : 'block',
+        color: color ? theme.colors[color] : theme.colors.text,
+        margin: 0,
+        fontWeight: (strong ? 'bold' : 'normal'),
+        fontSize: theme.text.size[size].fontSize,
+        lineHeight: theme.text.size[size].lineHeight,
+        textAlign: (center ? 'center' : 'start')
+      }}
+      {...props}
+    />
+  )
+}
 
 const StyledTooltip = withStyles(() => ({
   tooltip: {

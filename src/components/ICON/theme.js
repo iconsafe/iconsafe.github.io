@@ -1,4 +1,6 @@
-const theme = {
+import { createMuiTheme } from '@material-ui/core/styles'
+
+const theme = createMuiTheme({
   buttons: {
     size: {
       md: { height: '36px', padding: '0 16px' },
@@ -125,6 +127,6 @@ const theme = {
       }
     }
   }
-}
+})
 
 export default theme

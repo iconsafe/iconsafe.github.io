@@ -1,22 +1,28 @@
 import React from 'react'
 
 import makeBlockie from 'ethereum-blockies-base64'
-import styled from 'styled-components'
+import theme from '../../theme'
 
-const StyledImg = styled.img`
-  height: ${({ size, theme }) => theme.identicon.size[size]};
-  width: ${({ size, theme }) => theme.identicon.size[size]};
-  border-radius: 50%;
-`
+const StyledImg = React.forwardRef(({ size, className, ...props }, ref) => (
+  <img
+    ref={ref}
+    className={className}
+    style={{
+      height: theme.identicon.size[size],
+      width: theme.identicon.size[size],
+      borderRadius: '50%'
+    }} {...props}
+  />
+))
 
 const Identicon = ({
   size = 'md',
   address,
-  ...rest
+  ...props
 }) => {
   const iconSrc = React.useMemo(() => makeBlockie(address), [address])
 
-  return <StyledImg src={iconSrc} size={size} {...rest} />
+  return <StyledImg src={iconSrc} size={size} {...props} />
 }
 
 export default Identicon

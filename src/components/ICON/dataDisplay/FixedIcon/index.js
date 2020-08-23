@@ -47,7 +47,7 @@ const icons = {
 /**
  * The `FixedIcon` renders an icon
  */
-function FixedIcon ({ type }) {
+const FixedIcon = ({ type }) => {
   return <span>{icons[type]}</span>
 }
 

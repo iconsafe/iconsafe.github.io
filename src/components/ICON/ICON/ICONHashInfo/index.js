@@ -1,5 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
+import { connect } from 'react-redux'
 
 import {
   Text,
@@ -78,4 +79,14 @@ const ICONHashInfo = ({
     </StyledContainer>
   )
 
-export default ICONHashInfo
+const mapStateToProps = state => {
+  return {
+    networkConnected: state.networkConnected
+  }
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {}
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(ICONHashInfo)

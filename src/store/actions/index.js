@@ -4,6 +4,6 @@ import {
   NETWORK_CONNECTED_ACTION
 } from './actionTypes'
 
-export const setWalletConnected = (mode) => ({ type: WALLET_CONNECTED_ACTION, mode })
-export const setWalletProvider = (mode) => ({ type: WALLET_PROVIDER_ACTION, mode })
-export const setNetworkConnected = (mode) => ({ type: NETWORK_CONNECTED_ACTION, mode })
+export const setWalletConnected = (walletConnected) => ({ type: WALLET_CONNECTED_ACTION, walletConnected })
+export const setWalletProvider = (walletProvider) => ({ type: WALLET_PROVIDER_ACTION, walletProvider })
+export const setNetworkConnected = (networkConnected) => ({ type: NETWORK_CONNECTED_ACTION, networkConnected })

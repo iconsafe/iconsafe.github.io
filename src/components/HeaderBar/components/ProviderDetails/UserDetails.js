@@ -14,7 +14,8 @@ import Paragraph from '@components/core/Paragraph'
 import Row from '@components/core/Row'
 import { background, connected as connectedBg, lg, md, sm, warning, xs } from '@src/theme/variables'
 import { upperFirst } from '@src/utils/css'
-import { ICONHashInfo } from '@components/ICON/ICON/ICONHashInfo'
+import CopyBtn from '@components/core/CopyBtn'
+import IconTrackerBtn from '@components/core/IconTrackerBtn'
 
 const dot = require('../../assets/dotRinkeby.svg')
 const walletIcon = require('../../assets/wallet.svg')
@@ -106,7 +107,19 @@ const UserDetails = ({ classes, connected, network, onDisconnect, openDashboard,
         </Row>
         <Block className={classes.user} justify='center'>
           {userAddress ? (
-            <ICONHashInfo hash={userAddress} showCopyBtn showEtherscanBtn shortenHash={4} network={network} />
+            <>
+              <Paragraph
+                className={classes.address}
+                color='disabled'
+                noMargin
+                size='md'
+                data-testid='safe-address-heading'
+              >
+                {userAddress}
+              </Paragraph>
+              <CopyBtn content={userAddress} />
+              <IconTrackerBtn type='address' value={userAddress} />
+            </>
           )
             : (
               'Address not available'

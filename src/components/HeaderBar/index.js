@@ -7,9 +7,8 @@ import ProviderDisconnected from './components/ProviderInfo/ProviderDisconnected
 import { connect } from 'react-redux'
 import { setWalletConnected, setWalletProvider } from '@src/store/actions'
 
-const HeaderComponent = ({ available, loaded, provider, userAddress, network }) => {
+const HeaderComponent = ({ available, loaded, provider, userAddress, network, setWalletProvider, setWalletConnected }) => {
   const handleDisconnect = () => {
-    const { setWalletProvider, setWalletConnected } = this.props
     setWalletConnected(null)
     setWalletProvider(null)
   }
@@ -48,10 +47,11 @@ const HeaderComponent = ({ available, loaded, provider, userAddress, network }) 
 }
 
 const mapStateToProps = state => {
+  console.log(state)
   return {
     userAddress: state.walletConnected,
     provider: state.walletProvider,
-    loaded: state.walletConnected !== null && state.walletProvider !== null,
+    loaded: !!state.walletConnected && !!state.walletProvider,
     available: true,
     network: 'localhost'
   }

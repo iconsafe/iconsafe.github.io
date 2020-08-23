@@ -2,7 +2,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 // Styling
-import { ThemeProvider as MuiThemeProvider } from '@material-ui/core/styles'
+import { ThemeProvider } from '@material-ui/core/styles'
 import CssBaseline from '@material-ui/core/CssBaseline'
 import theme from '@src/theme'
 // Store
@@ -16,10 +16,10 @@ import App from './components/App'
 ReactDOM.render(
   <Provider store={store}>
     <HashRouter>
-      <MuiThemeProvider theme={theme}>
+      <ThemeProvider theme={theme}>
         <CssBaseline />
         <App />
-      </MuiThemeProvider>
+      </ThemeProvider>
     </HashRouter>
   </Provider>,
   document.querySelector('#root')

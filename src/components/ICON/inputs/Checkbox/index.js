@@ -48,7 +48,8 @@ const Checkbox = ({
           <>
             {input ? (
               getCheckboxForReactFinalForm()
-            ) : (
+            )
+              : (
                 <CustomCheckbox {...rest} checked={checked} onChange={onChange} />
               )}
           </>

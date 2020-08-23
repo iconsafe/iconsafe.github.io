@@ -4,20 +4,27 @@ import { MultiSigWalletScore } from '@src/SCORE/MultiSigWalletScore'
 import { connect } from 'react-redux'
 import { getSafeAddress } from '@src/utils/route'
 
+import theme from '../../theme'
 import { Icon } from '../..'
 
-const StyledLink = styled.a`
-  display: inline-flex;
-  outline-color: ${({ theme }) => theme.colors.separator};
-`
+const StyledLink = React.forwardRef(({ className, ...props }, ref) => (
+  <a
+    ref={ref}
+    className={className}
+    style={{
+      display: 'inline-flex',
+      outlineColor: theme.colors.separator
+    }}
+    {...props}
+  />
+))
 
 const ICONTrackerButton = ({
   networkConnected,
   className,
-  value,
-  network = 'mainnet'
+  value
 }) => {
-  const type = value.length > 42 ? 'tx' : 'address'
+  const type = value.length > 42 ? 'transaction' : 'address'
   const safeWallet = getSafeAddress()
   const msw = new MultiSigWalletScore(networkConnected, safeWallet)
 

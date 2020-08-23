@@ -1,19 +1,27 @@
 import React, { useState } from 'react'
-import styled from 'styled-components'
 
 import { Icon } from '../..'
 import copyTextToClipboard from './copyTextToClipboard'
+import theme from '../../theme'
 
-const StyledButton = styled.button`
-  background: none;
-  color: inherit;
-  border: none;
-  padding: 0;
-  font: inherit;
-  cursor: pointer;
-  outline-color: ${({ theme }) => theme.colors.separator};
-  display: flex;
-`
+const StyledButton = ({ className, ...props }) => (
+  <>
+    <button
+      className={className}
+      style={{
+        background: 'none',
+        color: 'inherit',
+        border: 'none',
+        padding: '0',
+        font: 'inherit',
+        cursor: 'pointer',
+        outlineColor: theme.colors.separator,
+        display: 'flex'
+      }}
+      {...props}
+    />
+  </>
+)
 
 const CopyToClipboardBtn = ({
   className,

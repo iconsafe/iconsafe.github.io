@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import styles from './SafeTabChoser.module'
 
 import TabPanel from '@components/core/TabPanel'
-import Assets from '@components/Assets'
+import Assets from '@components/Safe/Assets'
 
 import AppBar from '@material-ui/core/AppBar'
 import Tabs from '@material-ui/core/Tabs'

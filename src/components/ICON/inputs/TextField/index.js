@@ -26,7 +26,7 @@ const CustomTextField = styled((props) => (
   }
 `
 
-function TextField ({
+const TextField = ({
   input,
   value,
   onChange,
@@ -37,7 +37,7 @@ function TextField ({
   endAdornment,
   className,
   ...rest
-}) {
+}) => {
   const customProps = {
     error: meta && !!meta.error,
     label: (meta && meta.error) || label,

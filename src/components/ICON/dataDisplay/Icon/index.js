@@ -1,5 +1,4 @@
 import React from 'react'
-import styled from 'styled-components'
 import Tooltip from '@material-ui/core/Tooltip'
 import { withStyles } from '@material-ui/core/styles'
 
@@ -75,14 +74,19 @@ import { rgba } from 'polished'
 
 import theme from '../../theme'
 
-const StyledIcon = styled.span`
-  display: inline-flex;
-
-  .icon-color {
-    fill: ${({ theme, color }) =>
-    color ? theme.colors[color] : theme.colors.icon};
-  }
-`
+const StyledIcon = React.forwardRef(({ color, className, ...props }, ref) => (
+  <span
+    ref={ref}
+    className={className}
+    style={{
+      display: 'inline-flex',
+      '& .iconColor': {
+        fill: color ? theme.colors[color] : theme.colors.icon
+      }
+    }}
+    {...props}
+  />
+))
 
 const StyledTooltip = withStyles(() => ({
   popper: {
