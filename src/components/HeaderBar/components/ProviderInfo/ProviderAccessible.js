@@ -88,7 +88,8 @@ const ProviderInfo = ({ connected, provider, userAddress, network }) => {
               textSize='sm'
               network={network}
             />
-          ) : (
+          )
+            : (
               <Text size='md' color={addressColor}>
                 Connection Error
               </Text>

@@ -15,8 +15,8 @@ const VerticalDivider = styled.div`
 const Divider = ({ className, orientation }) => {
   return orientation === 'vertical' ? (
     <VerticalDivider className={className} />
-  ) :
-    (
+  )
+    : (
       <HorizontalDivider className={className} />
     )
 }

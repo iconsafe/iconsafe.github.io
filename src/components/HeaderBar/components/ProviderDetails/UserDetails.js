@@ -14,6 +14,7 @@ import Paragraph from '@components/core/Paragraph'
 import Row from '@components/core/Row'
 import { background, connected as connectedBg, lg, md, sm, warning, xs } from '@src/theme/variables'
 import { upperFirst } from '@src/utils/css'
+import { ICONHashInfo } from '@components/ICON/ICON/ICONHashInfo'
 
 const dot = require('../../assets/dotRinkeby.svg')
 const walletIcon = require('../../assets/wallet.svg')
