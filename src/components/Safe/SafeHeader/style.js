@@ -1,4 +1,4 @@
-import { screenSm, secondaryText, sm, smallFontSize, xs, disabled, fontSizeHeadingSm } from '@src/theme/variables'
+import { screenSm, primaryText, turquoiseIcon, sm, smallFontSize, xs, disabled, fontSizeHeadingSm, secondaryText } from '@src/theme/variables'
 import { createStyles } from '@material-ui/core/styles'
 
 export const styles = createStyles({
@@ -36,6 +36,17 @@ export const styles = createStyles({
   },
   readonly: {
     backgroundColor: secondaryText,
+    borderRadius: xs,
+    color: '#ffffff',
+    fontSize: smallFontSize,
+    letterSpacing: '0.5px',
+    lineHeight: '28px',
+    marginLeft: sm,
+    padding: `0 ${sm}`,
+    textTransform: 'uppercase'
+  },
+  walletOwner: {
+    backgroundColor: turquoiseIcon,
     borderRadius: xs,
     color: '#ffffff',
     fontSize: smallFontSize,

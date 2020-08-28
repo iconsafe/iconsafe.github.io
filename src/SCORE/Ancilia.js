@@ -3,6 +3,8 @@ import IconService, { IconConverter } from 'icon-sdk-js'
 // ================================================
 // Constants
 const WALLET_LOCAL_STORAGE_KEY = '__Ancilia_WALLET_LOCAL_STORAGE_KEY'
+const WALLET_LOCAL_STORAGE_PROVIDER = '__Ancilia_WALLET_LOCAL_STORAGE_PROVIDER'
+
 export const IconNetworks = {
   LOCALHOST: 'LOCALHOST',
   MAINNET: 'MAINNET',
@@ -23,11 +25,12 @@ export const WALLET_PROVIDER = {
 class UnconfirmedTransaction extends Error { }
 class LoggedInCancelled extends Error { }
 class WrongEventSignature extends Error { }
+class NotLoggedInWallet extends Error { }
 
 // ================================================
 //  Ancilia Implementation
 export class Ancilia {
-  constructor(network) {
+  constructor (network) {
     this._nid = this.__getNetworkInfo(network).nid
     this._network = network
     this.recoverSession()
@@ -45,7 +48,8 @@ export class Ancilia {
       case WALLET_PROVIDER.ICONEX:
         return this.iconexAskAddress().then(address => {
           if (!address) throw new LoggedInCancelled()
-          localStorage.setItem(WALLET_LOCAL_STORAGE_KEY, address)
+          window.localStorage.setItem(WALLET_LOCAL_STORAGE_KEY, address)
+          window.localStorage.setItem(WALLET_LOCAL_STORAGE_PROVIDER, WALLET_PROVIDER.ICONEX)
           this._walletAddress = address
           return address
         })
@@ -56,17 +60,28 @@ export class Ancilia {
   }
 
   isLoggedIn () {
-    const address = localStorage.getItem(WALLET_LOCAL_STORAGE_KEY)
+    const address = window.localStorage.getItem(WALLET_LOCAL_STORAGE_KEY)
     return address !== undefined && address !== null
   }
 
-  getLoggedInWallet () {
-    if (!this.isLoggedIn()) return null
-    else return localStorage.getItem(WALLET_LOCAL_STORAGE_KEY)
+  getLoggedInWallet (shouldThrow = false) {
+    if (!this.isLoggedIn()) {
+      if (shouldThrow) {
+        throw new NotLoggedInWallet()
+      } else {
+        return null
+      }
+    } else {
+      return {
+        address: window.localStorage.getItem(WALLET_LOCAL_STORAGE_KEY),
+        provider: window.localStorage.getItem(WALLET_LOCAL_STORAGE_PROVIDER)
+      }
+    }
   }
 
   logout () {
-    localStorage.removeItem(WALLET_LOCAL_STORAGE_KEY)
+    window.localStorage.removeItem(WALLET_LOCAL_STORAGE_KEY)
+    window.localStorage.removeItem(WALLET_LOCAL_STORAGE_PROVIDER)
   }
 
   // Network Meta ============================================================
@@ -87,8 +102,7 @@ export class Ancilia {
   icxBalance (address) {
     // Assume ICX has 18 decimals
     return this.__getIconService().getBalance(address).execute().then(balance => {
-      const digits = IconConverter.toBigNumber('10').exponentiatedBy(18)
-      return IconConverter.toBigNumber(balance).dividedBy(digits)
+      return IconConverter.toBigNumber(balance)
     })
   }
 
@@ -109,10 +123,7 @@ export class Ancilia {
 
   irc2Balance (address, contract) {
     return this.__callROTx(contract, 'balanceOf', { _owner: address }).then(balance => {
-      return this.irc2Decimals(contract).then(decimals => {
-        const digits = IconConverter.toBigNumber('10').exponentiatedBy(decimals)
-        return IconConverter.toBigNumber(balance).dividedBy(digits)
-      })
+      return IconConverter.toBigNumber(balance)
     })
   }
 
@@ -126,13 +137,13 @@ export class Ancilia {
   }
 
   convertUnitToDecimalsEx (amount, contract) {
-    this.irc2Decimals(contract).then(decimals => {
+    return this.irc2Decimals(contract).then(decimals => {
       return this.convertUnitToDecimals(amount, decimals)
     })
   }
 
   convertDecimalsToUnitEx (amount, contract) {
-    this.irc2Decimals(contract).then(decimals => {
+    return this.irc2Decimals(contract).then(decimals => {
       return this.convertDecimalsToUnit(amount, decimals)
     })
   }
@@ -197,7 +208,6 @@ export class Ancilia {
       params: IconConverter.toRawTransaction(transaction),
       id: 1234
     }
-    console.log(jsonRpcQuery)
     return this.__iconexJsonRpc(jsonRpcQuery)
   }
 

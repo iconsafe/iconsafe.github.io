@@ -118,7 +118,7 @@ const UserDetails = ({ classes, connected, network, onDisconnect, openDashboard,
                 {userAddress}
               </Paragraph>
               <CopyBtn content={userAddress} />
-              <IconTrackerBtn type='address' value={userAddress} />
+              <IconTrackerBtn value={userAddress} />
             </>
           )
             : (

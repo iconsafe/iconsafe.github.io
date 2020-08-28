@@ -1,26 +1,37 @@
-// React base
 import React from 'react'
 import ReactDOM from 'react-dom'
-// Styling
-import { ThemeProvider } from '@material-ui/core/styles'
+import { ThemeProvider } from 'styled-components'
+import { MuiThemeProvider } from '@material-ui/core/styles'
 import CssBaseline from '@material-ui/core/CssBaseline'
-import theme from '@src/theme'
-// Store
+import { theme } from '@src/theme'
+import { theme as styledTheme } from '@components/core/theme'
 import store from './store'
+import { setWalletConnected, setWalletProvider } from '@src/store/actions'
 import { Provider } from 'react-redux'
-// Router
 import { HashRouter } from 'react-router-dom'
-// App
 import App from './components/App'
+import { getAnciliaAPI } from '@src/utils/ancilia'
+
+// Initialize store
+const ancilia = getAnciliaAPI()
+const loggedWallet = ancilia.getLoggedInWallet()
+if (loggedWallet) {
+  const { address, provider } = loggedWallet
+  store.dispatch(setWalletConnected(address))
+  store.dispatch(setWalletProvider(provider))
+}
 
 ReactDOM.render(
-  <Provider store={store}>
-    <HashRouter>
-      <ThemeProvider theme={theme}>
-        <CssBaseline />
-        <App />
-      </ThemeProvider>
-    </HashRouter>
-  </Provider>,
+  <ThemeProvider theme={styledTheme}>
+    <Provider store={store}>
+      <HashRouter>
+        <MuiThemeProvider theme={theme}>
+          <CssBaseline />
+          <App />
+        </MuiThemeProvider>
+      </HashRouter>
+    </Provider>
+  </ThemeProvider>
+  ,
   document.querySelector('#root')
 )

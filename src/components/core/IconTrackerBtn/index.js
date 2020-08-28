@@ -4,12 +4,12 @@ import cn from 'classnames'
 import React from 'react'
 import { MultiSigWalletScore } from '@src/SCORE/MultiSigWalletScore'
 import { getSafeAddress } from '@src/utils/route'
-import { connect } from 'react-redux'
 
 import TrackerOpenIcon from './img/tracker-open.svg'
 
 import Img from '@components/core/Img'
 import { xs } from '@src/theme/variables'
+import { useSelector } from 'react-redux'
 
 const useStyles = makeStyles({
   container: {
@@ -32,13 +32,13 @@ const useStyles = makeStyles({
 const IconTrackerBtn = ({
   className = '',
   increaseZindex = false,
-  type,
-  value,
-  networkConnected
+  value
 }) => {
+  const networkConnected = useSelector((state) => state.networkConnected)
   const classes = useStyles()
   const customClasses = increaseZindex ? { popper: classes.increasedPopperZindex } : {}
   const msw = new MultiSigWalletScore(networkConnected, getSafeAddress())
+  const type = value.length > 42 ? 'transaction' : 'address'
 
   const getIconTrackerLink = (type, value) => {
     return `${msw.getTrackerEndpoint()}/${type}/${value}`
@@ -60,14 +60,4 @@ const IconTrackerBtn = ({
   )
 }
 
-const mapStateToProps = state => {
-  return {
-    networkConnected: state.networkConnected
-  }
-}
-
-const mapDispatchToProps = (dispatch) => {
-  return {}
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(IconTrackerBtn)
+export default IconTrackerBtn

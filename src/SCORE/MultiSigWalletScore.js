@@ -1,8 +1,8 @@
-import { Ancilia, IconNetworks } from './Ancilia'
+import { Ancilia } from './Ancilia'
 import { IconConverter } from 'icon-sdk-js'
 
-const NETWORK = IconNetworks.LOCALHOST
-const MSW_SCORE = 'cx351ba692d5d29c5d579741e1541d75a45365d8e8'
+//  Exceptions
+class InvalidTransactionType extends Error { }
 
 // EventLogs
 const TransactionCreated = 'TransactionCreated(int)'
@@ -15,21 +15,49 @@ class BalanceHistory {
     this.uid = parseInt(json.uid)
     this.token = json.token
     this.balance = IconConverter.toBigNumber(json.balance)
-    this.txhash = json.txhash
     this.timestamp = parseInt(json.timestamp)
+    this.transaction_uid = parseInt(json.transaction_uid)
   }
 }
 
 class Transaction {
   constructor(json) {
     this.uid = parseInt(json.uid)
+    this.type = json.type
+    this.txhash = json.txhash
+    this.created_timestamp = parseInt(json.created_timestamp)
+  }
+}
+
+class SubOutgoingTransaction {
+  constructor(json) {
     this.destination = json.destination
     this.method_name = json.method_name
     this.params = json.params ? JSON.parse(json.params) : {}
     this.amount = IconConverter.toBigNumber(json.amount)
     this.description = json.description
-    this.confirmations = parseInt(json.confirmations)
+  }
+}
+
+class OutgoingTransaction extends Transaction {
+  constructor(json) {
+    super(json)
+    this.confirmations = json.confirmations.map(uid => parseInt(uid))
+    this.rejections = json.rejections.map(uid => parseInt(uid))
     this.state = json.state
+    this.sub_transactions = json.sub_transactions.map(subtx => {
+      return new SubOutgoingTransaction(subtx)
+    })
+    this.executed_timestamp = parseInt(json.executed_timestamp)
+  }
+}
+
+class IncomingTransaction extends Transaction {
+  constructor(json) {
+    super(json)
+    this.token = json.token
+    this.source = json.source
+    this.amount = IconConverter.toBigNumber(json.amount)
   }
 }
 
@@ -75,7 +103,7 @@ export class MultiSigWalletScore extends Ancilia {
   }
 
   add_balance_tracker (token) {
-    const wallet = this.getLoggedInWallet()
+    const wallet = this.getLoggedInWallet(true).address
 
     return this.__iconexCallRWTx(
       wallet,
@@ -87,7 +115,7 @@ export class MultiSigWalletScore extends Ancilia {
   }
 
   remove_balance_tracker (token) {
-    const wallet = this.getLoggedInWallet()
+    const wallet = this.getLoggedInWallet(true).address
 
     return this.__iconexCallRWTx(
       wallet,
@@ -99,8 +127,22 @@ export class MultiSigWalletScore extends Ancilia {
   }
 
   // --- TransactionManager ---
+  parseTransaction (json) {
+    const baseTransaction = new Transaction(json)
+    switch (baseTransaction.type) {
+      case 'OUTGOING':
+        return new OutgoingTransaction(json)
+
+      case 'INCOMING':
+        return new IncomingTransaction(json)
+
+      default:
+        throw new InvalidTransactionType(baseTransaction.type)
+    }
+  }
+
   submit_transaction (destination, method_name, params, amount, description) {
-    const wallet = this.getLoggedInWallet()
+    const wallet = this.getLoggedInWallet(true).address
     var method_params = {}
 
     method_params.destination = destination
@@ -125,7 +167,7 @@ export class MultiSigWalletScore extends Ancilia {
   }
 
   confirm_transaction (transaction_uid) {
-    const wallet = this.getLoggedInWallet()
+    const wallet = this.getLoggedInWallet(true).address
 
     return this.__iconexCallRWTx(
       wallet,
@@ -143,7 +185,7 @@ export class MultiSigWalletScore extends Ancilia {
   }
 
   revoke_transaction (transaction_uid) {
-    const wallet = this.getLoggedInWallet()
+    const wallet = this.getLoggedInWallet(true).address
 
     return this.__iconexCallRWTx(
       wallet,
@@ -165,12 +207,18 @@ export class MultiSigWalletScore extends Ancilia {
     return this.__callROTx(this._scoreAddress, 'get_transaction', {
       transaction_uid: IconConverter.toHex(transaction_uid)
     }).then(json => {
-      return new Transaction(json)
+      return this.parseTransaction(json)
     })
   }
 
   get_waiting_transactions_count () {
     return this.__callROTx(this._scoreAddress, 'get_waiting_transactions_count').then(result => {
+      return parseInt(result)
+    })
+  }
+
+  get_all_transactions_count () {
+    return this.__callROTx(this._scoreAddress, 'get_all_transactions_count').then(result => {
       return parseInt(result)
     })
   }
@@ -186,7 +234,17 @@ export class MultiSigWalletScore extends Ancilia {
       offset: IconConverter.toHex(offset)
     }).then(jsons => {
       return jsons.map(json => {
-        return new Transaction(json)
+        return this.parseTransaction(json)
+      })
+    })
+  }
+
+  get_all_transactions (offset) {
+    return this.__callROTx(this._scoreAddress, 'get_all_transactions', {
+      offset: IconConverter.toHex(offset)
+    }).then(jsons => {
+      return jsons.map(json => {
+        return this.parseTransaction(json)
       })
     })
   }
@@ -196,7 +254,7 @@ export class MultiSigWalletScore extends Ancilia {
       offset: IconConverter.toHex(offset)
     }).then(jsons => {
       return jsons.map(json => {
-        return new Transaction(json)
+        return this.parseTransaction(json)
       })
     })
   }

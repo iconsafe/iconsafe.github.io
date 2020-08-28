@@ -1,0 +1,29 @@
+@import "src/theme/variables.scss";
+
+.root {
+}
+
+.dialog-wallet {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: inherit;
+  font-family: inherit;
+  padding: 0.6em;
+  border-radius: 30px;
+  background: #eeeeee;
+}
+
+.dialog-title {
+  display: flex;
+  align-items: center;
+  font-size: inherit;
+  font-family: inherit;
+  margin-bottom: 1em;
+}
+
+.dialog-title-text {
+  color: #4a4a4a;
+  margin-left: 10px;
+  font-weight: 800;
+}

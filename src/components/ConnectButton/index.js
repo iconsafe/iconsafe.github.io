@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
-import Button from '@src/components/core/Button'
-import Img from '@src/components/core/Img'
+import Button from '@components/core/Button'
+import Img from '@components/core/Img'
 import wallet from '@src/assets/icons/wallet.svg'
 import Dialog from '@material-ui/core/Dialog'
 import MuiDialogTitle from '@material-ui/core/DialogTitle'
@@ -11,12 +11,12 @@ import { createStyles, withStyles } from '@material-ui/core/styles'
 import IconButton from '@material-ui/core/IconButton'
 import CloseIcon from '@material-ui/icons/Close'
 import Typography from '@material-ui/core/Typography'
-import WalletIcon from '@src/components/HeaderBar/components/WalletIcon'
-import { MultiSigWalletScore } from '@src/SCORE/MultiSigWalletScore'
+import WalletIcon from '@components/HeaderBar/components/WalletIcon'
 import { WALLET_PROVIDER } from '@src/SCORE/Ancilia'
 import { setWalletConnected, setWalletProvider } from '@src/store/actions'
-import { connect } from 'react-redux'
 import { getSafeAddress } from '@src/utils/route'
+import { getMultiSigWalletAPI } from '@src/utils/msw'
+import { useDispatch } from 'react-redux'
 
 const cx = classNames.bind(styles)
 
@@ -71,9 +71,9 @@ const ProviderDialog = ({ provider, onClickCallback }) => {
   )
 }
 
-const SelectWalletDialog = ({ onClose, selectedValue, open, networkConnected, setWalletConnected, setWalletProvider }) => {
-  const safeWallet = getSafeAddress()
-  const msw = new MultiSigWalletScore(networkConnected, safeWallet)
+const SelectWalletDialog = ({ onClose, selectedValue, open }) => {
+  const msw = getMultiSigWalletAPI(getSafeAddress())
+  const dispatch = useDispatch()
 
   const handleClose = () => {
     onClose(selectedValue)
@@ -89,8 +89,8 @@ const SelectWalletDialog = ({ onClose, selectedValue, open, networkConnected, se
 
   const onClickProviderICONex = () => {
     msw.login(WALLET_PROVIDER.ICONEX).then(address => {
-      setWalletConnected(address)
-      setWalletProvider('ICONex')
+      dispatch(setWalletConnected(address))
+      dispatch(setWalletProvider('ICONex'))
       onClose(address)
     }).catch(error => {
       // silently catch user cancellation
@@ -129,7 +129,7 @@ const SelectWalletDialog = ({ onClose, selectedValue, open, networkConnected, se
   )
 }
 
-const ConnectButton = ({ setWalletConnected, setWalletProvider, networkConnected, ...props }) => {
+const ConnectButton = (props) => {
   const [dialogOpen, setDialogOpen] = useState(false)
   const [selectedValue, setSelectedValue] = useState(null)
 
@@ -149,9 +149,6 @@ const ConnectButton = ({ setWalletConnected, setWalletProvider, networkConnected
         selectedValue={selectedValue}
         open={dialogOpen}
         onClose={onDialogClose}
-        setWalletConnected={setWalletConnected}
-        setWalletProvider={setWalletProvider}
-        networkConnected={networkConnected}
       />
 
       <Button
@@ -167,17 +164,4 @@ const ConnectButton = ({ setWalletConnected, setWalletProvider, networkConnected
   )
 }
 
-const mapStateToProps = state => {
-  return {
-    networkConnected: state.networkConnected
-  }
-}
-
-const mapDispatchToProps = (dispatch) => {
-  return {
-    setWalletConnected: value => dispatch(setWalletConnected(value)),
-    setWalletProvider: value => dispatch(setWalletProvider(value))
-  }
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(ConnectButton)
+export default ConnectButton

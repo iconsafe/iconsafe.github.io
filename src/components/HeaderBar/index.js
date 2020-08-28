@@ -4,13 +4,19 @@ import ConnectDetails from './components/ProviderDetails/ConnectDetails'
 import UserDetails from './components/ProviderDetails/UserDetails'
 import ProviderAccessible from './components/ProviderInfo/ProviderAccessible'
 import ProviderDisconnected from './components/ProviderInfo/ProviderDisconnected'
-import { connect } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { setWalletConnected, setWalletProvider } from '@src/store/actions'
 
-const HeaderComponent = ({ available, loaded, provider, userAddress, network, setWalletProvider, setWalletConnected }) => {
+const HeaderBar = () => {
+  const walletConnected = useSelector((state) => state.walletConnected)
+  const walletProvider = useSelector((state) => state.walletProvider)
+  const networkConnected = useSelector((state) => state.networkConnected)
+  const dispatch = useDispatch()
+  const loaded = !!walletConnected && !!walletProvider
+
   const handleDisconnect = () => {
-    setWalletConnected(null)
-    setWalletProvider(null)
+    dispatch(setWalletConnected(null))
+    dispatch(setWalletProvider(null))
   }
 
   const getProviderInfoBased = () => {
@@ -18,24 +24,21 @@ const HeaderComponent = ({ available, loaded, provider, userAddress, network, se
       return <ProviderDisconnected />
     }
 
-    return <ProviderAccessible connected={available} provider={provider} network={network} userAddress={userAddress} />
+    return <ProviderAccessible connected provider={walletProvider} network={networkConnected} userAddress={walletConnected} />
   }
 
   const getProviderDetailsBased = () => {
-    console.log(available, loaded, network, provider, userAddress)
-    console.log(loaded)
-
     if (!loaded) {
       return <ConnectDetails />
     }
 
     return (
       <UserDetails
-        connected={available}
-        network={network}
+        connected
+        network={networkConnected}
         onDisconnect={handleDisconnect}
-        provider={provider}
-        userAddress={userAddress}
+        provider={walletProvider}
+        userAddress={walletConnected}
       />
     )
   }
@@ -46,22 +49,4 @@ const HeaderComponent = ({ available, loaded, provider, userAddress, network, se
   return <Layout providerDetails={details} providerInfo={info} />
 }
 
-const mapStateToProps = state => {
-  console.log(state)
-  return {
-    userAddress: state.walletConnected,
-    provider: state.walletProvider,
-    loaded: !!state.walletConnected && !!state.walletProvider,
-    available: true,
-    network: 'localhost'
-  }
-}
-
-const mapDispatchToProps = (dispatch) => {
-  return {
-    setWalletConnected: value => dispatch(setWalletConnected(value)),
-    setWalletProvider: value => dispatch(setWalletProvider(value))
-  }
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(HeaderComponent)
+export default HeaderBar

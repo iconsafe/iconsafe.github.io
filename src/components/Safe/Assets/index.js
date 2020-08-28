@@ -1,22 +1,77 @@
-import React from 'react'
-import { connect } from 'react-redux'
-import styles from './Assets.module'
+import React, { useState } from 'react'
+import { useSelector } from 'react-redux'
+import css from './index.module'
 import Table from './Table'
+import { styles } from './style'
+import AddCustomToken from './AddCustomToken'
+import { isWalletOwner, getMultiSigWalletAPI } from '@src/utils/msw'
+import { makeStyles } from '@material-ui/core/styles'
+import Dialog from '@material-ui/core/Dialog'
+import { getSafeAddress } from '@src/utils/route'
+import Button from '@components/core/Button'
+import classNames from 'classnames/bind'
+import AddIcon from '@material-ui/icons/Add'
 
-const Assets = ({ assets }) => {
+const useStyles = makeStyles(styles)
+
+const Assets = () => {
+  const msw = getMultiSigWalletAPI(getSafeAddress())
+  const classes = useStyles(styles)
+
+  const walletConnected = useSelector((state) => state.walletConnected)
+  const walletOwners = useSelector((state) => state.walletOwners)
+  const multisigBalances = useSelector((state) => state.multisigBalances)
+
+  const [dialogOpen, setDialogOpen] = useState(false)
+
+  const onDialogClose = (value) => {
+    setDialogOpen(false)
+  }
+
+  const onClickNewToken = () => {
+    setDialogOpen(true)
+  }
+
+  const granted = isWalletOwner(walletConnected, walletOwners)
+
+  const addNewTokenButton = () => {
+    return (
+      <>
+        <Dialog
+          onClose={onDialogClose} open={dialogOpen}
+        >
+          <AddCustomToken
+            classes={classes}
+            onClose={onDialogClose}
+            msw={msw}
+          />
+        </Dialog>
+
+        <Button
+          className={classes.receive}
+          color='primary'
+          onClick={onClickNewToken}
+          size='small'
+          variant='contained'
+          disabled={!granted}
+        >
+          <AddIcon
+            alt='Add token'
+            className={classNames(classes.leftIcon, classes.iconSmall)}
+            component={undefined}
+          />
+          Add token
+        </Button>
+
+      </>
+    )
+  }
+
   return (
-    <div className={styles.root}>
-      <Table rows={assets} />
+    <div className={css.root}>
+      <Table rows={multisigBalances || []} additionalChild={addNewTokenButton()} />
     </div>
   )
 }
 
-const mapStateToProps = state => {
-  return {}
-}
-
-const mapDispatchToProps = (dispatch) => {
-  return {}
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(Assets)
+export default Assets

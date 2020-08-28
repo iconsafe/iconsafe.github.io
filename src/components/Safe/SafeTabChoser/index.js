@@ -1,26 +1,19 @@
-import React, { useState, useEffect } from 'react'
-import { connect } from 'react-redux'
-import styles from './SafeTabChoser.module'
-
+import React, { useState } from 'react'
+import styles from './index.module'
 import TabPanel from '@components/core/TabPanel'
 import Assets from '@components/Safe/Assets'
-
+import Transactions from '@components/Safe/Transactions'
 import AppBar from '@material-ui/core/AppBar'
 import Tabs from '@material-ui/core/Tabs'
 import Tab from '@material-ui/core/Tab'
-
-import PhoneIcon from '@material-ui/icons/Phone'
-import FavoriteIcon from '@material-ui/icons/Favorite'
+import SettingsIcon from '@material-ui/icons/Settings'
 import PersonPinIcon from '@material-ui/icons/PersonPin'
-import HelpIcon from '@material-ui/icons/Help'
-import ShoppingBasket from '@material-ui/icons/ShoppingBasket'
 import { makeStyles } from '@material-ui/core/styles'
 import { turquoiseIcon } from '@src/theme/variables'
-
+import AccountBalanceWalletIcon from '@material-ui/icons/AccountBalanceWallet'
+import AppsIcon from '@material-ui/icons/Apps'
+import ImportExportIcon from '@material-ui/icons/ImportExport'
 import { createStyles } from '@material-ui/core'
-import { MultiSigWalletScore } from '@src/SCORE/MultiSigWalletScore'
-import { getSafeAddress } from '@src/utils/route'
-import { isTokenICX, displayBalance } from '@src/utils/icon'
 
 export const inlineStyles = createStyles({
   root: {
@@ -46,63 +39,20 @@ export const inlineStyles = createStyles({
 const useStyles = makeStyles(inlineStyles)
 
 const tabs = [
-  { label: 'ASSETS', icon: <PhoneIcon />, disabled: false },
-  { label: 'TRANSACTIONS', icon: <ShoppingBasket />, disabled: false },
-  { label: 'BALANCE HISTORY', icon: <FavoriteIcon />, disabled: false },
-  { label: 'APPS', icon: <PersonPinIcon />, disabled: false },
-  { label: 'ADDRESS BOOK', icon: <HelpIcon />, disabled: false },
-  { label: 'SETTINGS', icon: <ShoppingBasket />, disabled: false }
+  { label: 'ASSETS', icon: <AccountBalanceWalletIcon />, disabled: false },
+  { label: 'TRANSACTIONS', icon: <ImportExportIcon />, disabled: false },
+  { label: 'APPS', icon: <AppsIcon />, disabled: false },
+  { label: 'ADDRESS BOOK', icon: <PersonPinIcon />, disabled: false },
+  { label: 'SETTINGS', icon: <SettingsIcon />, disabled: false }
 ]
 
-const SafeTabChoser = ({ networkConnected }) => {
+const SafeTabChoser = ({ assets }) => {
   const [value, setValue] = useState(0)
-  const [assets, setAssets] = useState(null)
   const classes = useStyles()
-  const safeWallet = getSafeAddress()
-
-  const msw = new MultiSigWalletScore(networkConnected, safeWallet)
 
   const handleChange = (event, newValue) => {
     setValue(newValue)
   }
-
-  useEffect(() => {
-    const getAssetInformation = (token) => {
-      if (isTokenICX(token)) {
-        const promises = [msw.icxBalance(safeWallet)]
-        return Promise.allSettled(promises).then(result => {
-          result = result.map(item => item.value)
-          console.log(result)
-          return {
-            asset: 'ICX',
-            balance: displayBalance(result[0]),
-            value: '? USD'
-          }
-        })
-      } else {
-        const promises = [msw.irc2Symbol(token), msw.irc2Balance(safeWallet, token)]
-
-        return Promise.allSettled(promises).then(result => {
-          result = result.map(item => item.value)
-          return {
-            asset: result[0],
-            balance: displayBalance(result[1]),
-            value: '? USD'
-          }
-        })
-      }
-    }
-
-    msw.get_balance_trackers().then(trackers => {
-      const promises = trackers.map(tracker => getAssetInformation(tracker))
-
-      return Promise.allSettled(promises).then(result => {
-        result = result.filter(item => item.status === 'fulfilled')
-        result = result.map(item => item.value)
-        setAssets(result)
-      })
-    })
-  }, [safeWallet])
 
   return (
     <div className={styles.root}>
@@ -134,24 +84,21 @@ const SafeTabChoser = ({ networkConnected }) => {
       <div className={styles.tabBar} />
 
       <TabPanel value={value} index={0}>
-        {assets && <Assets assets={assets} />}
+        <Assets />
       </TabPanel>
       <TabPanel value={value} index={1}>
-        Item Two
+        <Transactions />
       </TabPanel>
       <TabPanel value={value} index={2}>
-        Item Three
-      </TabPanel>
-      <TabPanel value={value} index={3}>
         Item Four
       </TabPanel>
-      <TabPanel value={value} index={4}>
+      <TabPanel value={value} index={3}>
         Item Five
       </TabPanel>
-      <TabPanel value={value} index={5}>
+      <TabPanel value={value} index={4}>
         Item Six
       </TabPanel>
-      <TabPanel value={value} index={6}>
+      <TabPanel value={value} index={5}>
         Item Seven
       </TabPanel>
 
@@ -159,14 +106,4 @@ const SafeTabChoser = ({ networkConnected }) => {
   )
 }
 
-const mapStateToProps = state => {
-  return {
-    networkConnected: state.networkConnected
-  }
-}
-
-const mapDispatchToProps = (dispatch) => {
-  return {}
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(SafeTabChoser)
+export default SafeTabChoser

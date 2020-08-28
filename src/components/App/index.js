@@ -1,17 +1,18 @@
 import React from 'react'
-import { connect } from 'react-redux'
 import { Switch, Route, Redirect } from 'react-router-dom'
 import styles from './App.module'
 import Safe from '@components/Safe'
+import Welcome from '@components/Welcome'
 import HeaderBar from '@components/HeaderBar'
 import Footer from '@components/Footer'
 
-const ConnectedApp = () => {
+const App = () => {
   return (
     <div className={styles.root}>
       <HeaderBar />
       <Switch>
         <Route exact path='/safe/:address' render={(props) => <Safe {...props} />} />
+        <Route exact path='/' render={(props) => <Welcome {...props} />} />
         <Route render={() => <Redirect to='/' />} />
       </Switch>
       <Footer />
@@ -19,12 +20,4 @@ const ConnectedApp = () => {
   )
 }
 
-const mapStateToProps = state => {
-  return {}
-}
-
-const mapDispatchToProps = (dispatch) => {
-  return {}
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(ConnectedApp)
+export default App

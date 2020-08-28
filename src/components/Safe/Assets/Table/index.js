@@ -4,17 +4,24 @@ import { makeStyles } from '@material-ui/core/styles'
 import Table from '@material-ui/core/Table'
 import TableBody from '@material-ui/core/TableBody'
 import TableCell from '@material-ui/core/TableCell'
+import IconButton from '@material-ui/core/IconButton'
 import TableContainer from '@material-ui/core/TableContainer'
+import ExpandLess from '@material-ui/icons/ExpandLess'
+import ExpandMore from '@material-ui/icons/ExpandMore'
 import TableHead from '@material-ui/core/TableHead'
 import TablePagination from '@material-ui/core/TablePagination'
 import TableRow from '@material-ui/core/TableRow'
+import Collapse from '@material-ui/core/Collapse'
 import TableSortLabel from '@material-ui/core/TableSortLabel'
 import Paper from '@material-ui/core/Paper'
 import { getTokenIcon } from '@components/TokenIcon'
 import Img from '@components/core/Img'
-
-// import FormControlLabel from '@material-ui/core/FormControlLabel'
-// import Switch from '@material-ui/core/Switch'
+import Block from '@components/core/Block'
+import Row from '@components/core/Row'
+import { screenSm, sm } from '@src/theme/variables'
+import { displayUnit } from '@src/utils/icon'
+import cn from 'classnames'
+import TokenBalance from '@components/Safe/Assets/TokenBalance'
 
 function descendingComparator (a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -43,9 +50,9 @@ function stableSort (array, comparator) {
 }
 
 const headCells = [
-  { id: 'asset', numeric: false, disablePadding: true, label: 'Asset' },
-  { id: 'balance', numeric: true, disablePadding: false, label: 'Balance' },
-  { id: 'value', numeric: true, disablePadding: false, label: 'Value' }
+  { id: 'asset', disablePadding: false, label: 'Asset' },
+  { id: 'balance', disablePadding: false, label: 'Balance' },
+  { id: 'value', disablePadding: false, label: 'Value' }
 ]
 
 function EnhancedTableHead ({ classes, order, orderBy, rowCount, onRequestSort }) {
@@ -56,12 +63,10 @@ function EnhancedTableHead ({ classes, order, orderBy, rowCount, onRequestSort }
   return (
     <TableHead>
       <TableRow>
-        <TableCell padding='checkbox' />
-        {headCells.map((headCell) => (
+        {headCells.map((headCell, index) => (
           <TableCell
             key={headCell.id}
-            align={headCell.numeric ? 'right' : 'left'}
-            padding={headCell.disablePadding ? 'none' : 'default'}
+            align={headCells.length === index + 1 ? 'right' : 'left'}
             sortDirection={orderBy === headCell.id ? order : false}
           >
             <TableSortLabel
@@ -78,6 +83,7 @@ function EnhancedTableHead ({ classes, order, orderBy, rowCount, onRequestSort }
             </TableSortLabel>
           </TableCell>
         ))}
+        <TableCell align='right' />
       </TableRow>
     </TableHead>
   )
@@ -92,6 +98,27 @@ EnhancedTableHead.propTypes = {
 }
 
 const useStyles = makeStyles((theme) => ({
+  container: {
+    display: 'flex',
+    alignItems: 'center',
+    flexWrap: 'wrap'
+  },
+  additionalChild: {
+    flexWrap: 'nowrap',
+    marginBottom: sm,
+    [`@media (min-width: ${screenSm}px)`]: {
+      marginBottom: '0'
+    }
+  },
+  pagination: {
+    display: 'flex',
+    overflow: 'hidden',
+    width: '100%',
+    [`@media (min-width: ${screenSm}px)`]: {
+      marginLeft: 'auto',
+      width: 'auto'
+    }
+  },
   root: {
     width: '100%'
   },
@@ -112,17 +139,33 @@ const useStyles = makeStyles((theme) => ({
     position: 'absolute',
     top: 20,
     width: 1
+  },
+  tableRow: {
+    cursor: 'pointer',
+    '&:hover': {
+      backgroundColor: '#fff3e2 !important'
+    }
+  },
+  expandedRow: {
+    backgroundColor: '#fff3e2 !important'
+  },
+  extendedTxContainer: {
+    padding: 0,
+    border: 0,
+    '&:last-child': {
+      padding: 0
+    },
+    backgroundColor: '#fffaf4'
   }
 }))
 
-export default function EnhancedTable ({ rows }) {
+export default function EnhancedTable ({ rows, additionalChild }) {
   const classes = useStyles()
   const [order, setOrder] = useState('asc')
   const [orderBy, setOrderBy] = useState('asset')
   const [page, setPage] = useState(0)
-  // const [dense, setDense] = useState(false)
-  const dense = false
   const [rowsPerPage, setRowsPerPage] = useState(5)
+  const [expandedTx, setExpandedTx] = useState(null)
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc'
@@ -130,8 +173,8 @@ export default function EnhancedTable ({ rows }) {
     setOrderBy(property)
   }
 
-  const handleClick = (event, name) => {
-    console.log(event, name)
+  const handleClick = (row) => {
+    setExpandedTx((prevToken) => (prevToken === row.token ? null : row.token))
   }
 
   const handleChangePage = (event, newPage) => {
@@ -143,10 +186,6 @@ export default function EnhancedTable ({ rows }) {
     setPage(0)
   }
 
-  // const handleChangeDense = (event) => {
-  //   setDense(event.target.checked)
-  // }
-
   const emptyRows = rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage)
 
   return (
@@ -156,7 +195,7 @@ export default function EnhancedTable ({ rows }) {
           <Table
             className={classes.table}
             aria-labelledby='tableTitle'
-            size={dense ? 'small' : 'medium'}
+            size='medium'
             aria-label='enhanced table'
           >
             <EnhancedTableHead
@@ -173,44 +212,71 @@ export default function EnhancedTable ({ rows }) {
                   const labelId = `enhanced-table-checkbox-${index}`
 
                   return (
-                    <TableRow
-                      hover
-                      onClick={(event) => handleClick(event, row.asset)}
-                      tabIndex={-1}
-                      key={row.asset}
-                    >
-                      <TableCell padding='checkbox' />
-                      <TableCell component='th' id={labelId} scope='row' padding='none'>
-                        <Img style={{ paddingRight: '8px', verticalAlign: 'bottom' }} height={20} src={getTokenIcon(row.asset).src} alt={row.asset} />
-                        {row.asset}
-                      </TableCell>
-                      <TableCell align='right'>{row.balance}</TableCell>
-                      <TableCell align='right'>{row.value}</TableCell>
-                    </TableRow>
+                    <React.Fragment key={row.symbol}>
+                      <TableRow
+                        hover
+                        className={cn(classes.tableRow, expandedTx === row.token && classes.expandedRow)}
+                        onClick={() => handleClick(row)}
+                        tabIndex={-1}
+                      >
+                        <TableCell component='th' id={labelId} scope='row'>
+                          <Img style={{ paddingRight: '8px', verticalAlign: 'bottom' }} height={20} src={getTokenIcon(row.symbol).src} alt={row.symbol} />
+                          {row.symbol}
+                        </TableCell>
+                        <TableCell align='left'>{displayUnit(row.balance, row.decimals)}</TableCell>
+                        <TableCell align='right'>{row.value}</TableCell>
+
+                        <TableCell align='right' className={classes.expandCellStyle}>
+                          <IconButton disableRipple>
+                            {expandedTx === row.token ? <ExpandLess /> : <ExpandMore />}
+                          </IconButton>
+                        </TableCell>
+                      </TableRow>
+
+                      {/* Extension */}
+                      <Collapse
+                        component={() => (
+                          <TableRow>
+                            <TableCell
+                              className={classes.extendedTxContainer}
+                              colSpan={6}
+                              style={{ paddingBottom: 0, paddingTop: 0 }}
+                            >
+                              <TokenBalance token={row} />
+                            </TableCell>
+                          </TableRow>
+                        )}
+                        in={expandedTx === row.token}
+                        timeout='auto'
+                        unmountOnExit
+                      />
+                    </React.Fragment>
                   )
                 })}
               {emptyRows > 0 && (
-                <TableRow style={{ height: (dense ? 40 : 53) * emptyRows }}>
-                  <TableCell colSpan={4} />
+                <TableRow style={{ height: 40 * emptyRows }}>
+                  <TableCell colSpan={6} />
                 </TableRow>
               )}
             </TableBody>
           </Table>
         </TableContainer>
-        <TablePagination
-          rowsPerPageOptions={[5, 10, 25]}
-          component='div'
-          count={rows.length}
-          rowsPerPage={rowsPerPage}
-          page={page}
-          onChangePage={handleChangePage}
-          onChangeRowsPerPage={handleChangeRowsPerPage}
-        />
+
+        <Block className={classes.container}>
+          <Row className={classes.additionalChild}>{additionalChild}</Row>
+          <Row className={classes.pagination}>
+            <TablePagination
+              rowsPerPageOptions={[5, 10, 25]}
+              component='div'
+              count={rows.length}
+              rowsPerPage={rowsPerPage}
+              page={page}
+              onChangePage={handleChangePage}
+              onChangeRowsPerPage={handleChangeRowsPerPage}
+            />
+          </Row>
+        </Block>
       </Paper>
-      {/* <FormControlLabel
-        control={<Switch checked={dense} onChange={handleChangeDense} />}
-        label='Dense padding'
-      /> */}
     </div>
   )
 }

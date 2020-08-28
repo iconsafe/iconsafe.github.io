@@ -1,13 +1,12 @@
 import React from 'react'
 import styled from 'styled-components'
-import { connect } from 'react-redux'
+import IconTrackerBtn from '@components/core/IconTrackerBtn'
+import CopyBtn from '@components/core/CopyBtn'
 
 import {
   Text,
   Identicon,
-  EllipsisMenu,
-  ICONTrackerButton,
-  CopyToClipboardBtn
+  EllipsisMenu
 } from '../..'
 import { textShortener } from '../../utils/strings'
 
@@ -48,7 +47,7 @@ const ICONHashInfo = ({
   showIdenticon,
   showCopyBtn,
   menuItems,
-  showEtherscanBtn,
+  showTrackerBtn,
   network
 }) =>
   (
@@ -71,22 +70,12 @@ const ICONHashInfo = ({
               ? textShortener(hash, shortenHash + 2, shortenHash)
               : hash}
           </Text>
-          {showCopyBtn && <CopyToClipboardBtn textToCopy={hash} />}
-          {showEtherscanBtn && <ICONTrackerButton value={hash} network={network} />}
+          {showCopyBtn && <CopyBtn content={hash} />}
+          {showTrackerBtn && <IconTrackerBtn value={hash} />}
           {menuItems && <EllipsisMenu menuItems={menuItems} />}
         </AddressContainer>
       </InfoContainer>
     </StyledContainer>
   )
 
-const mapStateToProps = state => {
-  return {
-    networkConnected: state.networkConnected
-  }
-}
-
-const mapDispatchToProps = (dispatch) => {
-  return {}
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(ICONHashInfo)
+export default ICONHashInfo

@@ -1,24 +1,34 @@
-import {
-  WALLET_CONNECTED_ACTION,
-  WALLET_PROVIDER_ACTION,
-  NETWORK_CONNECTED_ACTION
-} from '@store/actions/actionTypes'
+import * as Actions from '@store/actions/actionTypes'
 
 import { IconNetworks } from '@src/SCORE/Ancilia'
 
 const initialState = {
   walletConnected: null,
   walletProvider: null,
-  networkConnected: IconNetworks.LOCALHOST
+  networkConnected: IconNetworks.LOCALHOST,
+  multisigBalances: null,
+  connectedWalletOwnerUid: null,
+  forceReload: true,
+  walletOwnersRequired: 0
 }
 
 function rootReducer (state = initialState, action) {
   switch (action.type) {
-    case WALLET_CONNECTED_ACTION:
+    case Actions.WALLET_CONNECTED_ACTION:
       return { ...state, walletConnected: action.walletConnected }
-    case WALLET_PROVIDER_ACTION:
+    case Actions.WALLET_PROVIDER_ACTION:
       return { ...state, walletProvider: action.walletProvider }
-    case NETWORK_CONNECTED_ACTION:
+    case Actions.WALLET_OWNERS_ACTION:
+      return { ...state, walletOwners: action.walletOwners }
+    case Actions.WALLET_OWNERS_REQUIRED_ACTION:
+      return { ...state, walletOwnersRequired: action.walletOwnersRequired }
+    case Actions.MULTISIG_BALANCES_ACTION:
+      return { ...state, multisigBalances: action.multisigBalances }
+    case Actions.FORCE_RELOAD_ACTION:
+      return { ...state, forceReload: action.forceReload }
+    case Actions.CONNECTED_WALLET_WALLET_OWNER_UID:
+      return { ...state, connectedWalletOwnerUid: action.connectedWalletOwnerUid }
+    case Actions.NETWORK_CONNECTED_ACTION:
       return { ...state, networkConnected: action.networkConnected }
     default:
       return state
