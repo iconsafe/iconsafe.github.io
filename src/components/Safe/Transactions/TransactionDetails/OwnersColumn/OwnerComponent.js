@@ -1,15 +1,16 @@
 import { makeStyles } from '@material-ui/core/styles'
 import cn from 'classnames'
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import { ICONHashInfo } from '@components/ICON/'
+import { getSafeAddress } from '@src/utils/route'
+import { getMultiSigWalletAPI } from '@src/utils/msw'
 
 import CancelSmallFilledCircle from './assets/cancel-small-filled.svg'
 import ConfirmSmallFilledCircle from './assets/confirm-small-filled.svg'
 import ConfirmSmallGreenCircle from './assets/confirm-small-green.svg'
 import ConfirmSmallGreyCircle from './assets/confirm-small-grey.svg'
 import ConfirmSmallRedCircle from './assets/confirm-small-red.svg'
-import PendingSmallYellowCircle from './assets/confirm-small-yellow.svg'
 import { styles } from './style'
 
 import Block from '@components/core/Block'
@@ -20,62 +21,74 @@ import Img from '@components/core/Img'
 
 const useStyles = makeStyles(styles)
 
-const OwnerComponent = (props) => {
-  const {
-    owner,
-    pendingAcceptAction,
-    pendingRejectAction,
-    isCancelTx,
-    thresholdReached,
-    executor,
-    showConfirmBtn,
-    onTxConfirm,
-    onTxExecute,
-    showExecuteBtn,
-    showRejectBtn,
-    userAddress,
-    onTxReject,
-    showExecuteRejectBtn,
-    confirmed
-  } = props
-  const nameInAdbk = 'NAMEINADBK' // useSelector((state) => getNameFromAddressBook(state, owner))
+const OwnerComponent = ({
+  ownerUid,
+  confirmed,
+  tx,
+  isCancelTx,
+  isUnconfirmed,
+  threshold,
+  thresholdReached
+}) => {
   const networkConnected = useSelector((state) => state.networkConnected)
+  const walletConnected = useSelector((state) => state.walletConnected)
   const classes = useStyles()
-  const [imgCircle, setImgCircle] = React.useState(ConfirmSmallGreyCircle)
+  const [imgCircle, setImgCircle] = useState(ConfirmSmallGreyCircle)
+  const [owner, setOwner] = useState(null)
+  const msw = getMultiSigWalletAPI(getSafeAddress())
+
+  console.log('isCancelTx = ', isCancelTx)
+
+  const showConfirmBtn = true
+  const showExecuteBtn = false
+  const showRejectBtn = true
+  const showExecuteRejectBtn = false
+
+  console.log('UID = ', ownerUid, 'CONFIRMED = ', confirmed)
+
+  const onTxConfirm = () => {
+    console.log('onTxConfirm')
+  }
+  const onTxExecute = () => {
+    console.log('onTxExecute')
+  }
+  const onTxReject = () => {
+    console.log('onTxReject')
+  }
+
+  useEffect(() => {
+    msw.get_wallet_owner(ownerUid).then(owner => {
+      setOwner(owner)
+    })
+  }, [ownerUid])
 
   React.useMemo(() => {
-    if (pendingAcceptAction || pendingRejectAction) {
-      setImgCircle(PendingSmallYellowCircle)
+    if (isUnconfirmed) {
+      setImgCircle(ConfirmSmallGreyCircle)
       return
     }
     if (confirmed) {
       setImgCircle(isCancelTx ? CancelSmallFilledCircle : ConfirmSmallFilledCircle)
       return
     }
-    if (thresholdReached || executor) {
+    if (thresholdReached) {
       setImgCircle(isCancelTx ? ConfirmSmallRedCircle : ConfirmSmallGreenCircle)
       return
     }
     setImgCircle(ConfirmSmallGreyCircle)
-  }, [confirmed, thresholdReached, executor, isCancelTx, pendingAcceptAction, pendingRejectAction])
+  }, [confirmed, thresholdReached, isCancelTx])
 
   const getTimelineLine = () => {
-    if (pendingAcceptAction || pendingRejectAction) {
-      return classes.verticalPendingAction
-    }
     if (isCancelTx) {
       return classes.verticalLineCancel
+    }
+    if (isUnconfirmed) {
+      return classes.verticalLinePending
     }
     return classes.verticalLineDone
   }
 
   const confirmButton = () => {
-    if (pendingRejectAction) {
-      return null
-    }
-    if (pendingAcceptAction) {
-      return <Block className={classes.executor}>Pending</Block>
-    }
     return (
       <>
         {showConfirmBtn && (
@@ -103,12 +116,6 @@ const OwnerComponent = (props) => {
   }
 
   const rejectButton = () => {
-    if (pendingRejectAction) {
-      return <Block className={classes.executor}>Pending</Block>
-    }
-    if (pendingAcceptAction) {
-      return null
-    }
     return (
       <>
         {showRejectBtn && (
@@ -140,25 +147,28 @@ const OwnerComponent = (props) => {
       <div
         className={cn(
           classes.verticalLine,
-          (confirmed || thresholdReached || executor || pendingAcceptAction || pendingRejectAction) &&
+          (confirmed || thresholdReached) &&
           getTimelineLine()
         )}
       />
       <div className={classes.circleState}>
         <Img alt='' src={imgCircle} />
       </div>
-      <ICONHashInfo
-        hash={owner}
-        name={!nameInAdbk || nameInAdbk === 'UNKNOWN' ? null : nameInAdbk}
-        shortenHash={4}
-        showIdenticon
-        showCopyBtn
-        showEtherscanBtn
-        network={networkConnected}
-      />
+
+      {owner &&
+        <ICONHashInfo
+          hash={owner.address}
+          name={owner.name}
+          shortenHash={4}
+          showIdenticon
+          showCopyBtn
+          showEtherscanBtn
+          network={networkConnected}
+        />}
+
       <Block className={classes.spacer} />
-      {owner === userAddress && <Block>{isCancelTx ? rejectButton() : confirmButton()}</Block>}
-      {owner === executor && <Block className={classes.executor}>Executor</Block>}
+
+      {owner && owner.address === walletConnected && <Block>{isCancelTx ? rejectButton() : confirmButton()}</Block>}
     </Block>
   )
 }

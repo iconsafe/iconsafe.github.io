@@ -5,6 +5,7 @@ export const styles = createStyles({
   txDataContainer: {
     paddingTop: lg,
     paddingLeft: md,
+    paddingRight: md,
     paddingBottom: md
   },
   txData: {

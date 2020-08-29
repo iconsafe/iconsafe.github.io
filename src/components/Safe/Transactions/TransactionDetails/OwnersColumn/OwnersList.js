@@ -2,22 +2,11 @@ import React from 'react'
 
 import OwnerComponent from './OwnerComponent'
 
-const OwnersList = (props) => {
-  const { ownersUnconfirmed, ownersWhoConfirmed } = props
-
+const OwnersList = ({ tx, arrayOwners, ...props }) => {
   return (
     <>
-      {ownersWhoConfirmed.map((owner) => (
-        <OwnerComponent confirmed key={owner} owner={owner} {...props} />
-      ))}
-      {ownersUnconfirmed.map(({ hasPendingAcceptActions, hasPendingRejectActions, owner }) => (
-        <OwnerComponent
-          key={owner}
-          owner={owner}
-          pendingAcceptAction={hasPendingAcceptActions}
-          pendingRejectAction={hasPendingRejectActions}
-          {...props}
-        />
+      {arrayOwners.map(ownerUid => (
+        <OwnerComponent confirmed tx={tx} key={ownerUid} ownerUid={ownerUid} {...props} />
       ))}
     </>
   )

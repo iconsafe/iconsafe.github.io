@@ -195,6 +195,9 @@ const useStyles = makeStyles((theme) => ({
       padding: 0
     },
     backgroundColor: '#ffeeee'
+  },
+  tokenIconRow: {
+    padding: '5px'
   }
 }))
 
@@ -288,7 +291,7 @@ export default function EnhancedTable ({ rows }) {
 
                           {/* Display Sum of tokens */}
                           {row.tokens.map((token, index) => (
-                            <Row key={`${row.uid}-token-${index}`}>
+                            <Row className={classes.tokenIconRow} key={`${row.uid}-token-${index}`}>
                               <Img
                                 style={{ paddingRight: '8px', verticalAlign: 'bottom' }}
                                 height={20}

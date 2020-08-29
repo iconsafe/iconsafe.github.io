@@ -17,12 +17,12 @@ export const OutgoingTx = ({ tx, isOutgoingTx }) => {
         <Bold>Created: </Bold>
         {convertTsToDateString(tx.created_timestamp)}
       </Paragraph>
-      {tx.executed_timestamp && (
+      {tx.executed_timestamp ? (
         <Paragraph noMargin>
           <Bold>Executed: </Bold>
           {convertTsToDateString(tx.executed_timestamp)}
         </Paragraph>
-      )}
+      ) : null}
 
       {hasFailed && <TransactionFailReason tx={tx} />}
 
