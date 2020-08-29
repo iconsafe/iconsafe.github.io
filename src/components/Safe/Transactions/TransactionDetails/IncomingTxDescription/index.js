@@ -44,25 +44,31 @@ export const IncomingTxDescription = ({ tx }) => {
             {openedTokenTransfers ? <ExpandLess /> : <ExpandMore />}
           </ListItem>}
 
-        {tx.tokens.map((token, index) => (
-          <Collapse
-            key={`${tx.txhash}-${index}`}
-            in={openedTokenTransfers} timeout='auto' unmountOnExit
-          >
-            <List component='div' disablePadding>
-              <ListItem button className={classes.nested}>
-                <TokenTransferDescription
-                  key={`${tx.txhash}-${index}`}
-                  incoming
-                  amount={token.amount}
-                  symbol={token.symbol}
-                  decimals={token.decimals}
-                  address={token.source}
-                />
-              </ListItem>
+        <Collapse
+          in={openedTokenTransfers} timeout='auto' unmountOnExit
+        >
+          {tx.tokens.map((token, index) => (
+            <List
+              key={`${tx.created_txhash}-${index}`}
+              component='div' disablePadding
+            >
+              {token.transfers.map((transfer, index) => (
+                <ListItem
+                  key={`${tx.created_txhash}-${token.symbol}-${index}`}
+                  button className={classes.nested}
+                >
+                  <TokenTransferDescription
+                    incoming
+                    amount={transfer.amount}
+                    symbol={token.symbol}
+                    decimals={token.decimals}
+                    address={transfer.source}
+                  />
+                </ListItem>
+              ))}
             </List>
-          </Collapse>
-        ))}
+          ))}
+        </Collapse>
       </List>
     </Block>
   )

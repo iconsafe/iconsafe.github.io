@@ -4,8 +4,13 @@ import Block from '@src/components/core/Block'
 import Bold from '@src/components/core/Bold'
 import Box from '@material-ui/core/Box'
 import { getAnciliaAPI } from '@src/utils/ancilia'
+import { makeStyles } from '@material-ui/core/styles'
+import { styles } from './styles'
+
+const useStyles = makeStyles(styles)
 
 export const TransactionFailReason = ({ tx }) => {
+  const classes = useStyles()
   const [reason, setReason] = useState('Loading...')
 
   useEffect(() => {
@@ -17,15 +22,15 @@ export const TransactionFailReason = ({ tx }) => {
       })
     }
 
-    getReasonFromTxhash(tx.txhash).then(reason => {
+    getReasonFromTxhash(tx.executed_txhash).then(reason => {
       setReason(reason)
     })
-  }, [tx.txhash])
+  }, [tx.executed_txhash])
 
   return (
-    <Block>
+    <Block className={classes.failReasonBlock}>
       <Bold>Fail reason:</Bold>
-      <Box fontFamily='Monospace' color='#fb0000'>{reason}</Box>
+      <Box className={classes.failReasonBox} fontFamily='Monospace' color='#fb0000'>{reason}</Box>
     </Block>
   )
 }

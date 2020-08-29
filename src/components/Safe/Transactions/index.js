@@ -32,16 +32,18 @@ const Transactions = () => {
             return {
               uid: transaction.uid,
               type: transaction.type,
-              txhash: transaction.txhash,
+              created_txhash: transaction.created_txhash,
               source: transaction.source,
-              // There is always always one token per incoming transaction
+              // There is always always one token and one transfer per incoming transaction
               tokens: [{
                 symbol: symbol,
-                amount: transaction.amount,
                 decimals: decimals,
-                source: transaction.source
+                transfers: [{
+                  amount: transaction.amount,
+                  source: transaction.source
+                }]
               }],
-              createdDate: transaction.created_timestamp,
+              created_timestamp: transaction.created_timestamp,
               status: state
             }
           })
@@ -50,17 +52,17 @@ const Transactions = () => {
           const tokens = {}
           const cache = {}
 
-          transaction.sub_transactions.forEach(subtx => {
-            // Sum amounts for ICX
-            if (!tokens[ICX_TOKEN_SYMBOL]) {
-              tokens[ICX_TOKEN_SYMBOL] = {
-                amount: IconConverter.toBigNumber(0),
-                decimals: ICX_TOKEN_DECIMALS,
-                destination: subtx.destination
-              }
+          tokens[ICX_TOKEN_SYMBOL] = transaction.sub_transactions.filter(subtx => {
+            return !subtx.amount.isEqualTo(0)
+          }).map(subtx => {
+            return {
+              amount: subtx.amount,
+              decimals: ICX_TOKEN_DECIMALS,
+              destination: subtx.destination
             }
-            tokens[ICX_TOKEN_SYMBOL].amount = tokens[ICX_TOKEN_SYMBOL].amount.plus(subtx.amount)
           })
+
+          if (tokens[ICX_TOKEN_SYMBOL].length === 0) delete tokens[ICX_TOKEN_SYMBOL]
 
           // Fill symbol / decimals cache
           transaction.sub_transactions.forEach(subtx => {
@@ -79,45 +81,44 @@ const Transactions = () => {
               }
             })
 
-            // Sum amounts for all tokens
-            transaction.sub_transactions.forEach(subtx => {
-              if (cache[subtx.destination]) {
-                const { symbol, decimals } = cache[subtx.destination]
+            Object.keys(cache).forEach(address => {
+              if (cache[address]) {
+                const { symbol, decimals } = cache[address]
 
-                const arg = subtx.params.filter(tx => tx.name === '_value')[0].value
-                const to = subtx.params.filter(tx => tx.name === '_to')[0].value
-                const value = IconConverter.toBigNumber(arg)
+                tokens[symbol] = transaction.sub_transactions.filter(subtx => {
+                  return subtx.amount.isEqualTo(0)
+                }).map(subtx => {
+                  const to = subtx.params.filter(tx => tx.name === '_to')[0].value
+                  const value = IconConverter.toBigNumber(subtx.params.filter(tx => tx.name === '_value')[0].value)
 
-                if (!tokens[symbol]) {
-                  tokens[symbol] = {
-                    amount: IconConverter.toBigNumber(0),
+                  return {
+                    amount: value,
                     decimals: decimals,
-                    destination: to
+                    destination: to,
+                    address: address
                   }
-                }
-                tokens[symbol].amount = tokens[symbol].amount.plus(value)
+                })
               }
             })
 
             // Flatten the tokens dict
-            return Promise.all(Object.entries(tokens).filter(entry => {
-              return !(entry[1].amount.isEqualTo(0))
-            }).map(async ([symbol, v]) => {
-              return { symbol: symbol, amount: v.amount, decimals: v.decimals, destination: v.destination }
-            })).then(tokensArray => {
-              return {
-                uid: transaction.uid,
-                type: transaction.type,
-                txhash: transaction.txhash,
-                tokens: tokensArray,
-                subTx: transaction.sub_transactions,
-                confirmations: transaction.confirmations,
-                rejections: transaction.rejections,
-                createdDate: transaction.created_timestamp,
-                executedDate: transaction.executed_timestamp,
-                status: getTransactionState(transaction)
-              }
+            const tokensArray = Object.entries(tokens).map(([symbol, v]) => {
+              return { symbol: symbol, decimals: v[0].decimals, transfers: v }
             })
+
+            return {
+              uid: transaction.uid,
+              type: transaction.type,
+              created_txhash: transaction.created_txhash,
+              executed_txhash: transaction.executed_txhash,
+              tokens: tokensArray,
+              subTx: transaction.sub_transactions,
+              confirmations: transaction.confirmations,
+              rejections: transaction.rejections,
+              created_timestamp: transaction.created_timestamp,
+              executed_timestamp: transaction.executed_timestamp,
+              status: getTransactionState(transaction)
+            }
           })
         }
       }

@@ -31,7 +31,7 @@ const TransactionDetails = ({ transaction }) => {
   const ancilia = getAnciliaAPI()
 
   useEffect(() => {
-    transaction.txhash && ancilia.txResult(transaction.txhash).then(result => {
+    transaction.created_txhash && ancilia.txResult(transaction.created_txhash).then(result => {
       setTransactionStepUsed(result.stepUsed)
       setTransactionStepPrice(result.stepPrice)
     })
@@ -46,10 +46,10 @@ const TransactionDetails = ({ transaction }) => {
               <div style={{ display: 'flex' }}>
                 <Bold className={classes.txHash}>Hash:</Bold>
                 {
-                  transaction.txhash
+                  transaction.created_txhash
                     ? (
                       <ICONHashInfo
-                        hash={transaction.txhash}
+                        hash={transaction.created_txhash}
                         shortenHash={4}
                         showCopyBtn
                         showTrackerBtn
@@ -58,19 +58,19 @@ const TransactionDetails = ({ transaction }) => {
                     ) : 'n/a'
                 }
               </div>
-              {transaction.txhash && transactionStepUsed ? (
+              {transaction.created_txhash && transactionStepUsed ? (
                 <Paragraph noMargin>
                   <Bold>Step Used: </Bold>
                   {`${displayBigInt(transactionStepUsed)} steps` || 'n/a'}
                 </Paragraph>
               ) : null}
-              {transaction.txhash && transactionStepPrice ? (
+              {transaction.created_txhash && transactionStepPrice ? (
                 <Paragraph noMargin>
                   <Bold>Step Price: </Bold>
                   {`${displayBigInt(transactionStepPrice)}` || 'n/a'}
                 </Paragraph>
               ) : null}
-              {transaction.txhash && transactionStepUsed && transactionStepPrice ? (
+              {transaction.created_txhash && transactionStepUsed && transactionStepPrice ? (
                 <Paragraph noMargin>
                   <Bold>TxFee: </Bold>
                   {`${displayBigInt(ancilia.convertDecimalsToUnit(transactionStepUsed.multipliedBy(transactionStepPrice), 18))} ICX` || 'n/a'}

@@ -4,7 +4,6 @@ import { styles } from './styles'
 import TokenTransferDescription from '@components/Safe/Transactions/TransactionDetails/TokenTransferDescription'
 import RawMethodCallDescription from '@components/Safe/Transactions/TransactionDetails/RawMethodCallDescription'
 import Block from '@src/components/core/Block'
-import { TransactionFailReason } from './TransactionFailReason'
 import List from '@material-ui/core/List'
 import ListSubheader from '@material-ui/core/ListSubheader'
 import ListItem from '@material-ui/core/ListItem'
@@ -22,7 +21,6 @@ export const OutgoingTxDescription = ({ tx }) => {
   const classes = useStyles()
   const [openedTokenTransfers, setOpenedTokenTransfers] = React.useState(true)
   const [openedRawMethodCalls, setOpenedRawMethodCalls] = React.useState(false)
-  const hasFailed = tx.status === 'FAILED'
 
   const handleClickTokenTransfers = () => {
     setOpenedTokenTransfers(!openedTokenTransfers)
@@ -53,24 +51,30 @@ export const OutgoingTxDescription = ({ tx }) => {
             {openedTokenTransfers ? <ExpandLess /> : <ExpandMore />}
           </ListItem>}
 
-        {tx.tokens.map((token, index) => (
-          <Collapse
-            key={`${tx.txhash}-${index}`}
-            in={openedTokenTransfers} timeout='auto' unmountOnExit
-          >
-            <List component='div' disablePadding>
-              <ListItem button className={classes.nested}>
-                <TokenTransferDescription
-                  incoming={false}
-                  amount={token.amount}
-                  symbol={token.symbol}
-                  decimals={token.decimals}
-                  address={token.destination}
-                />
-              </ListItem>
+        <Collapse
+          in={openedTokenTransfers} timeout='auto' unmountOnExit
+        >
+          {tx.tokens.map((token, index) => (
+            <List
+              key={`${tx.created_txhash}-${index}`} component='div' disablePadding
+            >
+              {token.transfers.map((transfer, index) => (
+                <ListItem
+                  key={`${tx.created_txhash}-${token.symbol}-${index}`}
+                  button className={classes.nested}
+                >
+                  <TokenTransferDescription
+                    incoming={false}
+                    amount={transfer.amount}
+                    symbol={token.symbol}
+                    decimals={token.decimals}
+                    address={transfer.destination}
+                  />
+                </ListItem>
+              ))}
             </List>
-          </Collapse>
-        ))}
+          ))}
+        </Collapse>
 
         {tx.subTx.length > 0 &&
           <ListItem button onClick={handleClickRawMethodCalls}>
@@ -90,7 +94,7 @@ export const OutgoingTxDescription = ({ tx }) => {
           >
             {tx.subTx.map((subtx, index) => (
               <ListItem
-                key={`${tx.txhash}-${index}`}
+                key={`${tx.created_txhash}-${index}`}
                 button className={classes.nested}
               >
                 Transaction N° {index + 1}
@@ -105,11 +109,7 @@ export const OutgoingTxDescription = ({ tx }) => {
             ))}
           </List>
         </Collapse>
-
       </List>
-
-      {hasFailed && <TransactionFailReason tx={tx} />}
-
     </Block>
   )
 }

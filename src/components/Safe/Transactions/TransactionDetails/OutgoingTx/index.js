@@ -1,6 +1,7 @@
 import React from 'react'
 import Bold from '@components/core/Bold'
 import Paragraph from '@components/core/Paragraph'
+import { TransactionFailReason } from '@components/Safe/Transactions/TransactionDetails/OutgoingTxDescription/TransactionFailReason'
 import { convertTsToDateString } from '@src/utils/icon'
 
 export const OutgoingTx = ({ tx, isOutgoingTx }) => {
@@ -8,18 +9,23 @@ export const OutgoingTx = ({ tx, isOutgoingTx }) => {
     return null
   }
 
+  const hasFailed = tx.status === 'FAILED'
+
   return isOutgoingTx ? (
     <>
       <Paragraph noMargin>
         <Bold>Created: </Bold>
-        {convertTsToDateString(tx.createdDate)}
+        {convertTsToDateString(tx.created_timestamp)}
       </Paragraph>
-      {tx.executedDate ? (
+      {tx.executed_timestamp && (
         <Paragraph noMargin>
           <Bold>Executed: </Bold>
-          {convertTsToDateString(tx.executedDate)}
+          {convertTsToDateString(tx.executed_timestamp)}
         </Paragraph>
-      ) : <></>}
+      )}
+
+      {hasFailed && <TransactionFailReason tx={tx} />}
+
     </>
   ) : null
 }

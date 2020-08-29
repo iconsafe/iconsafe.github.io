@@ -13,13 +13,15 @@ export const styles = createStyles({
     paddingBottom: '0px'
   },
   paramType: {
-    color: 'red',
+    color: 'blue',
     paddingRight: '5px'
   },
   paramName: {
+    color: 'red',
     paddingRight: '5px'
   },
   paramValue: {
+    color: 'green',
     paddingRight: '5px'
   },
   boldTitle: {

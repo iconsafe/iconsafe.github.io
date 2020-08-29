@@ -17,7 +17,6 @@ const useStyles = makeStyles(styles)
 
 const TokenTransferDescription = ({ amount, decimals, symbol, address, incoming }) => {
   const classes = useStyles()
-  console.log('address  ==== ', address)
 
   return (
     <Block className={classes.transactionDescriptionContainer}>

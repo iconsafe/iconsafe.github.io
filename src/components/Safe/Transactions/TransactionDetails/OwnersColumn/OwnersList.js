@@ -4,8 +4,7 @@ import OwnerComponent from './OwnerComponent'
 
 const OwnersList = (props) => {
   const { ownersUnconfirmed, ownersWhoConfirmed } = props
-  console.log('ownersWhoConfirmed=', ownersWhoConfirmed)
-  console.log('ownersUnconfirmed=', ownersUnconfirmed)
+
   return (
     <>
       {ownersWhoConfirmed.map((owner) => (

@@ -11,7 +11,7 @@ export const IncomingTx = ({ tx, isIncomingTx }) => {
   return isIncomingTx ? (
     <Paragraph noMargin>
       <Bold>Created: </Bold>
-      {convertTsToDateString(tx.createdDate)}
+      {convertTsToDateString(tx.created_timestamp)}
     </Paragraph>
   ) : null
 }

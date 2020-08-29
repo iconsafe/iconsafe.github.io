@@ -21,8 +21,6 @@ const RawMethodCallDescription = ({
 }) => {
   const classes = useStyles()
 
-  console.log('params=', params)
-
   return (
     <Block className={classes.transactionDescriptionContainer}>
       <List component='div' disablePadding>
@@ -48,7 +46,7 @@ const RawMethodCallDescription = ({
           <ListItem classes={{ root: classes.item }}>
             <Bold className={classes.boldTitle}>Params: </Bold>
             <List component='div' disablePadding>
-              {params.map(param => console.log(param) || (
+              {params.map(param => (
                 <ListItem key={0} classes={{ root: classes.item }}>
                   <Box fontFamily='Monospace' className={classes.paramName}>{param.name}: </Box>
                   <Box fontFamily='Monospace' className={classes.paramType}>{param.type}</Box>

@@ -281,6 +281,12 @@ export default function EnhancedTable ({ rows }) {
                           {lowercaseWithCapital(row.type)}
                         </TableCell>
                         <TableCell align='left'>
+
+                          {/* Default display : 0 ICX */}
+                          {row.tokens.length === 0 &&
+                            <Row>n/a</Row>}
+
+                          {/* Display Sum of tokens */}
                           {row.tokens.map((token, index) => (
                             <Row key={`${row.uid}-token-${index}`}>
                               <Img
@@ -288,11 +294,13 @@ export default function EnhancedTable ({ rows }) {
                                 height={20}
                                 src={getTokenIcon(token.symbol).src} alt={token.symbol}
                               />
-                              {displayUnit(token.amount, token.decimals)} {token.symbol}
+                              {displayUnit(token.transfers
+                                .map(transfer => transfer.amount)
+                                .reduce((acc, cur) => acc.plus(cur)), token.decimals)} {token.symbol}
                             </Row>
                           ))}
                         </TableCell>
-                        <TableCell align='left'>{convertTsToDateString(row.createdDate)}</TableCell>
+                        <TableCell align='left'>{convertTsToDateString(row.created_timestamp)}</TableCell>
 
                         <TableCell align='right'>
                           <Row align='end' className={classes.actions}>

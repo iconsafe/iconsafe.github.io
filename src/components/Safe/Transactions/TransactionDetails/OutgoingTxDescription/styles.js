@@ -49,5 +49,12 @@ export const styles = createStyles({
   },
   nested: {
     paddingLeft: '20px'
+  },
+  failReasonBlock: {
+    display: 'flex',
+    flexDirection: 'row'
+  },
+  failReasonBox: {
+    paddingLeft: '5px'
   }
 })

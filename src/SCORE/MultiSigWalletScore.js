@@ -24,7 +24,7 @@ class Transaction {
   constructor(json) {
     this.uid = parseInt(json.uid)
     this.type = json.type
-    this.txhash = json.txhash
+    this.created_txhash = json.created_txhash === 'None' ? null : json.created_txhash
     this.created_timestamp = parseInt(json.created_timestamp)
   }
 }
@@ -49,6 +49,7 @@ class OutgoingTransaction extends Transaction {
       return new SubOutgoingTransaction(subtx)
     })
     this.executed_timestamp = parseInt(json.executed_timestamp)
+    this.executed_txhash = json.executed_txhash === 'None' ? null : json.executed_txhash
   }
 }
 
