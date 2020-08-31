@@ -6,7 +6,9 @@
   "scripts": {
     "start": "webpack-dev-server --mode development",
     "build": "webpack --mode production",
-    "standard": "standard"
+    "standard": "standard",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build"
   },
   "repository": {
     "type": "git",
@@ -17,7 +19,7 @@
   "bugs": {
     "url": "https://github.com/iconation/icon-multisig-wallet-gui/issues"
   },
-  "homepage": "https://github.com/iconation/icon-multisig-wallet-gui#readme",
+  "homepage": "http://iconation.github.io/iconsafe",
   "devDependencies": {
     "@babel/core": "^7.4.5",
     "@babel/plugin-proposal-class-properties": "^7.4.4",
