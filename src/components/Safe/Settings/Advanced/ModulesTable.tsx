@@ -12,11 +12,11 @@ import { styles } from './style'
 
 import { grantedSelector } from 'src/routes/safe/container/selector'
 import { ModulePair } from 'src/logic/safe/store/models/safe'
-import Table from 'src/components/Table'
-import { TableCell, TableRow } from 'src/components/layout/Table'
-import Block from 'src/components/layout/Block'
-import Identicon from 'src/components/Identicon'
-import Row from 'src/components/layout/Row'
+import Table from '@src/components/Table'
+import { TableCell, TableRow } from '@src/components/core/Table'
+import Block from '@src/components/core/Block'
+import Identicon from '@src/components/core/Identicon'
+import Row from '@src/components/core/Row'
 
 const REMOVE_MODULE_BTN_TEST_ID = 'remove-module-btn'
 const MODULES_ROW_TEST_ID = 'owners-row'
@@ -90,8 +90,8 @@ const ModulesTable = ({ moduleData }: ModulesTableProps): React.ReactElement => 
                             <AddressText size="lg">{rowElement[0]}</AddressText>
                           </Block>
                         ) : (
-                          rowElement
-                        )}
+                            rowElement
+                          )}
                       </TableCell>
                       <TableCell component="td">
                         <Row align="end" className={classes.actions}>

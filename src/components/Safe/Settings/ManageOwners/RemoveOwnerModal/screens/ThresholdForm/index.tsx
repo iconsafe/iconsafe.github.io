@@ -7,23 +7,23 @@ import { useSelector } from 'react-redux'
 
 import { styles } from './style'
 
-import Field from 'src/components/forms/Field'
-import GnoForm from 'src/components/forms/GnoForm'
-import SelectField from 'src/components/forms/SelectField'
-import { composeValidators, maxValue, minValue, mustBeInteger, required } from 'src/components/forms/validator'
-import Block from 'src/components/layout/Block'
-import Button from 'src/components/layout/Button'
-import Col from 'src/components/layout/Col'
-import Hairline from 'src/components/layout/Hairline'
-import Paragraph from 'src/components/layout/Paragraph'
-import Row from 'src/components/layout/Row'
-import { safeOwnersSelector, safeThresholdSelector } from 'src/logic/safe/store/selectors'
+import Field from '@src/components/core/Field'
+import GnoForm from '@src/components/core/GnoForm'
+import SelectField from '@src/components/core/SelectField'
+import { composeValidators, maxValue, minValue, mustBeInteger, required } from '@src/components/core/validator'
+import Block from '@src/components/core/Block'
+import Button from '@src/components/core/Button'
+import Col from '@src/components/core/Col'
+import Hairline from '@src/components/core/Hairline'
+import Paragraph from '@src/components/core/Paragraph'
+import Row from '@src/components/core/Row'
+import { (state) => state.walletOwners, safeThresholdSelector } from 'src/logic/safe/store/selectors'
 
 export const REMOVE_OWNER_THRESHOLD_NEXT_BTN_TEST_ID = 'remove-owner-threshold-next-btn'
 
 const ThresholdForm = ({ classes, onClickBack, onClose, onSubmit }) => {
-  const owners = useSelector(safeOwnersSelector)
-  const threshold = useSelector(safeThresholdSelector)
+  const owners = useSelector((state) => state.walletOwners)
+  const threshold = useSelector((state) => state.walletOwnersRequired)
   const handleSubmit = (values) => {
     onSubmit(values)
   }
@@ -43,7 +43,7 @@ const ThresholdForm = ({ classes, onClickBack, onClose, onSubmit }) => {
       <Hairline />
       <GnoForm initialValues={{ threshold: defaultThreshold.toString() }} onSubmit={handleSubmit}>
         {() => {
-          const numOptions = owners.size > 1 ? owners.size - 1 : 1
+          const numOptions = owners.length > 1 ? owners.length - 1 : 1
 
           return (
             <>
@@ -82,7 +82,7 @@ const ThresholdForm = ({ classes, onClickBack, onClose, onSubmit }) => {
                   </Col>
                   <Col xs={10}>
                     <Paragraph className={classes.ownersText} color="primary" noMargin size="lg">
-                      out of {owners.size - 1} owner(s)
+                      out of {owners.length - 1} owner(s)
                     </Paragraph>
                   </Col>
                 </Row>

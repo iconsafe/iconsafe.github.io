@@ -3,7 +3,7 @@ import cn from 'classnames'
 import React, { useState, useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import { ICONHashInfo } from '@components/ICON/'
-import { getSafeAddress } from '@src/utils/route'
+import { getSafeAddressFromUrl } from '@src/utils/route'
 import { getMultiSigWalletAPI } from '@src/utils/msw'
 
 import CancelSmallFilledCircle from './assets/cancel-small-filled.svg'
@@ -32,28 +32,33 @@ const OwnerComponent = ({
 }) => {
   const networkConnected = useSelector((state) => state.networkConnected)
   const walletConnected = useSelector((state) => state.walletConnected)
+  const owners = useSelector((state) => state.walletOwners)
   const classes = useStyles()
   const [imgCircle, setImgCircle] = useState(ConfirmSmallGreyCircle)
   const [owner, setOwner] = useState(null)
-  const msw = getMultiSigWalletAPI(getSafeAddress())
+  const msw = getMultiSigWalletAPI(getSafeAddressFromUrl())
+  const unconfirmed = owners
+    .filter(owner => !tx.confirmations.includes(owner.uid))
+    .filter(owner => !tx.rejections.includes(owner.uid))
+    .map(owner => owner.uid)
 
-  console.log('isCancelTx = ', isCancelTx)
-
-  const showConfirmBtn = true
-  const showExecuteBtn = false
-  const showRejectBtn = true
-  const showExecuteRejectBtn = false
-
-  console.log('UID = ', ownerUid, 'CONFIRMED = ', confirmed)
+  const showConfirmBtn = unconfirmed.includes(ownerUid)
+  const showRejectBtn = unconfirmed.includes(ownerUid)
 
   const onTxConfirm = () => {
-    console.log('onTxConfirm')
+    msw.confirm_transaction(tx.uid).then(txConfirm => {
+      msw.txResult(txConfirm.result).then(result => {
+        console.log(result)
+      })
+    })
   }
-  const onTxExecute = () => {
-    console.log('onTxExecute')
-  }
+
   const onTxReject = () => {
-    console.log('onTxReject')
+    msw.reject_transaction(tx.uid).then(txConfirm => {
+      msw.txResult(txConfirm.result).then(result => {
+        console.log(result)
+      })
+    })
   }
 
   useEffect(() => {
@@ -80,12 +85,12 @@ const OwnerComponent = ({
 
   const getTimelineLine = () => {
     if (isCancelTx) {
-      return classes.verticalLineCancel
+      return classes.verticalLineRed
     }
     if (isUnconfirmed) {
       return classes.verticalLinePending
     }
-    return classes.verticalLineDone
+    return classes.verticalLineGreen
   }
 
   const confirmButton = () => {
@@ -99,16 +104,6 @@ const OwnerComponent = ({
             variant='contained'
           >
             Confirm
-          </Button>
-        )}
-        {showExecuteBtn && (
-          <Button
-            className={classes.button}
-            color='primary'
-            onClick={onTxExecute}
-            variant='contained'
-          >
-            Execute
           </Button>
         )}
       </>
@@ -126,16 +121,6 @@ const OwnerComponent = ({
             variant='contained'
           >
             Reject
-          </Button>
-        )}
-        {showExecuteRejectBtn && (
-          <Button
-            className={cn(classes.button, classes.lastButton)}
-            color='secondary'
-            onClick={onTxReject}
-            variant='contained'
-          >
-            Execute
           </Button>
         )}
       </>
@@ -162,13 +147,17 @@ const OwnerComponent = ({
           shortenHash={4}
           showIdenticon
           showCopyBtn
-          showEtherscanBtn
+          showTrackerBtn
           network={networkConnected}
         />}
 
       <Block className={classes.spacer} />
 
-      {owner && owner.address === walletConnected && <Block>{isCancelTx ? rejectButton() : confirmButton()}</Block>}
+      {owner && owner.address === walletConnected &&
+        <Block>
+          {rejectButton()}
+          {confirmButton()}
+        </Block>}
     </Block>
   )
 }

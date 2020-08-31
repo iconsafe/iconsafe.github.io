@@ -24,10 +24,10 @@ export const styles = createStyles({
   verticalLinePending: {
     backgroundColor: secondaryText
   },
-  verticalLineDone: {
+  verticalLineGreen: {
     backgroundColor: secondary
   },
-  verticalLineCancel: {
+  verticalLineRed: {
     backgroundColor: error
   },
   verticalPendingAction: {
@@ -59,10 +59,10 @@ export const styles = createStyles({
   olderTxAnnotation: {
     textAlign: 'center'
   },
-  ownerListTitleDone: {
+  ownerListTitleGreen: {
     color: secondary
   },
-  ownerListTitleCancelDone: {
+  ownerListTitleRed: {
     color: error
   },
   name: {

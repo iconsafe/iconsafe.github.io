@@ -8,21 +8,21 @@ import { useDispatch, useSelector } from 'react-redux'
 
 import { styles } from './style'
 
-import Identicon from 'src/components/Identicon'
-import Modal from 'src/components/Modal'
-import Block from 'src/components/layout/Block'
-import Button from 'src/components/layout/Button'
-import Col from 'src/components/layout/Col'
-import Hairline from 'src/components/layout/Hairline'
-import Link from 'src/components/layout/Link'
-import Paragraph from 'src/components/layout/Paragraph'
-import Row from 'src/components/layout/Row'
+import Identicon from '@src/components/core/Identicon'
+import Modal from '@src/components/Modal'
+import Block from '@src/components/core/Block'
+import Button from '@src/components/core/Button'
+import Col from '@src/components/core/Col'
+import Hairline from '@src/components/core/Hairline'
+import Link from '@src/components/core/Link'
+import Paragraph from '@src/components/core/Paragraph'
+import Row from '@src/components/core/Row'
 import { getEtherScanLink } from 'src/logic/wallets/getWeb3'
 import { SAFELIST_ADDRESS } from 'src/routes/routes'
 import removeSafe from 'src/logic/safe/store/actions/removeSafe'
-import { safeNameSelector, safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
+import { (state) => state.safeName, (state) => state.safeAddress } from 'src/logic/safe/store/selectors'
 import { history } from 'src/store'
-import { md, secondary } from 'src/theme/variables'
+import { md, secondary } from '@src/theme/variables'
 
 const openIconStyle = {
   height: md,
@@ -30,8 +30,8 @@ const openIconStyle = {
 }
 
 const RemoveSafeComponent = ({ classes, isOpen, onClose }) => {
-  const safeAddress = useSelector(safeParamAddressFromStateSelector)
-  const safeName = useSelector(safeNameSelector)
+  const safeAddress = useSelector((state) => state.safeAddress)
+  const safeName = useSelector((state) => state.safeName)
   const dispatch = useDispatch()
   const etherScanLink = getEtherScanLink('address', safeAddress)
 

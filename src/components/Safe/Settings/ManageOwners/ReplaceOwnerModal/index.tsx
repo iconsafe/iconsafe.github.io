@@ -6,13 +6,13 @@ import { useDispatch, useSelector } from 'react-redux'
 import OwnerForm from './screens/OwnerForm'
 import ReviewReplaceOwner from './screens/Review'
 
-import Modal from 'src/components/Modal'
+import Modal from '@src/components/Modal'
 import { addOrUpdateAddressBookEntry } from 'src/logic/addressBook/store/actions/addOrUpdateAddressBookEntry'
 import { SENTINEL_ADDRESS, getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
 import createTransaction from 'src/logic/safe/store/actions/createTransaction'
 import replaceSafeOwner from 'src/logic/safe/store/actions/replaceSafeOwner'
-import { safeParamAddressFromStateSelector, safeThresholdSelector } from 'src/logic/safe/store/selectors'
+import { (state) => state.safeAddress, safeThresholdSelector } from 'src/logic/safe/store/selectors'
 import { checksumAddress } from 'src/utils/checksumAddress'
 
 const styles = () => ({
@@ -68,8 +68,8 @@ const ReplaceOwner = ({ classes, closeSnackbar, enqueueSnackbar, isOpen, onClose
   const [activeScreen, setActiveScreen] = useState('checkOwner')
   const [values, setValues] = useState<any>({})
   const dispatch = useDispatch()
-  const safeAddress = useSelector(safeParamAddressFromStateSelector)
-  const threshold = useSelector(safeThresholdSelector)
+  const safeAddress = useSelector((state) => state.safeAddress)
+  const threshold = useSelector((state) => state.walletOwnersRequired)
 
   useEffect(
     () => () => {

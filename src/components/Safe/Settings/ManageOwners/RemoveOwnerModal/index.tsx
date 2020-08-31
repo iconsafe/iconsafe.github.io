@@ -7,15 +7,15 @@ import CheckOwner from './screens/CheckOwner'
 import ReviewRemoveOwner from './screens/Review'
 import ThresholdForm from './screens/ThresholdForm'
 
-import Modal from 'src/components/Modal'
+import Modal from '@src/components/Modal'
 import { SENTINEL_ADDRESS, getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
 import createTransaction from 'src/logic/safe/store/actions/createTransaction'
 import removeSafeOwner from 'src/logic/safe/store/actions/removeSafeOwner'
 
 import {
-  safeOwnersSelector,
-  safeParamAddressFromStateSelector,
+  (state) => state.walletOwners,
+  (state) => state.safeAddress,
   safeThresholdSelector,
 } from 'src/logic/safe/store/selectors'
 
@@ -67,9 +67,9 @@ const RemoveOwner = ({ classes, closeSnackbar, enqueueSnackbar, isOpen, onClose,
   const [activeScreen, setActiveScreen] = useState('checkOwner')
   const [values, setValues] = useState<any>({})
   const dispatch = useDispatch()
-  const owners = useSelector(safeOwnersSelector)
-  const safeAddress = useSelector(safeParamAddressFromStateSelector)
-  const threshold = useSelector(safeThresholdSelector)
+  const owners = useSelector((state) => state.walletOwners)
+  const safeAddress = useSelector((state) => state.safeAddress)
+  const threshold = useSelector((state) => state.walletOwnersRequired)
 
   useEffect(
     () => () => {

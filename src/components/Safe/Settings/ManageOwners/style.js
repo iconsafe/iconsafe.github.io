@@ -44,5 +44,11 @@ export const styles = () => ({
   removeOwnerIcon: {
     marginLeft: lg,
     cursor: 'pointer'
+  },
+  leftIcon: {
+    marginRight: sm
+  },
+  iconSmall: {
+    fontSize: 16
   }
 })

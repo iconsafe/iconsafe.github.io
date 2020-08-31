@@ -8,7 +8,7 @@ import { getModuleData } from './dataFetcher'
 import { styles } from './style'
 import ModulesTable from './ModulesTable'
 
-import Block from 'src/components/layout/Block'
+import Block from '@src/components/core/Block'
 import { safeModulesSelector, safeNonceSelector } from 'src/logic/safe/store/selectors'
 
 const useStyles = makeStyles(styles)
@@ -83,8 +83,8 @@ const Advanced = (): React.ReactElement => {
         ) : moduleData?.length === 0 ? (
           <LoadingModules />
         ) : (
-          <ModulesTable moduleData={moduleData} />
-        )}
+              <ModulesTable moduleData={moduleData} />
+            )}
       </Block>
     </>
   )

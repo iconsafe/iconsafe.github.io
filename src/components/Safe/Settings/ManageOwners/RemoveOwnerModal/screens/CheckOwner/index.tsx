@@ -6,15 +6,15 @@ import React from 'react'
 
 import { styles } from './style'
 
-import CopyBtn from 'src/components/CopyBtn'
-import EtherscanBtn from 'src/components/EtherscanBtn'
-import Identicon from 'src/components/Identicon'
-import Block from 'src/components/layout/Block'
-import Button from 'src/components/layout/Button'
-import Col from 'src/components/layout/Col'
-import Hairline from 'src/components/layout/Hairline'
-import Paragraph from 'src/components/layout/Paragraph'
-import Row from 'src/components/layout/Row'
+import CopyBtn from '@src/components/CopyBtn'
+import IconTrackerBtn from '@src/components/core/IconTrackerBtn'
+import Identicon from '@src/components/core/Identicon'
+import Block from '@src/components/core/Block'
+import Button from '@src/components/core/Button'
+import Col from '@src/components/core/Col'
+import Hairline from '@src/components/core/Hairline'
+import Paragraph from '@src/components/core/Paragraph'
+import Row from '@src/components/core/Row'
 
 export const REMOVE_OWNER_MODAL_NEXT_BTN_TEST_ID = 'remove-owner-next-btn'
 
@@ -53,7 +53,7 @@ const CheckOwner = ({ classes, onClose, onSubmit, ownerAddress, ownerName }) => 
                   {ownerAddress}
                 </Paragraph>
                 <CopyBtn content={ownerAddress} />
-                <EtherscanBtn type="address" value={ownerAddress} />
+                <IconTrackerBtn type="address" value={ownerAddress} />
               </Block>
             </Block>
           </Col>

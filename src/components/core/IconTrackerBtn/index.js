@@ -3,7 +3,7 @@ import { makeStyles } from '@material-ui/core/styles'
 import cn from 'classnames'
 import React from 'react'
 import { MultiSigWalletScore } from '@src/SCORE/MultiSigWalletScore'
-import { getSafeAddress } from '@src/utils/route'
+import { getSafeAddressFromUrl } from '@src/utils/route'
 
 import TrackerOpenIcon from './img/tracker-open.svg'
 
@@ -37,7 +37,7 @@ const IconTrackerBtn = ({
   const networkConnected = useSelector((state) => state.networkConnected)
   const classes = useStyles()
   const customClasses = increaseZindex ? { popper: classes.increasedPopperZindex } : {}
-  const msw = new MultiSigWalletScore(networkConnected, getSafeAddress())
+  const msw = new MultiSigWalletScore(networkConnected, getSafeAddressFromUrl())
   const type = value.length > 42 ? 'transaction' : 'address'
 
   const getIconTrackerLink = (type, value) => {

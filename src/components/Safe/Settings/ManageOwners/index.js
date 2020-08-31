@@ -3,13 +3,14 @@ import TableContainer from '@material-ui/core/TableContainer'
 import TableRow from '@material-ui/core/TableRow'
 import { withStyles } from '@material-ui/core/styles'
 import cn from 'classnames'
+import classNames from 'classnames/bind'
 import React, { useState } from 'react'
 import { useSelector } from 'react-redux'
-
+import AddIcon from '@material-ui/icons/Add'
 import RemoveOwnerIcon from '../assets/icons/bin.svg'
 
 import OwnerAddressTableCell from './OwnerAddressTableCell'
-// import AddOwnerModal from './AddOwnerModal'
+import AddOwnerModal from './AddOwnerModal'
 // import EditOwnerModal from './EditOwnerModal'
 // import RemoveOwnerModal from './RemoveOwnerModal'
 // import ReplaceOwnerModal from './ReplaceOwnerModal'
@@ -31,27 +32,37 @@ import Paragraph from '@components/core/Paragraph/index'
 import Row from '@components/core/Row'
 
 const ManageOwners = ({ classes, granted }) => {
-  // const [selectedOwnerAddress, setSelectedOwnerAddress] = useState(undefined)
-  // const [selectedOwnerName, setSelectedOwnerName] = useState(undefined)
-  // const [showAddOwner, setShowAddOwner] = useState(false)
-  // const [showRemoveOwner, setShowRemoveOwner] = useState(false)
-  // const [showReplaceOwner, setShowReplaceOwner] = useState(false)
-  // const [showEditOwner, setShowEditOwner] = useState(false)
+  const [selectedOwnerAddress, setSelectedOwnerAddress] = useState(undefined)
+  const [selectedOwnerName, setSelectedOwnerName] = useState(undefined)
+  const [showAddOwner, setShowAddOwner] = useState(false)
+  const [showRemoveOwner, setShowRemoveOwner] = useState(false)
+  const [showReplaceOwner, setShowReplaceOwner] = useState(false)
+  const [showEditOwner, setShowEditOwner] = useState(false)
 
   const onShow = (action, row) => {
-    // setState({
-    //   [`show${action}`]: true,
-    //   selectedOwnerAddress: row && row.address,
-    //   selectedOwnerName: row && row.name
-    // })
+    console.log('onShow ', action, row)
+    setSelectedOwnerAddress(row && row.address)
+    setSelectedOwnerName(row && row.name)
+
+    switch (action) {
+      case 'AddOwner': setShowAddOwner(true); break
+      case 'RemoveOwner': setShowRemoveOwner(true); break
+      case 'ReplaceOwner': setShowReplaceOwner(true); break
+      case 'EditOwner': setShowEditOwner(true); break
+    }
   }
 
   const onHide = (action) => {
-    // setState({
-    //   [`show${action}`]: false,
-    //   selectedOwnerAddress: undefined,
-    //   selectedOwnerName: undefined
-    // })
+    console.log('onHide ', action)
+    setSelectedOwnerAddress(undefined)
+    setSelectedOwnerName(undefined)
+
+    switch (action) {
+      case 'AddOwner': setShowAddOwner(false); break
+      case 'RemoveOwner': setShowRemoveOwner(false); break
+      case 'ReplaceOwner': setShowReplaceOwner(false); break
+      case 'EditOwner': setShowEditOwner(false); break
+    }
   }
 
   const columns = generateColumns()
@@ -101,7 +112,7 @@ const ManageOwners = ({ classes, granted }) => {
                       <Img
                         alt='Edit owner'
                         className={classes.editOwnerIcon}
-                        onClick={onShow('EditOwner', row)}
+                        onClick={() => onShow('EditOwner', row)}
                         src={RenameOwnerIcon}
                       />
                       {granted && (
@@ -109,14 +120,14 @@ const ManageOwners = ({ classes, granted }) => {
                           <Img
                             alt='Replace owner'
                             className={classes.replaceOwnerIcon}
-                            onClick={onShow('ReplaceOwner', row)}
+                            onClick={() => onShow('ReplaceOwner', row)}
                             src={ReplaceOwnerIcon}
                           />
                           {ownerData.size > 1 && (
                             <Img
                               alt='Remove owner'
                               className={classes.removeOwnerIcon}
-                              onClick={onShow('RemoveOwner', row)}
+                              onClick={() => onShow('RemoveOwner', row)}
                               src={RemoveOwnerIcon}
                             />
                           )}
@@ -136,32 +147,37 @@ const ManageOwners = ({ classes, granted }) => {
             <Col end='xs'>
               <Button
                 color='primary'
-                onClick={onShow('AddOwner')}
+                onClick={() => onShow('AddOwner')}
                 size='small'
                 variant='contained'
               >
-                Add new owner
+                <AddIcon
+                  alt='Add token'
+                  className={classNames(classes.leftIcon, classes.iconSmall)}
+                  component={undefined}
+                />
+                Add owner
               </Button>
             </Col>
           </Row>
         </>
       )}
-      {/* <AddOwnerModal isOpen={showAddOwner} onClose={onHide('AddOwner')} />
-        <RemoveOwnerModal
+      <AddOwnerModal isOpen={showAddOwner} onClose={() => onHide('AddOwner')} />
+      {/* <RemoveOwnerModal
           isOpen={showRemoveOwner}
-          onClose={onHide('RemoveOwner')}
+          onClose={() => onHide('RemoveOwner')}
           ownerAddress={selectedOwnerAddress}
           ownerName={selectedOwnerName}
         />
         <ReplaceOwnerModal
           isOpen={showReplaceOwner}
-          onClose={onHide('ReplaceOwner')}
+          onClose={() => onHide('ReplaceOwner')}
           ownerAddress={selectedOwnerAddress}
           ownerName={selectedOwnerName}
         />
         <EditOwnerModal
           isOpen={showEditOwner}
-          onClose={onHide('EditOwner')}
+          onClose={() => onHide('EditOwner')}
           ownerAddress={selectedOwnerAddress}
           selectedOwnerName={selectedOwnerName}
         /> */}

@@ -17,13 +17,14 @@ import Paragraph from '@components/core/Paragraph'
 import Row from '@components/core/Row'
 import Link from '@components/core/Link'
 import ArrowRightIcon from '@material-ui/icons/ArrowRight'
+import SaveIcon from '@material-ui/icons/Save'
 
 const useStyles = makeStyles(styles)
 
 const SafeDetails = (props) => {
   const classes = useStyles()
   // const latestMasterContractVersion = useSelector(latestMasterContractVersionSelector)
-  const safeName = 'ICONSafe' // useSelector(safeNameSelector)
+  const safeName = useSelector((state) => state.safeName)
   // const safeNeedsUpdate = useSelector(safeNeedsUpdateSelector)
   const contractVersion = useSelector((state) => state.contractVersion)
 
@@ -77,7 +78,7 @@ const SafeDetails = (props) => {
                   type='submit'
                   variant='contained'
                 >
-                  Save
+                  <SaveIcon /> &nbsp; Save
                 </Button>
               </Col>
             </Row>

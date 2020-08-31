@@ -25,7 +25,7 @@ import { getTokenIcon } from '@components/TokenIcon'
 
 import classNames from 'classnames/bind'
 import { getMultiSigWalletAPI } from '@src/utils/msw'
-import { getSafeAddress } from '@src/utils/route'
+import { getSafeAddressFromUrl } from '@src/utils/route'
 
 const cx = classNames.bind(styles)
 
@@ -41,7 +41,7 @@ const AddCustomToken = ({
 }) => {
   const [formValues, setFormValues] = useState(INITIAL_FORM_STATE)
   const [tokenLogo, setTokenLogo] = useState('GENERIC_TOKEN')
-  const msw = getMultiSigWalletAPI(getSafeAddress())
+  const msw = getMultiSigWalletAPI(getSafeAddressFromUrl())
   const dispatch = useDispatch()
 
   const handleSubmit = (values, msw) => {
@@ -182,7 +182,7 @@ const AddCustomToken = ({
                   Cancel
                 </Button>
                 <Button color='primary' minHeight={42} minWidth={140} type='submit' variant='contained'>
-                  Save
+                  Add token
                 </Button>
               </Row>
             </>

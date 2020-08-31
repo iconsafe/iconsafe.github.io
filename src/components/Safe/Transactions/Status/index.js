@@ -4,6 +4,7 @@ import * as React from 'react'
 
 import AwaitingIcon from './assets/awaiting.svg'
 import ErrorIcon from './assets/error.svg'
+import RejectedIcon from './assets/rejected.svg'
 import OkIcon from './assets/ok.svg'
 import { styles } from './style'
 
@@ -13,7 +14,7 @@ import Paragraph from '@components/core/Paragraph/'
 
 const statusToIcon = {
   EXECUTED: OkIcon,
-  cancelled: ErrorIcon,
+  REJECTED: RejectedIcon,
   FAILED: ErrorIcon,
   awaiting_your_confirmation: AwaitingIcon,
   awaiting_confirmations: AwaitingIcon,
@@ -23,7 +24,7 @@ const statusToIcon = {
 
 const statusToLabel = {
   EXECUTED: 'Success',
-  cancelled: 'Cancelled',
+  REJECTED: 'Rejected',
   FAILED: 'Failed',
   awaiting_your_confirmation: 'Awaiting your confirmation',
   awaiting_confirmations: 'Awaiting confirmations',

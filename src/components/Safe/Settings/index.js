@@ -6,11 +6,11 @@ import React, { useState } from 'react'
 import { useSelector } from 'react-redux'
 
 // import Advanced from './Advanced'
-// import ThresholdSettings from './ThresholdSettings'
 // import { RemoveSafeModal } from './RemoveSafeModal'
+// import RemoveSafeIcon from './assets/icons/bin.svg'
 import ManageOwners from './ManageOwners'
 import SafeDetails from './SafeDetails'
-import RemoveSafeIcon from './assets/icons/bin.svg'
+import ThresholdSettings from './ThresholdSettings'
 import { styles } from './style'
 
 // import Loader from '@components/Loader'
@@ -79,7 +79,7 @@ const Settings = () => {
                 color={menuOptionIndex === 2 ? 'primary' : 'secondary'}
               />
               <Paragraph className={classes.counter} size='xs'>
-                {owners.size}
+                {owners.length}
               </Paragraph>
             </Row>
             <Hairline className={classes.hairline} />
@@ -93,7 +93,7 @@ const Settings = () => {
               />
             </Row>
             <Hairline className={classes.hairline} />
-            <Row className={cn(classes.menuOption, menuOptionIndex === 4 && classes.active)} onClick={handleChange(4)}>
+            {/* <Row className={cn(classes.menuOption, menuOptionIndex === 4 && classes.active)} onClick={handleChange(4)}>
               <IconText
                 iconSize='sm'
                 textSize='xl'
@@ -102,17 +102,15 @@ const Settings = () => {
                 color={menuOptionIndex === 4 ? 'primary' : 'secondary'}
               />
             </Row>
-            <Hairline className={classes.hairline} />
+            <Hairline className={classes.hairline} /> */}
           </Block>
         </Col>
         <Col className={classes.contents} layout='column'>
           <Block className={classes.container}>
             {menuOptionIndex === 1 && <SafeDetails />}
             {menuOptionIndex === 2 && <ManageOwners granted={granted} owners={owners} />}
-            {/*
             {menuOptionIndex === 3 && <ThresholdSettings />}
-            {menuOptionIndex === 4 && <Advanced />}
-             */}
+            {/* {menuOptionIndex === 4 && <Advanced />} */}
           </Block>
         </Col>
       </Block>

@@ -1,6 +1,6 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useSelector } from 'react-redux'
-import { getSafeAddress } from '@src/utils/route'
+import { getSafeAddressFromUrl } from '@src/utils/route'
 import { isWalletOwner } from '@src/utils/msw'
 import { styles } from './style'
 import { makeStyles } from '@material-ui/core/styles'
@@ -15,87 +15,119 @@ import Paragraph from '@components/core/Paragraph'
 import CopyBtn from '@components/core/CopyBtn'
 import IconTrackerBtn from '@components/core/IconTrackerBtn'
 import Button from '@components/core/Button'
+import Modal from '@components/Modal'
+import Receive from '@components/Safe/Assets/Receive'
+import { GenericModal } from '@components/ICON'
 
 const useStyles = makeStyles(styles)
 
 const SafeHeader = () => {
   const walletConnected = useSelector((state) => state.walletConnected)
   const walletOwners = useSelector((state) => state.walletOwners)
+  const safeName = useSelector((state) => state.safeName)
+  const classes = useStyles(styles)
+  const address = getSafeAddressFromUrl()
+  const granted = isWalletOwner(walletConnected, walletOwners)
+  const [showReceive, setShowReceive] = useState(false)
+  const [modal, setModal] = useState({
+    isOpen: false,
+    title: '',
+    body: null,
+    footer: null,
+    onClose: null
+  })
 
-  const getSafeName = () => {
-    return 'ICONSafe'
+  const closeGenericModal = () => {
+    modal.onClose && modal.onClose()
+    setModal({
+      isOpen: false,
+      title: null,
+      body: null,
+      footer: null,
+      onClose: null
+    })
   }
 
-  const classes = useStyles(styles)
-
-  const address = getSafeAddress()
-  const granted = isWalletOwner(walletConnected, walletOwners)
-  const name = getSafeName()
-
   const onSendFunds = () => { }
-  const onReceiveFunds = () => { }
+  const onReceiveFunds = () => {
+    setShowReceive(true)
+  }
 
   return (
-    <Block className={classes.container} margin='xl'>
-      <Row className={classes.userInfo}>
-        <Identicon address={address} diameter={50} />
-        <Block className={classes.name}>
-          <Row>
-            <Heading className={classes.nameText} color='primary' tag='h2'>
-              {name}
-            </Heading>
-            {!granted && <Block className={classes.readonly}>Read Only</Block>}
-          </Row>
-          <Block className={classes.user} justify='center'>
-            <Paragraph
-              className={classes.address}
-              color='disabled'
-              noMargin
-              size='md'
-              data-testid='safe-address-heading'
-            >
-              {address}
-            </Paragraph>
-            <CopyBtn content={address} />
-            <IconTrackerBtn value={address} />
+    <>
+      <Block className={classes.container} margin='xl'>
+        <Row className={classes.userInfo}>
+          <Identicon address={address} diameter={50} />
+          <Block className={classes.name}>
+            <Row>
+              <Heading className={classes.nameText} color='primary' tag='h2'>
+                {safeName}
+              </Heading>
+              {!granted && <Block className={classes.readonly}>Read Only</Block>}
+            </Row>
+            <Block className={classes.user} justify='center'>
+              <Paragraph
+                className={classes.address}
+                color='disabled'
+                noMargin
+                size='md'
+                data-testid='safe-address-heading'
+              >
+                {address}
+              </Paragraph>
+              <CopyBtn content={address} />
+              <IconTrackerBtn value={address} />
+            </Block>
           </Block>
-        </Block>
-      </Row>
+        </Row>
 
-      <Block className={classes.balance}>
-        <Button
-          className={classes.send}
-          color='primary'
-          disabled={!granted}
-          onClick={() => onSendFunds()}
-          size='small'
-          variant='contained'
-          testId='main-send-btn'
-        >
-          <CallMade
-            alt='Send Transaction'
-            className={classNames(classes.leftIcon, classes.iconSmall)}
-            component={undefined}
-          />
+        <Block className={classes.balance}>
+          <Button
+            className={classes.send}
+            color='primary'
+            disabled={!granted}
+            onClick={() => onSendFunds()}
+            size='small'
+            variant='contained'
+            testId='main-send-btn'
+          >
+            <CallMade
+              alt='Send Transaction'
+              className={classNames(classes.leftIcon, classes.iconSmall)}
+              component={undefined}
+            />
           Send
-        </Button>
-        <Button
-          className={classes.receive}
-          color='primary'
-          onClick={onReceiveFunds()}
-          size='small'
-          variant='contained'
-        >
-          <CallReceived
-            alt='Receive Transaction'
-            className={classNames(classes.leftIcon, classes.iconSmall)}
-            component={undefined}
-          />
+          </Button>
+          <Button
+            className={classes.receive}
+            color='primary'
+            onClick={() => onReceiveFunds()}
+            size='small'
+            variant='contained'
+          >
+            <CallReceived
+              alt='Receive Transaction'
+              className={classNames(classes.leftIcon, classes.iconSmall)}
+              component={undefined}
+            />
           Receive
-        </Button>
+          </Button>
+        </Block>
+
       </Block>
 
-    </Block>
+      <Modal
+        description='Receive Tokens Form'
+        handleClose={() => setShowReceive(false)}
+        open={showReceive}
+        paperClassName={classes.receiveModal}
+        title='Receive Tokens'
+      >
+        <Receive onClose={() => setShowReceive(false)} />
+      </Modal>
+
+      {modal.isOpen && <GenericModal {...modal} onClose={closeGenericModal} />}
+    </>
   )
 }
 

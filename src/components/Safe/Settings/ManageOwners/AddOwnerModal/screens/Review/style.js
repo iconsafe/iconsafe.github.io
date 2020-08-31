@@ -1,83 +1,83 @@
-import { background, border, lg, secondaryText, sm } from 'src/theme/variables'
+import { background, border, lg, secondaryText, sm } from '@src/theme/variables'
 
 export const styles = () => ({
   root: {
-    height: '372px',
+    height: '372px'
   },
   heading: {
     padding: `${sm} ${lg}`,
     justifyContent: 'flex-start',
     boxSizing: 'border-box',
-    maxHeight: '75px',
+    maxHeight: '75px'
   },
   annotation: {
     color: secondaryText,
     marginRight: 'auto',
     marginLeft: '20px',
-    lineHeight: 'normal',
+    lineHeight: 'normal'
   },
   manage: {
-    fontSize: lg,
+    fontSize: lg
   },
   closeIcon: {
     height: '35px',
-    width: '35px',
+    width: '35px'
   },
   info: {
     backgroundColor: background,
     padding: sm,
     justifyContent: 'center',
     textAlign: 'center',
-    flexDirection: 'column',
+    flexDirection: 'column'
   },
   buttonRow: {
     height: '84px',
-    justifyContent: 'center',
+    justifyContent: 'center'
   },
   details: {
     padding: lg,
     borderRight: `solid 2px ${border}`,
-    height: '100%',
+    height: '100%'
   },
   owners: {
     overflow: 'auto',
-    height: '100%',
+    height: '100%'
   },
   ownersTitle: {
-    padding: lg,
+    padding: lg
   },
   address: {
-    marginRight: sm,
+    marginRight: sm
   },
   owner: {
     padding: sm,
-    alignItems: 'center',
+    alignItems: 'center'
   },
   name: {
     textOverflow: 'ellipsis',
-    overflow: 'hidden',
+    overflow: 'hidden'
   },
   userName: {
-    whiteSpace: 'nowrap',
+    whiteSpace: 'nowrap'
   },
   selectedOwner: {
     padding: sm,
     alignItems: 'center',
-    backgroundColor: '#fff3e2',
+    backgroundColor: '#fff3e2'
   },
   user: {
-    justifyContent: 'left',
+    justifyContent: 'left'
   },
   open: {
     paddingLeft: sm,
     width: 'auto',
     '&:hover': {
-      cursor: 'pointer',
-    },
+      cursor: 'pointer'
+    }
   },
   gasCostsContainer: {
     padding: `0 ${lg}`,
     textAlign: 'center',
-    width: '100%',
-  },
+    width: '100%'
+  }
 })

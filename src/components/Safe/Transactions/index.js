@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import { useSelector } from 'react-redux'
 import styles from './index.module'
 import Table from './Table'
 import {
@@ -12,11 +13,10 @@ import { getSymbolAndDecimalsFromContract } from '@src/utils/ancilia'
 import { getTransactionState, getMultiSigWalletAPI } from '@src/utils/msw'
 
 import { IconConverter } from 'icon-sdk-js'
-import { getSafeAddress } from '@src/utils/route'
 
 const Transactions = () => {
   const [transactions, setTransactions] = useState(null)
-  const safeAddress = getSafeAddress()
+  const safeAddress = useSelector((state) => state.safeAddress)
   const msw = getMultiSigWalletAPI(safeAddress)
 
   useEffect(() => {
@@ -106,12 +106,18 @@ const Transactions = () => {
               return { symbol: symbol, decimals: v[0].decimals, transfers: v }
             })
 
+            // Self operations
+            const safeOperations = transaction.sub_transactions.filter(subtx => {
+              return subtx.destination === safeAddress
+            })
+
             return {
               uid: transaction.uid,
               type: transaction.type,
               created_txhash: transaction.created_txhash,
               executed_txhash: transaction.executed_txhash,
               tokens: tokensArray,
+              safeOperations: safeOperations,
               subTx: transaction.sub_transactions,
               confirmations: transaction.confirmations,
               rejections: transaction.rejections,

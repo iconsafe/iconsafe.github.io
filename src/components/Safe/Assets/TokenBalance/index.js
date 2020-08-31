@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react'
 import { styles } from './style'
 import Block from '@components/core/Block'
 import Chart from 'react-google-charts'
-import { getSafeAddress } from '@src/utils/route'
+import { getSafeAddressFromUrl } from '@src/utils/route'
 import { getMultiSigWalletAPI } from '@src/utils/msw'
 import { convertTsToDate, getTokenDecimals, displayUnit } from '@src/utils/icon'
 
@@ -12,7 +12,7 @@ const useStyles = makeStyles(styles)
 const TokenBalance = ({ token }) => {
   const classes = useStyles()
   const [data, setData] = useState(null)
-  const safeAddress = getSafeAddress()
+  const safeAddress = getSafeAddressFromUrl()
   const msw = getMultiSigWalletAPI(safeAddress)
 
   useEffect(() => {

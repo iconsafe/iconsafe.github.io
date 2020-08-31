@@ -17,10 +17,9 @@ export const styles = () => ({
     backgroundColor: '#A1D2CA',
     color: secondary
   },
-  cancelled: {
-    backgroundColor: 'transparent',
-    color: error,
-    border: `1px solid ${error}`
+  REJECTED: {
+    backgroundColor: '#FFD2D2',
+    color: '#D8000C'
   },
   FAILED: {
     backgroundColor: '#FFD2D2',

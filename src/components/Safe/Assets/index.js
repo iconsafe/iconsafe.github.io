@@ -7,7 +7,7 @@ import AddCustomToken from './AddCustomToken'
 import { isWalletOwner, getMultiSigWalletAPI } from '@src/utils/msw'
 import { makeStyles } from '@material-ui/core/styles'
 import Dialog from '@material-ui/core/Dialog'
-import { getSafeAddress } from '@src/utils/route'
+import { getSafeAddressFromUrl } from '@src/utils/route'
 import Button from '@components/core/Button'
 import classNames from 'classnames/bind'
 import AddIcon from '@material-ui/icons/Add'
@@ -15,7 +15,7 @@ import AddIcon from '@material-ui/icons/Add'
 const useStyles = makeStyles(styles)
 
 const Assets = () => {
-  const msw = getMultiSigWalletAPI(getSafeAddress())
+  const msw = getMultiSigWalletAPI(getSafeAddressFromUrl())
   const classes = useStyles(styles)
 
   const walletConnected = useSelector((state) => state.walletConnected)

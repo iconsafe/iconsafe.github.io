@@ -1,40 +1,40 @@
 import { createStyles } from '@material-ui/core'
-import { background, border, error, fontColor, lg, md, secondaryText, sm, smallFontSize, xl } from 'src/theme/variables'
+import { background, border, error, fontColor, lg, md, secondaryText, sm, smallFontSize, xl } from '@src/theme/variables'
 
 export const styles = createStyles({
   title: {
     padding: lg,
-    paddingBottom: 0,
+    paddingBottom: 0
   },
   hide: {
     '&:hover': {
-      backgroundColor: '#fff3e2',
+      backgroundColor: '#fff3e2'
     },
     '&:hover $actions': {
-      visibility: 'initial',
-    },
+      visibility: 'initial'
+    }
   },
   actions: {
     justifyContent: 'flex-end',
     visibility: 'hidden',
-    minWidth: '100px',
+    minWidth: '100px'
   },
   noBorderBottom: {
     '& > td': {
-      borderBottom: 'none',
-    },
+      borderBottom: 'none'
+    }
   },
   annotation: {
-    paddingLeft: lg,
+    paddingLeft: lg
   },
   ownersText: {
     color: secondaryText,
     '& b': {
-      color: fontColor,
-    },
+      color: fontColor
+    }
   },
   container: {
-    padding: lg,
+    padding: lg
   },
   buttonRow: {
     padding: lg,
@@ -44,69 +44,69 @@ export const styles = createStyles({
     boxSizing: 'border-box',
     width: '100%',
     justifyContent: 'flex-end',
-    borderTop: `2px solid ${border}`,
+    borderTop: `2px solid ${border}`
   },
   modifyBtn: {
     height: xl,
-    fontSize: smallFontSize,
+    fontSize: smallFontSize
   },
   removeModuleIcon: {
     marginLeft: lg,
-    cursor: 'pointer',
+    cursor: 'pointer'
   },
   modalHeading: {
     boxSizing: 'border-box',
     justifyContent: 'space-between',
     maxHeight: '75px',
-    padding: `${sm} ${lg}`,
+    padding: `${sm} ${lg}`
   },
   modalContainer: {
-    minHeight: '369px',
+    minHeight: '369px'
   },
   modalManage: {
-    fontSize: lg,
+    fontSize: lg
   },
   modalClose: {
     height: '35px',
-    width: '35px',
+    width: '35px'
   },
   modalButtonRow: {
     height: '84px',
-    justifyContent: 'center',
+    justifyContent: 'center'
   },
   modalButtonRemove: {
     color: '#fff',
     backgroundColor: error,
-    height: '42px',
+    height: '42px'
   },
   modalName: {
     textOverflow: 'ellipsis',
-    overflow: 'hidden',
+    overflow: 'hidden'
   },
   modalUserName: {
-    whiteSpace: 'nowrap',
+    whiteSpace: 'nowrap'
   },
   modalOwner: {
     backgroundColor: background,
     padding: md,
-    alignItems: 'center',
+    alignItems: 'center'
   },
   modalUser: {
-    justifyContent: 'left',
+    justifyContent: 'left'
   },
   modalDescription: {
-    padding: md,
+    padding: md
   },
   modalOpen: {
     paddingLeft: sm,
     width: 'auto',
     '&:hover': {
-      cursor: 'pointer',
-    },
+      cursor: 'pointer'
+    }
   },
   modal: {
     height: 'auto',
     maxWidth: 'calc(100% - 30px)',
-    overflow: 'hidden',
-  },
+    overflow: 'hidden'
+  }
 })

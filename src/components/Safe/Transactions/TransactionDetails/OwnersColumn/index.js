@@ -36,99 +36,106 @@ const OwnersColumn = ({ tx }) => {
     .filter(owner => !tx.rejections.includes(owner.uid))
     .map(owner => owner.uid)
 
+  const getConfirmedThread = () => {
+    return (
+      <>
+        <Block className={cn(classes.ownerListTitle, classes.ownerListTitleGreen)}>
+          <div className={classes.circleState}>
+            <Img
+              alt=''
+              src={thresholdConfirmationsReached || tx.status === 'EXECUTED' ? CheckLargeFilledGreenCircle : ConfirmLargeGreenCircle}
+            />
+          </div>
+          {tx.status === 'EXECUTED'
+            ? `Confirmed [${tx.confirmations.length}/${tx.confirmations.length}]`
+            : `Confirmed [${tx.confirmations.length}/${threshold}]`}
+        </Block>
+        <OwnersList
+          tx={tx}
+          arrayOwners={tx.confirmations}
+          threshold={threshold}
+          thresholdReached={thresholdReached}
+        />
+      </>
+    )
+  }
+
+  const getRejectedThread = () => {
+    return (
+      <>
+        <Block className={cn(classes.ownerListTitle, classes.ownerListTitleRed)}>
+          <div className={cn(classes.verticalLine, tx.status === 'EXECUTED' ? classes.verticalLineGreen : classes.verticalLinePending)} />
+          <div className={classes.circleState}>
+            <Img
+              alt=''
+              src={thresholdRejectionsReached ? CheckLargeFilledRedCircle : ConfirmLargeRedCircle}
+            />
+          </div>
+          {thresholdRejectionsReached
+            ? `Rejected [${tx.rejections.length}/${tx.rejections.length}]`
+            : `Rejected [${tx.rejections.length}/${threshold}]`}
+        </Block>
+        <OwnersList
+          tx={tx}
+          arrayOwners={tx.rejections}
+          isCancelTx
+          threshold={threshold}
+          thresholdReached={thresholdReached}
+        />
+      </>
+    )
+  }
+
+  const getWaitingThread = () => {
+    return (
+      <>
+        <Block className={cn(classes.ownerListTitle)}>
+          <div className={cn(classes.verticalLine, tx.status === 'EXECUTED' ? classes.verticalLineGreen : classes.verticalLinePending)} />
+          <div className={classes.circleState}>
+            <Img
+              alt=''
+              src={ConfirmLargeGreyCircle}
+            />
+          </div>
+          {`Unconfirmed [${unconfirmed.length}]`}
+        </Block>
+        <OwnersList
+          tx={tx}
+          isUnconfirmed
+          arrayOwners={unconfirmed}
+          threshold={threshold}
+          thresholdReached={thresholdReached}
+        />
+      </>
+    )
+  }
+
   return (
     <Col className={classes.rightCol} layout='block' xs={6}>
 
-      {/* Confirmed Thread */}
-      <Block
-        className={cn(classes.ownerListTitle, classes.ownerListTitleDone)}
-      >
-        <div className={classes.circleState}>
-          <Img
-            alt=''
-            src={thresholdConfirmationsReached || tx.status === 'EXECUTED' ? CheckLargeFilledGreenCircle : ConfirmLargeGreenCircle}
-          />
-        </div>
-        {tx.status === 'EXECUTED'
-          ? `Confirmed [${tx.confirmations.length}/${tx.confirmations.length}]`
-          : `Confirmed [${tx.confirmations.length}/${threshold}]`}
-      </Block>
-      <OwnersList
-        tx={tx}
-        arrayOwners={tx.confirmations}
-        threshold={threshold}
-        thresholdReached={thresholdReached}
-      />
-
-      {/* Rejected Thread */}
-      <Block
-        className={cn(
-          classes.ownerListTitle,
-          classes.ownerListTitleCancelDone
-        )}
-      >
-        <div
-          className={cn(classes.verticalLine, tx.status === 'EXECUTED' ? classes.verticalLineDone : classes.verticalLinePending)}
-        />
-        <div className={classes.circleState}>
-          <Img
-            alt=''
-            src={thresholdRejectionsReached ? CheckLargeFilledRedCircle : ConfirmLargeRedCircle}
-          />
-        </div>
-        {thresholdRejectionsReached
-          ? `Rejected [${tx.rejections.length}/${tx.rejections.length}]`
-          : `Rejected [${tx.rejections.length}/${threshold}]`}
-      </Block>
-      <OwnersList
-        tx={tx}
-        arrayOwners={tx.rejections}
-        isCancelTx
-        threshold={threshold}
-        thresholdReached={thresholdReached}
-      />
+      {/* Set the confirmed at the bottom */}
+      {getConfirmedThread()}
+      {getRejectedThread()}
 
       {/* Waiting Thread */}
       {!thresholdReached &&
-        <>
-          <Block
-            className={cn(
-              classes.ownerListTitle
-            )}
-          >
-            <div
-              className={cn(classes.verticalLine, tx.status === 'EXECUTED' ? classes.verticalLineDone : classes.verticalLinePending)}
-            />
-            <div className={classes.circleState}>
-              <Img
-                alt=''
-                src={ConfirmLargeGreyCircle}
-              />
-            </div>
-            {`Unconfirmed [${unconfirmed.length}]`}
-          </Block>
-          <OwnersList
-            tx={tx}
-            isUnconfirmed
-            arrayOwners={unconfirmed}
-            threshold={threshold}
-            thresholdReached={thresholdReached}
-          />
-        </>}
+        getWaitingThread()}
 
       {/* Status Thread */}
       <Block
         className={cn(
           classes.ownerListTitle,
-          tx.status === 'EXECUTED' && classes.ownerListTitleDone,
-          tx.status === 'FAILED' && classes.ownerListTitleCancelDone
+          tx.status === 'EXECUTED' && classes.ownerListTitleGreen,
+          tx.status === 'REJECTED' && classes.ownerListTitleRed,
+          tx.status === 'FAILED' && classes.ownerListTitleRed
         )}
       >
         <div
           className={cn(
             classes.verticalLine,
-            tx.status === 'EXECUTED' && classes.verticalLineDone,
-            tx.status === 'FAILED' && classes.verticalLineCancel
+            tx.status === 'EXECUTED' && classes.verticalLineGreen,
+            tx.status === 'FAILED' && classes.verticalLineRed,
+            tx.status === 'REJECTED' && classes.verticalLineRed
           )}
         />
         <div className={classes.circleState}>

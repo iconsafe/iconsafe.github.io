@@ -24,6 +24,8 @@ export const getTransactionState = (transaction) => {
           return 'EXECUTED'
         case 'FAILED':
           return 'FAILED'
+        case 'REJECTED':
+          return 'REJECTED'
         case 'WAITING':
           return 'WAITING'
         default:

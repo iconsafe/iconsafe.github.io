@@ -7,26 +7,26 @@ import { useDispatch, useSelector } from 'react-redux'
 
 import { styles } from './style'
 
-import CopyBtn from 'src/components/CopyBtn'
-import EtherscanBtn from 'src/components/EtherscanBtn'
-import Identicon from 'src/components/Identicon'
-import Modal from 'src/components/Modal'
-import Field from 'src/components/forms/Field'
-import GnoForm from 'src/components/forms/GnoForm'
-import TextField from 'src/components/forms/TextField'
-import { composeValidators, minMaxLength, required } from 'src/components/forms/validator'
-import Block from 'src/components/layout/Block'
-import Button from 'src/components/layout/Button'
-import Hairline from 'src/components/layout/Hairline'
-import Paragraph from 'src/components/layout/Paragraph'
-import Row from 'src/components/layout/Row'
+import CopyBtn from '@src/components/CopyBtn'
+import IconTrackerBtn from '@src/components/core/IconTrackerBtn'
+import Identicon from '@src/components/core/Identicon'
+import Modal from '@src/components/Modal'
+import Field from '@src/components/core/Field'
+import GnoForm from '@src/components/core/GnoForm'
+import TextField from '@src/components/core/TextField'
+import { composeValidators, minMaxLength, required } from '@src/components/core/validator'
+import Block from '@src/components/core/Block'
+import Button from '@src/components/core/Button'
+import Hairline from '@src/components/core/Hairline'
+import Paragraph from '@src/components/core/Paragraph'
+import Row from '@src/components/core/Row'
 import { makeAddressBookEntry } from 'src/logic/addressBook/model/addressBook'
 import { updateAddressBookEntry } from 'src/logic/addressBook/store/actions/updateAddressBookEntry'
 import { getNotificationsFromTxType, showSnackbar } from 'src/logic/notifications'
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
 import editSafeOwner from 'src/logic/safe/store/actions/editSafeOwner'
-import { safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
-import { sm } from 'src/theme/variables'
+import { (state) => state.safeAddress } from 'src/logic/safe/store/selectors'
+import { sm } from '@src/theme/variables'
 
 export const RENAME_OWNER_INPUT_TEST_ID = 'rename-owner-input'
 export const SAVE_OWNER_CHANGES_BTN_TEST_ID = 'save-owner-changes-btn'
@@ -41,7 +41,7 @@ const EditOwnerComponent = ({
   selectedOwnerName,
 }) => {
   const dispatch = useDispatch()
-  const safeAddress = useSelector(safeParamAddressFromStateSelector)
+  const safeAddress = useSelector((state) => state.safeAddress)
   const handleSubmit = (values) => {
     const { ownerName } = values
     dispatch(editSafeOwner({ safeAddress, ownerAddress, ownerName }))
@@ -93,7 +93,7 @@ const EditOwnerComponent = ({
                     {ownerAddress}
                   </Paragraph>
                   <CopyBtn content={safeAddress} />
-                  <EtherscanBtn type="address" value={safeAddress} />
+                  <IconTrackerBtn type="address" value={safeAddress} />
                 </Block>
               </Row>
             </Block>

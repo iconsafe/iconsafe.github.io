@@ -7,23 +7,23 @@ import { useSelector } from 'react-redux'
 
 import { styles } from './style'
 
-import CopyBtn from 'src/components/CopyBtn'
-import EtherscanBtn from 'src/components/EtherscanBtn'
-import Identicon from 'src/components/Identicon'
-import Block from 'src/components/layout/Block'
-import Button from 'src/components/layout/Button'
-import Col from 'src/components/layout/Col'
-import Hairline from 'src/components/layout/Hairline'
-import Paragraph from 'src/components/layout/Paragraph'
-import Row from 'src/components/layout/Row'
+import CopyBtn from '@src/components/CopyBtn'
+import IconTrackerBtn from '@src/components/core/IconTrackerBtn'
+import Identicon from '@src/components/core/Identicon'
+import Block from '@src/components/core/Block'
+import Button from '@src/components/core/Button'
+import Col from '@src/components/core/Col'
+import Hairline from '@src/components/core/Hairline'
+import Paragraph from '@src/components/core/Paragraph'
+import Row from '@src/components/core/Row'
 import { SENTINEL_ADDRESS, getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
 import { estimateTxGasCosts } from 'src/logic/safe/transactions/gasNew'
 import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
 import { getWeb3 } from 'src/logic/wallets/getWeb3'
 import {
-  safeNameSelector,
-  safeOwnersSelector,
-  safeParamAddressFromStateSelector,
+  (state) => state.safeName,
+  (state) => state.walletOwners,
+  (state) => state.safeAddress,
   safeThresholdSelector,
 } from 'src/logic/safe/store/selectors'
 
@@ -31,10 +31,10 @@ export const REPLACE_OWNER_SUBMIT_BTN_TEST_ID = 'replace-owner-submit-btn'
 
 const ReviewRemoveOwner = ({ classes, onClickBack, onClose, onSubmit, ownerAddress, ownerName, values }) => {
   const [gasCosts, setGasCosts] = useState('< 0.001')
-  const safeAddress = useSelector(safeParamAddressFromStateSelector)
-  const safeName = useSelector(safeNameSelector)
-  const owners = useSelector(safeOwnersSelector)
-  const threshold = useSelector(safeThresholdSelector)
+  const safeAddress = useSelector((state) => state.safeAddress)
+  const safeName = useSelector((state) => state.safeName)
+  const owners = useSelector((state) => state.walletOwners)
+  const threshold = useSelector((state) => state.walletOwnersRequired)
 
   useEffect(() => {
     let isCurrent = true
@@ -94,7 +94,7 @@ const ReviewRemoveOwner = ({ classes, onClickBack, onClose, onSubmit, ownerAddre
                   Any transaction requires the confirmation of:
                 </Paragraph>
                 <Paragraph className={classes.name} color="primary" noMargin size="lg" weight="bolder">
-                  {`${threshold} out of ${owners.size} owner(s)`}
+                  {`${threshold} out of ${owners.length} owner(s)`}
                 </Paragraph>
               </Block>
             </Block>
@@ -102,7 +102,7 @@ const ReviewRemoveOwner = ({ classes, onClickBack, onClose, onSubmit, ownerAddre
           <Col className={classes.owners} layout="column" xs={8}>
             <Row className={classes.ownersTitle}>
               <Paragraph color="primary" noMargin size="lg">
-                {`${owners.size} Safe owner(s)`}
+                {`${owners.length} Safe owner(s)`}
               </Paragraph>
             </Row>
             <Hairline />
@@ -124,7 +124,7 @@ const ReviewRemoveOwner = ({ classes, onClickBack, onClose, onSubmit, ownerAddre
                               {owner.address}
                             </Paragraph>
                             <CopyBtn content={owner.address} />
-                            <EtherscanBtn type="address" value={owner.address} />
+                            <IconTrackerBtn type="address" value={owner.address} />
                           </Block>
                         </Block>
                       </Col>
@@ -153,7 +153,7 @@ const ReviewRemoveOwner = ({ classes, onClickBack, onClose, onSubmit, ownerAddre
                       {ownerAddress}
                     </Paragraph>
                     <CopyBtn content={ownerAddress} />
-                    <EtherscanBtn type="address" value={ownerAddress} />
+                    <IconTrackerBtn type="address" value={ownerAddress} />
                   </Block>
                 </Block>
               </Col>
@@ -178,7 +178,7 @@ const ReviewRemoveOwner = ({ classes, onClickBack, onClose, onSubmit, ownerAddre
                       {values.ownerAddress}
                     </Paragraph>
                     <CopyBtn content={values.ownerAddress} />
-                    <EtherscanBtn type="address" value={values.ownerAddress} />
+                    <IconTrackerBtn type="address" value={values.ownerAddress} />
                   </Block>
                 </Block>
               </Col>
@@ -191,8 +191,6 @@ const ReviewRemoveOwner = ({ classes, onClickBack, onClose, onSubmit, ownerAddre
       <Block className={classes.gasCostsContainer}>
         <Paragraph>
           You&apos;re about to create a transaction and will have to confirm it with your currently connected wallet.
-          <br />
-          {`Make sure you have ${gasCosts} (fee price) ETH in this wallet to fund this confirmation.`}
         </Paragraph>
       </Block>
       <Hairline />

@@ -14,7 +14,7 @@ import Typography from '@material-ui/core/Typography'
 import WalletIcon from '@components/HeaderBar/components/WalletIcon'
 import { WALLET_PROVIDER } from '@src/SCORE/Ancilia'
 import { setWalletConnected, setWalletProvider } from '@src/store/actions'
-import { getSafeAddress } from '@src/utils/route'
+import { getSafeAddressFromUrl } from '@src/utils/route'
 import { getMultiSigWalletAPI } from '@src/utils/msw'
 import { useDispatch } from 'react-redux'
 
@@ -72,7 +72,7 @@ const ProviderDialog = ({ provider, onClickCallback }) => {
 }
 
 const SelectWalletDialog = ({ onClose, selectedValue, open }) => {
-  const msw = getMultiSigWalletAPI(getSafeAddress())
+  const msw = getMultiSigWalletAPI(getSafeAddressFromUrl())
   const dispatch = useDispatch()
 
   const handleClose = () => {

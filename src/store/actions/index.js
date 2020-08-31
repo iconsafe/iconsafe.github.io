@@ -9,3 +9,5 @@ export const setContractVersion = (contractVersion) => ({ type: Actions.CONTRACT
 export const setForceReload = (forceReload) => ({ type: Actions.FORCE_RELOAD_ACTION, forceReload })
 export const setConnectedWalletOwnerUid = (connectedWalletOwnerUid) => ({ type: Actions.CONNECTED_WALLET_OWNER_UID_ACTION, connectedWalletOwnerUid })
 export const setNetworkConnected = (networkConnected) => ({ type: Actions.NETWORK_CONNECTED_ACTION, networkConnected })
+export const setSafeAddress = (safeAddress) => ({ type: Actions.SAFE_ADDRESS_ACTION, safeAddress })
+export const setSafeName = (safeName) => ({ type: Actions.SAFE_NAME_ACTION, safeName })

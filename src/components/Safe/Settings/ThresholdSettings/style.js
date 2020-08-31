@@ -1,14 +1,14 @@
-import { border, fontColor, lg, secondaryText, smallFontSize, xl } from 'src/theme/variables'
+import { border, fontColor, lg, secondaryText, smallFontSize, xl } from '@src/theme/variables'
 
 export const styles = () => ({
   ownersText: {
     color: secondaryText,
     '& b': {
-      color: fontColor,
-    },
+      color: fontColor
+    }
   },
   container: {
-    padding: lg,
+    padding: lg
   },
   buttonRow: {
     padding: lg,
@@ -18,10 +18,10 @@ export const styles = () => ({
     boxSizing: 'border-box',
     width: '100%',
     justifyContent: 'flex-end',
-    borderTop: `2px solid ${border}`,
+    borderTop: `2px solid ${border}`
   },
   modifyBtn: {
     height: xl,
-    fontSize: smallFontSize,
-  },
+    fontSize: smallFontSize
+  }
 })

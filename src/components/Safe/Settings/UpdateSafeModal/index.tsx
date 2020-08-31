@@ -7,12 +7,12 @@ import { bindActionCreators } from 'redux'
 
 import { styles } from './style'
 
-import GnoForm from 'src/components/forms/GnoForm'
-import Block from 'src/components/layout/Block'
-import Button from 'src/components/layout/Button'
-import Hairline from 'src/components/layout/Hairline'
-import Paragraph from 'src/components/layout/Paragraph'
-import Row from 'src/components/layout/Row'
+import GnoForm from '@src/components/core/GnoForm'
+import Block from '@src/components/core/Block'
+import Button from '@src/components/core/Button'
+import Hairline from '@src/components/core/Hairline'
+import Paragraph from '@src/components/core/Paragraph'
+import Row from '@src/components/core/Row'
 import { upgradeSafeToLatestVersion } from 'src/logic/safe/utils/upgradeSafe'
 import createTransaction from 'src/logic/safe/store/actions/createTransaction'
 

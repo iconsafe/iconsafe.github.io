@@ -1,59 +1,59 @@
-import { background, error, lg, md, sm } from 'src/theme/variables'
+import { background, error, lg, md, sm } from '@src/theme/variables'
 
 export const styles = () => ({
   heading: {
     boxSizing: 'border-box',
     justifyContent: 'space-between',
     maxHeight: '75px',
-    padding: `${sm} ${lg}`,
+    padding: `${sm} ${lg}`
   },
   container: {
-    minHeight: '369px',
+    minHeight: '369px'
   },
   manage: {
-    fontSize: lg,
+    fontSize: lg
   },
   close: {
     height: '35px',
-    width: '35px',
+    width: '35px'
   },
   buttonRow: {
     height: '84px',
-    justifyContent: 'center',
+    justifyContent: 'center'
   },
   buttonRemove: {
     color: '#fff',
     backgroundColor: error,
-    height: '42px',
+    height: '42px'
   },
   name: {
     textOverflow: 'ellipsis',
-    overflow: 'hidden',
+    overflow: 'hidden'
   },
   userName: {
-    whiteSpace: 'nowrap',
+    whiteSpace: 'nowrap'
   },
   owner: {
     backgroundColor: background,
     padding: md,
-    alignItems: 'center',
+    alignItems: 'center'
   },
   user: {
-    justifyContent: 'left',
+    justifyContent: 'left'
   },
   description: {
-    padding: md,
+    padding: md
   },
   open: {
     paddingLeft: sm,
     width: 'auto',
     '&:hover': {
-      cursor: 'pointer',
-    },
+      cursor: 'pointer'
+    }
   },
   modal: {
     height: 'auto',
     maxWidth: 'calc(100% - 30px)',
-    overflow: 'hidden',
-  },
+    overflow: 'hidden'
+  }
 })

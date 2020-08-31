@@ -12,20 +12,20 @@ import styled from 'styled-components'
 import { styles } from './style'
 
 import { ModulePair } from 'src/logic/safe/store/models/safe'
-import { safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
+import { (state) => state.safeAddress } from 'src/logic/safe/store/selectors'
 import { getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
 import createTransaction from 'src/logic/safe/store/actions/createTransaction'
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
-import Modal from 'src/components/Modal'
-import Row from 'src/components/layout/Row'
-import Paragraph from 'src/components/layout/Paragraph'
-import Hairline from 'src/components/layout/Hairline'
-import Block from 'src/components/layout/Block'
-import Col from 'src/components/layout/Col'
-import Identicon from 'src/components/Identicon'
-import Link from 'src/components/layout/Link'
+import Modal from '@src/components/Modal'
+import Row from '@src/components/core/Row'
+import Paragraph from '@src/components/core/Paragraph'
+import Hairline from '@src/components/core/Hairline'
+import Block from '@src/components/core/Block'
+import Col from '@src/components/core/Col'
+import Identicon from '@src/components/core/Identicon'
+import Link from '@src/components/core/Link'
 import { getEtherScanLink } from 'src/logic/wallets/getWeb3'
-import { md, secondary } from 'src/theme/variables'
+import { md, secondary } from '@src/theme/variables'
 
 const useStyles = makeStyles(styles)
 
@@ -47,7 +47,7 @@ interface RemoveModuleModal {
 const RemoveModuleModal = ({ onClose, selectedModule }: RemoveModuleModal): React.ReactElement => {
   const classes = useStyles()
 
-  const safeAddress = useSelector(safeParamAddressFromStateSelector)
+  const safeAddress = useSelector((state) => state.safeAddress)
 
   const { enqueueSnackbar, closeSnackbar } = useSnackbar()
   const dispatch = useDispatch()
