@@ -1,5 +1,6 @@
 {
-  "name": "icon-multisig-wallet-gui",
+  "homepage": "/iconsafe/",
+  "name": "iconsafe",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -8,18 +9,17 @@
     "build": "webpack --mode production",
     "standard": "standard",
     "predeploy": "npm run build",
-    "deploy": "gh-pages -d build"
+    "deploy": "gh-pages -d dist"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/iconation/icon-multisig-wallet-gui.git"
+    "url": "git+https://github.com/iconation/iconsafe.git"
   },
   "author": "ICONation",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/iconation/icon-multisig-wallet-gui/issues"
+    "url": "https://github.com/iconation/iconsafe/issues"
   },
-  "homepage": "http://iconation.github.io/iconsafe",
   "devDependencies": {
     "@babel/core": "^7.4.5",
     "@babel/plugin-proposal-class-properties": "^7.4.4",
@@ -62,6 +62,7 @@
     "ethereum-blockies-base64": "^1.0.2",
     "final-form": "^4.20.1",
     "gh-pages": "^3.1.0",
+    "history": "^5.0.0",
     "lodash.memoize": "^4.1.2",
     "polished": "^3.6.5",
     "qrcode.react": "^1.0.0",

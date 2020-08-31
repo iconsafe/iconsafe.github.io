@@ -5,7 +5,7 @@ import { IconNetworks } from '@src/SCORE/Ancilia'
 const initialState = {
   walletConnected: null,
   walletProvider: null,
-  networkConnected: IconNetworks.LOCALHOST,
+  networkConnected: IconNetworks.YEOUIDO,
   multisigBalances: null,
   connectedWalletOwnerUid: null,
   forceReload: true,
