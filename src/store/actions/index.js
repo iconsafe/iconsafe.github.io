@@ -5,6 +5,7 @@ export const setWalletProvider = (walletProvider) => ({ type: Actions.WALLET_PRO
 export const setWalletOwners = (walletOwners) => ({ type: Actions.WALLET_OWNERS_ACTION, walletOwners })
 export const setWalletOwnersRequired = (walletOwnersRequired) => ({ type: Actions.WALLET_OWNERS_REQUIRED_ACTION, walletOwnersRequired })
 export const setMultisigBalances = (multisigBalances) => ({ type: Actions.MULTISIG_BALANCES_ACTION, multisigBalances })
+export const setContractVersion = (contractVersion) => ({ type: Actions.CONTRACT_VERSION_ACTION, contractVersion })
 export const setForceReload = (forceReload) => ({ type: Actions.FORCE_RELOAD_ACTION, forceReload })
-export const setConnectedWalletOwnerUid = (connectedWalletOwnerUid) => ({ type: Actions.CONNECTED_WALLET_WALLET_OWNER_UID, connectedWalletOwnerUid })
+export const setConnectedWalletOwnerUid = (connectedWalletOwnerUid) => ({ type: Actions.CONNECTED_WALLET_OWNER_UID_ACTION, connectedWalletOwnerUid })
 export const setNetworkConnected = (networkConnected) => ({ type: Actions.NETWORK_CONNECTED_ACTION, networkConnected })

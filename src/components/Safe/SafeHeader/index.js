@@ -23,11 +23,7 @@ const SafeHeader = () => {
   const walletOwners = useSelector((state) => state.walletOwners)
 
   const getSafeName = () => {
-    return 'MultiSig Safe'
-  }
-
-  const getSafeValue = () => {
-    return 1000
+    return 'ICONSafe'
   }
 
   const classes = useStyles(styles)
@@ -35,8 +31,6 @@ const SafeHeader = () => {
   const address = getSafeAddress()
   const granted = isWalletOwner(walletConnected, walletOwners)
   const name = getSafeName()
-  const formattedTotalBalance = getSafeValue()
-  const currentCurrency = 'ICX'
 
   const onSendFunds = () => { }
   const onReceiveFunds = () => { }
@@ -49,12 +43,6 @@ const SafeHeader = () => {
           <Row>
             <Heading className={classes.nameText} color='primary' tag='h2'>
               {name}
-              {!!formattedTotalBalance && !!currentCurrency && (
-                <span className={classes.totalBalance}>
-                  {' '}
-                  | {formattedTotalBalance} {currentCurrency}
-                </span>
-              )}
             </Heading>
             {!granted && <Block className={classes.readonly}>Read Only</Block>}
           </Row>

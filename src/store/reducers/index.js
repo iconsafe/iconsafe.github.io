@@ -9,7 +9,8 @@ const initialState = {
   multisigBalances: null,
   connectedWalletOwnerUid: null,
   forceReload: true,
-  walletOwnersRequired: 0
+  walletOwnersRequired: 0,
+  contractVersion: null
 }
 
 function rootReducer (state = initialState, action) {
@@ -26,10 +27,12 @@ function rootReducer (state = initialState, action) {
       return { ...state, multisigBalances: action.multisigBalances }
     case Actions.FORCE_RELOAD_ACTION:
       return { ...state, forceReload: action.forceReload }
-    case Actions.CONNECTED_WALLET_WALLET_OWNER_UID:
+    case Actions.CONNECTED_WALLET_OWNER_UID_ACTION:
       return { ...state, connectedWalletOwnerUid: action.connectedWalletOwnerUid }
     case Actions.NETWORK_CONNECTED_ACTION:
       return { ...state, networkConnected: action.networkConnected }
+    case Actions.CONTRACT_VERSION_ACTION:
+      return { ...state, contractVersion: action.contractVersion }
     default:
       return state
   }

@@ -3,6 +3,7 @@ import styles from './index.module'
 import TabPanel from '@components/core/TabPanel'
 import Assets from '@components/Safe/Assets'
 import Transactions from '@components/Safe/Transactions'
+import Settings from '@components/Safe/Settings'
 import AppBar from '@material-ui/core/AppBar'
 import Tabs from '@material-ui/core/Tabs'
 import Tab from '@material-ui/core/Tab'
@@ -90,16 +91,13 @@ const SafeTabChoser = ({ assets }) => {
         <Transactions />
       </TabPanel>
       <TabPanel value={value} index={2}>
-        Item Four
+        Apps
       </TabPanel>
       <TabPanel value={value} index={3}>
-        Item Five
+        Address Book
       </TabPanel>
       <TabPanel value={value} index={4}>
-        Item Six
-      </TabPanel>
-      <TabPanel value={value} index={5}>
-        Item Seven
+        <Settings />
       </TabPanel>
 
     </div>

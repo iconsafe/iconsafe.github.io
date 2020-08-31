@@ -40,13 +40,15 @@ const Safe = () => {
       })
 
       Promise.all([
+        msw.get_version_number(),
         msw.get_wallet_owners(),
         msw.get_balance_trackers(),
         msw.get_wallet_owners_required()
-      ]).then(([owners, tokens, walletOwnersRequired]) => {
+      ]).then(([contractVersion, owners, tokens, walletOwnersRequired]) => {
         dispatch(dispatchers.setWalletOwners(owners))
         Promise.all(tokens.map(tracker => getAssetInformation(tracker)))
           .then(result => {
+            dispatch(dispatchers.setContractVersion(contractVersion))
             dispatch(dispatchers.setMultisigBalances(result))
             dispatch(dispatchers.setForceReload(false))
             dispatch(dispatchers.setWalletOwnersRequired(walletOwnersRequired))

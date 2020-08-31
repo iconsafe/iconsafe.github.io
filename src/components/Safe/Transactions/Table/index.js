@@ -287,7 +287,7 @@ export default function EnhancedTable ({ rows }) {
 
                           {/* Default display : 0 ICX */}
                           {row.tokens.length === 0 &&
-                            <Row>n/a</Row>}
+                            <Row>-</Row>}
 
                           {/* Display Sum of tokens */}
                           {row.tokens.map((token, index) => (
