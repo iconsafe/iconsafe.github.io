@@ -7,7 +7,7 @@ module.exports = {
   entry: ['babel-polyfill', './src/main.js'],
   output: {
     path: path.join(__dirname, '/dist'),
-    publicPath: '/',
+    publicPath: '/iconsafe/',
     filename: 'main.[chunkhash:4].js'
   },
   devServer: {
