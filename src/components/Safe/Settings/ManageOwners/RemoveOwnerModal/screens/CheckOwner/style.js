@@ -5,43 +5,43 @@ export const styles = () => ({
     padding: `${sm} ${lg}`,
     justifyContent: 'flex-start',
     boxSizing: 'border-box',
-    maxHeight: '75px',
+    maxHeight: '75px'
   },
   annotation: {
     lineHeight: 'normal',
     color: secondaryText,
     marginRight: 'auto',
-    marginLeft: '20px',
+    marginLeft: '20px'
   },
   manage: {
-    fontSize: lg,
+    fontSize: lg
   },
   address: {
-    marginRight: sm,
+    marginRight: sm
   },
   closeIcon: {
     height: '35px',
-    width: '35px',
+    width: '35px'
   },
   formContainer: {
     padding: `${md} ${lg}`,
-    minHeight: '340px',
+    minHeight: '340px'
   },
   buttonRow: {
     height: '84px',
-    justifyContent: 'center',
+    justifyContent: 'center'
   },
   name: {
     textOverflow: 'ellipsis',
-    overflow: 'hidden',
+    overflow: 'hidden'
   },
   userName: {
-    whiteSpace: 'nowrap',
+    whiteSpace: 'nowrap'
   },
   owner: {
-    alignItems: 'center',
+    alignItems: 'center'
   },
   user: {
-    justifyContent: 'left',
-  },
+    justifyContent: 'left'
+  }
 })

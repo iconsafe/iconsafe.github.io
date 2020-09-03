@@ -30,7 +30,7 @@ class NotLoggedInWallet extends Error { }
 // ================================================
 //  Ancilia Implementation
 export class Ancilia {
-  constructor (network) {
+  constructor(network) {
     this._nid = this.__getNetworkInfo(network).nid
     this._network = network
     this.recoverSession()
@@ -161,7 +161,7 @@ export class Ancilia {
     })[0]
 
     if (eventLog === undefined) {
-      throw new WrongEventSignature(eventLogs)
+      throw new WrongEventSignature(`Cannot find ${eventLogSignature} in ${JSON.stringify(eventLogs)}`)
     }
 
     return eventLog
@@ -238,6 +238,9 @@ export class Ancilia {
   __iconexCallRWTx (from, to, method, value, params) {
     return this.__estimateStep(from, to, method, value, params).then(stepLimit => {
       return this.__iconexCallRWTxEx(from, to, method, value, stepLimit, params)
+    }).catch(() => {
+      // The estimation failed for some reason. Try to call it with a fixed steplimit
+      return this.__iconexCallRWTxEx(from, to, method, value, 100000000, params)
     })
   }
 

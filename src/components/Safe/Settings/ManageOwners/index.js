@@ -1,7 +1,7 @@
 import TableCell from '@material-ui/core/TableCell'
 import TableContainer from '@material-ui/core/TableContainer'
 import TableRow from '@material-ui/core/TableRow'
-import { withStyles } from '@material-ui/core/styles'
+import { withStyles, makeStyles } from '@material-ui/core/styles'
 import cn from 'classnames'
 import classNames from 'classnames/bind'
 import React, { useState } from 'react'
@@ -11,13 +11,13 @@ import RemoveOwnerIcon from '../assets/icons/bin.svg'
 
 import OwnerAddressTableCell from './OwnerAddressTableCell'
 import AddOwnerModal from './AddOwnerModal'
+import RemoveOwnerModal from './RemoveOwnerModal'
 // import EditOwnerModal from './EditOwnerModal'
-// import RemoveOwnerModal from './RemoveOwnerModal'
 // import ReplaceOwnerModal from './ReplaceOwnerModal'
 
 import RenameOwnerIcon from './assets/icons/rename-owner.svg'
 import ReplaceOwnerIcon from './assets/icons/replace-owner.svg'
-import { OWNERS_TABLE_ADDRESS_ID, OWNERS_TABLE_NAME_ID, generateColumns, getOwnerData } from './dataFetcher'
+import { OWNERS_TABLE_ADDRESS_ID, OWNERS_TABLE_NAME_ID, OWNERS_TABLE_ACTIONS_ID, generateColumns, getOwnerData } from './dataFetcher'
 import { styles } from './style'
 
 import Table from '@components/Table'
@@ -31,7 +31,10 @@ import Img from '@components/core/Img'
 import Paragraph from '@components/core/Paragraph/index'
 import Row from '@components/core/Row'
 
-const ManageOwners = ({ classes, granted }) => {
+const useStyles = makeStyles(styles)
+
+const ManageOwners = ({ granted }) => {
+  const classes = useStyles()
   const [selectedOwnerAddress, setSelectedOwnerAddress] = useState(undefined)
   const [selectedOwnerName, setSelectedOwnerName] = useState(undefined)
   const [showAddOwner, setShowAddOwner] = useState(false)
@@ -88,26 +91,54 @@ const ManageOwners = ({ classes, granted }) => {
             disablePagination
             label='Owners'
             noBorder
-            size={ownerData.size}
+            size={ownerData.length}
           >
             {(sortedData) =>
               sortedData.map((row, index) => (
                 <TableRow
-                  className={cn(classes.hide, index >= 3 && index === sortedData.size - 1 && classes.noBorderBottom)}
+                  className={cn(classes.hide, index >= 3 && index === sortedData.length - 1 && classes.noBorderBottom)}
                   key={index}
                   tabIndex={-1}
                 >
                   {autoColumns.map((column) => (
-                    <TableCell align={column.align} component='td' key={column.id} style={cellWidth(column.width)}>
+                    <TableCell align={column.align} component='td' key={column.id}>
                       {column.id === OWNERS_TABLE_ADDRESS_ID ? (
                         <OwnerAddressTableCell address={row[column.id]} showLinks />
                       )
-                        : (
-                          row[column.id]
-                        )}
+                        : column.id === OWNERS_TABLE_ACTIONS_ID ? (
+                          <Row align='end' className={classes.actions}>
+                            <Img
+                              alt='Edit owner'
+                              className={classes.editOwnerIcon}
+                              onClick={() => onShow('EditOwner', row)}
+                              src={RenameOwnerIcon}
+                            />
+                            {granted && (
+                              <>
+                                <Img
+                                  alt='Replace owner'
+                                  className={classes.replaceOwnerIcon}
+                                  onClick={() => onShow('ReplaceOwner', row)}
+                                  src={ReplaceOwnerIcon}
+                                />
+                                {console.log('ownerData=', ownerData) || ownerData.length > 1 && (
+                                  <Img
+                                    alt='Remove owner'
+                                    className={classes.removeOwnerIcon}
+                                    onClick={() => onShow('RemoveOwner', row)}
+                                    src={RemoveOwnerIcon}
+                                  />
+                                )}
+                              </>
+                            )}
+                          </Row>
+                        )
+                          : (
+                            row[column.id]
+                          )}
                     </TableCell>
                   ))}
-                  <TableCell component='td'>
+                  {/* <TableCell component='td'>
                     <Row align='end' className={classes.actions}>
                       <Img
                         alt='Edit owner'
@@ -123,7 +154,7 @@ const ManageOwners = ({ classes, granted }) => {
                             onClick={() => onShow('ReplaceOwner', row)}
                             src={ReplaceOwnerIcon}
                           />
-                          {ownerData.size > 1 && (
+                          {ownerData.length > 1 && (
                             <Img
                               alt='Remove owner'
                               className={classes.removeOwnerIcon}
@@ -134,7 +165,7 @@ const ManageOwners = ({ classes, granted }) => {
                         </>
                       )}
                     </Row>
-                  </TableCell>
+                  </TableCell> */}
                 </TableRow>
               ))}
           </Table>
@@ -163,13 +194,13 @@ const ManageOwners = ({ classes, granted }) => {
         </>
       )}
       <AddOwnerModal isOpen={showAddOwner} onClose={() => onHide('AddOwner')} />
-      {/* <RemoveOwnerModal
-          isOpen={showRemoveOwner}
-          onClose={() => onHide('RemoveOwner')}
-          ownerAddress={selectedOwnerAddress}
-          ownerName={selectedOwnerName}
-        />
-        <ReplaceOwnerModal
+      <RemoveOwnerModal
+        isOpen={showRemoveOwner}
+        onClose={() => onHide('RemoveOwner')}
+        ownerAddress={selectedOwnerAddress}
+        ownerName={selectedOwnerName}
+      />
+      {/* <ReplaceOwnerModal
           isOpen={showReplaceOwner}
           onClose={() => onHide('ReplaceOwner')}
           ownerAddress={selectedOwnerAddress}

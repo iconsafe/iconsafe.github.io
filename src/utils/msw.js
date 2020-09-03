@@ -1,5 +1,7 @@
 import store from '@src/store'
 import { MultiSigWalletScore } from '@src/SCORE/MultiSigWalletScore'
+import { useDispatch, useSelector } from 'react-redux'
+import * as dispatchers from '@src/store/actions'
 
 export const getMultiSigWalletAPI = (scoreAddress) => {
   const networkConnected = store.getState().networkConnected
@@ -10,6 +12,13 @@ export const isWalletOwner = (walletConnected, walletOwners) => {
   if (!walletConnected || !walletOwners) return false
   const walletOwnersAddresses = walletOwners.map(walletOwner => walletOwner.address)
   return walletOwnersAddresses.includes(walletConnected)
+}
+
+export const logout = (msw) => {
+  const dispatch = useDispatch()
+  msw.logout()
+  dispatch(dispatchers.setWalletConnected(null))
+  dispatch(dispatchers.setWalletProvider(null))
 }
 
 export const getTransactionState = (transaction) => {

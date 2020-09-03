@@ -29,10 +29,8 @@ const ThresholdSettings = ({ classes }) => {
   }
 
   const onChangeThreshold = async (newThreshold) => {
-    msw.set_wallet_owners_required(newThreshold).then(tx => {
-      msw.txResult(tx.result).then(result => {
-        console.log(result)
-      })
+    msw.set_wallet_owners_required(newThreshold).then(txuid => {
+      console.log(txuid)
     })
   }
 

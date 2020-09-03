@@ -2,17 +2,20 @@ import * as Actions from '@store/actions/actionTypes'
 import { isWalletOwner } from '@src/utils/msw'
 import { IconNetworks } from '@src/SCORE/Ancilia'
 
+const isDevelopment = process.env.NODE_ENV !== 'production'
+
 const initialState = {
   walletConnected: null,
   walletProvider: null,
-  networkConnected: IconNetworks.YEOUIDO,
+  networkConnected: isDevelopment ? IconNetworks.YEOUIDO : IconNetworks.YEOUIDO,
   multisigBalances: null,
   connectedWalletOwnerUid: null,
   forceReload: true,
   walletOwnersRequired: 0,
   contractVersion: null,
   granted: false,
-  safeAddress: null
+  safeAddress: null,
+  latestTransactions: null
 }
 
 function rootReducer (state = initialState, action) {
@@ -43,6 +46,11 @@ function rootReducer (state = initialState, action) {
       return { ...state, safeName: action.safeName }
     case Actions.CONNECTED_WALLET_OWNER_UID_ACTION:
       return { ...state, connectedWalletOwnerUid: action.connectedWalletOwnerUid }
+    case Actions.CONNECTED_WALLET_OWNER_ACTION:
+      return { ...state, connectedWalletOwner: action.connectedWalletOwner }
+    case Actions.LATEST_TRANSACTIONS_ACTION:
+      console.log('update latestTransactions : length = ', action.latestTransactions.length)
+      return { ...state, latestTransactions: action.latestTransactions }
     case Actions.NETWORK_CONNECTED_ACTION:
       return { ...state, networkConnected: action.networkConnected }
     case Actions.CONTRACT_VERSION_ACTION:

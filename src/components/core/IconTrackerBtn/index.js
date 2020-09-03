@@ -29,6 +29,11 @@ const useStyles = makeStyles({
   }
 })
 
+export const getIconTrackerLink = (msw, value) => {
+  const type = value.length > 42 ? 'transaction' : 'address'
+  return `${msw.getTrackerEndpoint()}/${type}/${value}`
+}
+
 const IconTrackerBtn = ({
   className = '',
   increaseZindex = false,
@@ -38,11 +43,6 @@ const IconTrackerBtn = ({
   const classes = useStyles()
   const customClasses = increaseZindex ? { popper: classes.increasedPopperZindex } : {}
   const msw = new MultiSigWalletScore(networkConnected, getSafeAddressFromUrl())
-  const type = value.length > 42 ? 'transaction' : 'address'
-
-  const getIconTrackerLink = (type, value) => {
-    return `${msw.getTrackerEndpoint()}/${type}/${value}`
-  }
 
   return (
     <Tooltip classes={customClasses} placement='top' title='Show details on ICON Tracker'>
@@ -50,7 +50,7 @@ const IconTrackerBtn = ({
         aria-label='Show details on ICON Tracker'
         className={cn(classes.container, className)}
         onClick={(event) => event.stopPropagation()}
-        href={getIconTrackerLink(type, value)}
+        href={getIconTrackerLink(msw, value)}
         rel='noopener noreferrer'
         target='_blank'
       >

@@ -4,7 +4,6 @@ import { FormSpy } from 'react-final-form'
 import IconButton from '@material-ui/core/IconButton'
 import Close from '@material-ui/icons/Close'
 import { useDispatch } from 'react-redux'
-import { setForceReload } from '@src/store/actions'
 
 import { styles } from './style'
 import { getSymbolAndDecimalsFromContract } from '@src/utils/ancilia'
@@ -22,6 +21,7 @@ import Img from '@components/core/Img'
 import Paragraph from '@components/core/Paragraph'
 import Row from '@components/core/Row'
 import { getTokenIcon } from '@components/TokenIcon'
+import * as dispatchers from '@src/store/actions'
 
 import classNames from 'classnames/bind'
 import { getMultiSigWalletAPI } from '@src/utils/msw'
@@ -49,7 +49,7 @@ const AddCustomToken = ({
 
     msw.add_balance_tracker(address).then((tx) => {
       msw.txResult(tx.result).then(() => {
-        dispatch(setForceReload(true))
+        dispatch(dispatchers.setMultisigBalances(null))
         onClose()
       })
     })

@@ -6,8 +6,12 @@ import ProviderAccessible from './components/ProviderInfo/ProviderAccessible'
 import ProviderDisconnected from './components/ProviderInfo/ProviderDisconnected'
 import { useDispatch, useSelector } from 'react-redux'
 import { setWalletConnected, setWalletProvider } from '@src/store/actions'
+import { getMultiSigWalletAPI } from '@src/utils/msw'
 
 const HeaderBar = () => {
+  const safeAddress = useSelector((state) => state.safeAddress)
+  const msw = getMultiSigWalletAPI(safeAddress)
+
   const walletConnected = useSelector((state) => state.walletConnected)
   const walletProvider = useSelector((state) => state.walletProvider)
   const networkConnected = useSelector((state) => state.networkConnected)
@@ -15,6 +19,7 @@ const HeaderBar = () => {
   const loaded = !!walletConnected && !!walletProvider
 
   const handleDisconnect = () => {
+    msw.logout()
     dispatch(setWalletConnected(null))
     dispatch(setWalletProvider(null))
   }

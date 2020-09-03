@@ -46,7 +46,7 @@ const ConnectDetails = withStyles(styles)(({ classes }) => {
         <CircleDot center circleSize={75} dotRight={25} dotSize={25} dotTop={50} keySize={32} mode='error' />
       </Row>
       <Block className={classes.connect}>
-        <ConnectButton data-testid='heading-connect-btn' />
+        <ConnectButton />
       </Block>
     </>
   )

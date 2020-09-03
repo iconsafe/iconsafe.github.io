@@ -11,6 +11,7 @@ import { getSafeAddressFromUrl } from '@src/utils/route'
 import Button from '@components/core/Button'
 import classNames from 'classnames/bind'
 import AddIcon from '@material-ui/icons/Add'
+import { Loader, LoadingContainer } from '@components/ICON'
 
 const useStyles = makeStyles(styles)
 
@@ -24,7 +25,7 @@ const Assets = () => {
 
   const [dialogOpen, setDialogOpen] = useState(false)
 
-  const onDialogClose = (value) => {
+  const onDialogClose = () => {
     setDialogOpen(false)
   }
 
@@ -47,29 +48,37 @@ const Assets = () => {
           />
         </Dialog>
 
-        <Button
-          className={classes.receive}
-          color='primary'
-          onClick={onClickNewToken}
-          size='small'
-          variant='contained'
-          disabled={!granted}
-        >
-          <AddIcon
-            alt='Add token'
-            className={classNames(classes.leftIcon, classes.iconSmall)}
-            component={undefined}
-          />
+        {granted &&
+          <Button
+            className={classes.receive}
+            color='primary'
+            onClick={onClickNewToken}
+            size='small'
+            variant='contained'
+          >
+            <AddIcon
+              alt='Add token'
+              className={classNames(classes.leftIcon, classes.iconSmall)}
+              component={undefined}
+            />
           Add token
-        </Button>
+          </Button>}
 
       </>
     )
   }
 
+  if (!multisigBalances) {
+    return (
+      <LoadingContainer>
+        <Loader size='md' />
+      </LoadingContainer>
+    )
+  }
+
   return (
     <div className={css.root}>
-      <Table rows={multisigBalances || []} additionalChild={addNewTokenButton()} />
+      <Table rows={multisigBalances} additionalChild={addNewTokenButton()} />
     </div>
   )
 }

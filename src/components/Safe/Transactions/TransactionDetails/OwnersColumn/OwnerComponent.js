@@ -1,10 +1,11 @@
 import { makeStyles } from '@material-ui/core/styles'
 import cn from 'classnames'
 import React, { useState, useEffect } from 'react'
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import { ICONHashInfo } from '@components/ICON/'
 import { getSafeAddressFromUrl } from '@src/utils/route'
 import { getMultiSigWalletAPI } from '@src/utils/msw'
+import { refreshLatestTransactions } from '@src/components/Safe'
 
 import CancelSmallFilledCircle from './assets/cancel-small-filled.svg'
 import ConfirmSmallFilledCircle from './assets/confirm-small-filled.svg'
@@ -22,50 +23,51 @@ import Img from '@components/core/Img'
 const useStyles = makeStyles(styles)
 
 const OwnerComponent = ({
-  ownerUid,
+  currentOwnerUid,
   confirmed,
   tx,
   isCancelTx,
   isUnconfirmed,
-  threshold,
   thresholdReached
 }) => {
+  const [currentOwner, setCurrentOwner] = useState(null)
   const networkConnected = useSelector((state) => state.networkConnected)
-  const walletConnected = useSelector((state) => state.walletConnected)
-  const owners = useSelector((state) => state.walletOwners)
+  const walletOwners = useSelector((state) => state.walletOwners)
   const classes = useStyles()
   const [imgCircle, setImgCircle] = useState(ConfirmSmallGreyCircle)
-  const [owner, setOwner] = useState(null)
+  const connectedWalletOwner = useSelector((state) => state.connectedWalletOwner)
   const msw = getMultiSigWalletAPI(getSafeAddressFromUrl())
-  const unconfirmed = owners
+  const unconfirmed = walletOwners
     .filter(owner => !tx.confirmations.includes(owner.uid))
     .filter(owner => !tx.rejections.includes(owner.uid))
     .map(owner => owner.uid)
+  const dispatch = useDispatch()
 
-  const showConfirmBtn = unconfirmed.includes(ownerUid)
-  const showRejectBtn = unconfirmed.includes(ownerUid)
+  const showConfirmBtn = unconfirmed.includes(currentOwnerUid)
+  const showRejectBtn = unconfirmed.includes(currentOwnerUid)
 
   const onTxConfirm = () => {
-    msw.confirm_transaction(tx.uid).then(txConfirm => {
-      msw.txResult(txConfirm.result).then(result => {
-        console.log(result)
-      })
+    msw.confirm_transaction(tx.uid).then(txuid => {
+      refreshLatestTransactions(msw, dispatch)
     })
   }
 
   const onTxReject = () => {
-    msw.reject_transaction(tx.uid).then(txConfirm => {
-      msw.txResult(txConfirm.result).then(result => {
-        console.log(result)
-      })
+    msw.reject_transaction(tx.uid).then(txuid => {
+      refreshLatestTransactions(msw, dispatch)
     })
   }
 
   useEffect(() => {
-    msw.get_wallet_owner(ownerUid).then(owner => {
-      setOwner(owner)
-    })
-  }, [ownerUid])
+    if (!walletOwners.map(owner => owner.uid).includes(currentOwnerUid)) {
+      msw.get_wallet_owner(currentOwnerUid).then(owner => {
+        setCurrentOwner(owner)
+      })
+    } else {
+      const cachedOwner = walletOwners.filter(owner => { return owner.uid === currentOwnerUid })[0]
+      setCurrentOwner(cachedOwner)
+    }
+  }, [currentOwnerUid])
 
   React.useMemo(() => {
     if (isUnconfirmed) {
@@ -140,10 +142,10 @@ const OwnerComponent = ({
         <Img alt='' src={imgCircle} />
       </div>
 
-      {owner &&
+      {currentOwner &&
         <ICONHashInfo
-          hash={owner.address}
-          name={owner.name}
+          hash={currentOwner.address}
+          name={currentOwner.name}
           shortenHash={4}
           showIdenticon
           showCopyBtn
@@ -153,7 +155,7 @@ const OwnerComponent = ({
 
       <Block className={classes.spacer} />
 
-      {owner && owner.address === walletConnected &&
+      {currentOwner && currentOwner.uid === connectedWalletOwner.uid &&
         <Block>
           {rejectButton()}
           {confirmButton()}

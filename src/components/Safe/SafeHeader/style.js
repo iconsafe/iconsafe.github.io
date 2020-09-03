@@ -106,5 +106,26 @@ export const styles = createStyles({
   totalBalance: {
     color: disabled,
     fontSize: fontSizeHeadingSm
+  },
+  qrCodeBtn: {
+    cursor: 'pointer',
+    width: '14px',
+    height: '14px',
+    marginLeft: '5px'
+  },
+  increasedPopperZindex: {
+    zIndex: 2001
+  },
+  qrContainer: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    cursor: 'pointer',
+    margin: `0 ${xs}`,
+    borderRadius: '50%',
+    transition: 'background-color .2s ease-in-out',
+    '&:hover': {
+      backgroundColor: '#F0EFEE'
+    }
   }
 })

@@ -18,6 +18,9 @@ import Button from '@components/core/Button'
 import Modal from '@components/Modal'
 import Receive from '@components/Safe/Assets/Receive'
 import { GenericModal } from '@components/ICON'
+import QRIcon from '@src/assets/icons/qrcode.svg'
+import Img from '@components/core/Img'
+import Tooltip from '@material-ui/core/Tooltip'
 
 const useStyles = makeStyles(styles)
 
@@ -52,7 +55,6 @@ const SafeHeader = () => {
   const onReceiveFunds = () => {
     setShowReceive(true)
   }
-
   return (
     <>
       <Block className={classes.container} margin='xl'>
@@ -77,12 +79,29 @@ const SafeHeader = () => {
               </Paragraph>
               <CopyBtn content={address} />
               <IconTrackerBtn value={address} />
+
+              <Tooltip
+                classes={{ popper: classes.increasedPopperZindex }}
+                placement='top' title='Open QR code for receiving funds'
+              >
+                <div className={classes.qrContainer}>
+                  <Img
+                    alt='Scan QR'
+                    className={classes.qrCodeBtn}
+                    height={20}
+                    onClick={() => onReceiveFunds()}
+                    role='button'
+                    src={QRIcon}
+                    testId='qr-icon'
+                  />
+                </div>
+              </Tooltip>
             </Block>
           </Block>
         </Row>
 
         <Block className={classes.balance}>
-          <Button
+          {/* <Button
             className={classes.send}
             color='primary'
             disabled={!granted}
@@ -97,7 +116,7 @@ const SafeHeader = () => {
               component={undefined}
             />
           Send
-          </Button>
+          </Button> */}
           <Button
             className={classes.receive}
             color='primary'

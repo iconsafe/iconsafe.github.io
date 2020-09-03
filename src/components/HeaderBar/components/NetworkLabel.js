@@ -1,12 +1,11 @@
 import { makeStyles } from '@material-ui/core/styles'
 import React from 'react'
+import { useSelector } from 'react-redux'
 
 import Col from '@components/core/Col'
 import Paragraph from '@components/core/Paragraph'
-import { getNetwork } from '@src/config'
 import { border, md, screenSm, sm, xs } from '@src/theme/variables'
 
-const interfaceNetwork = getNetwork()
 const formatNetwork = (network) => network[0].toUpperCase() + network.substring(1).toLowerCase()
 
 const useStyles = makeStyles({
@@ -31,7 +30,8 @@ const useStyles = makeStyles({
   }
 })
 
-const NetworkLabel = ({ network = interfaceNetwork }) => {
+const NetworkLabel = () => {
+  const network = useSelector((state) => state.networkConnected)
   const classes = useStyles()
   const formattedNetwork = formatNetwork(network)
 

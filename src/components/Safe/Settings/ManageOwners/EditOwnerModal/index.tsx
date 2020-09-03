@@ -7,7 +7,7 @@ import { useDispatch, useSelector } from 'react-redux'
 
 import { styles } from './style'
 
-import CopyBtn from '@src/components/CopyBtn'
+import CopyBtn from '@src/components/core/CopyBtn'
 import IconTrackerBtn from '@src/components/core/IconTrackerBtn'
 import Identicon from '@src/components/core/Identicon'
 import Modal from '@src/components/Modal'

@@ -17,34 +17,33 @@ import Hairline from '@src/components/core/Hairline'
 import Link from '@src/components/core/Link'
 import Paragraph from '@src/components/core/Paragraph'
 import Row from '@src/components/core/Row'
-import { getEtherScanLink } from 'src/logic/wallets/getWeb3'
-import { SAFELIST_ADDRESS } from 'src/routes/routes'
-import removeSafe from 'src/logic/safe/store/actions/removeSafe'
-import { (state) => state.safeName, (state) => state.safeAddress } from 'src/logic/safe/store/selectors'
-import { history } from 'src/store'
+import { history } from '@src/store'
 import { md, secondary } from '@src/theme/variables'
+import { getIconTrackerLink } from '@src/components/core/IconTrackerBtn'
+import { getMultiSigWalletAPI } from '@src/utils/msw'
 
 const openIconStyle = {
   height: md,
-  color: secondary,
+  color: secondary
 }
 
 const RemoveSafeComponent = ({ classes, isOpen, onClose }) => {
   const safeAddress = useSelector((state) => state.safeAddress)
   const safeName = useSelector((state) => state.safeName)
   const dispatch = useDispatch()
-  const etherScanLink = getEtherScanLink('address', safeAddress)
+  const msw = getMultiSigWalletAPI(safeAddress)
+  const trackerLink = getIconTrackerLink(msw, safeAddress)
 
   return (
     <Modal
-      description="Remove the selected Safe"
+      description='Remove the selected Safe'
       handleClose={onClose}
       open={isOpen}
       paperClassName={classes.modal}
-      title="Remove Safe"
+      title='Remove Safe'
     >
-      <Row align="center" className={classes.heading} grow>
-        <Paragraph className={classes.manage} noMargin weight="bolder">
+      <Row align='center' className={classes.heading} grow>
+        <Paragraph className={classes.manage} noMargin weight='bolder'>
           Remove Safe
         </Paragraph>
         <IconButton disableRipple onClick={onClose}>
@@ -54,19 +53,19 @@ const RemoveSafeComponent = ({ classes, isOpen, onClose }) => {
       <Hairline />
       <Block className={classes.container}>
         <Row className={classes.owner}>
-          <Col align="center" xs={1}>
+          <Col align='center' xs={1}>
             <Identicon address={safeAddress} diameter={32} />
           </Col>
           <Col xs={11}>
             <Block className={classNames(classes.name, classes.userName)}>
-              <Paragraph noMargin size="lg" weight="bolder">
+              <Paragraph noMargin size='lg' weight='bolder'>
                 {safeName}
               </Paragraph>
-              <Block className={classes.user} justify="center">
-                <Paragraph color="disabled" noMargin size="md">
+              <Block className={classes.user} justify='center'>
+                <Paragraph color='disabled' noMargin size='md'>
                   {safeAddress}
                 </Paragraph>
-                <Link className={classes.open} target="_blank" to={etherScanLink}>
+                <Link className={classes.open} target='_blank' to={trackerLink}>
                   <OpenInNew style={openIconStyle} />
                 </Link>
               </Block>
@@ -82,7 +81,7 @@ const RemoveSafeComponent = ({ classes, isOpen, onClose }) => {
         </Row>
       </Block>
       <Hairline />
-      <Row align="center" className={classes.buttonRow}>
+      <Row align='center' className={classes.buttonRow}>
         <Button minHeight={42} minWidth={140} onClick={onClose}>
           Cancel
         </Button>
@@ -90,12 +89,12 @@ const RemoveSafeComponent = ({ classes, isOpen, onClose }) => {
           className={classes.buttonRemove}
           minWidth={140}
           onClick={() => {
-            dispatch(removeSafe(safeAddress))
+            // dispatch(removeSafe(safeAddress))
             onClose()
-            history.push(SAFELIST_ADDRESS)
+            // history.push(SAFELIST_ADDRESS)
           }}
-          type="submit"
-          variant="contained"
+          type='submit'
+          variant='contained'
         >
           Remove
         </Button>
@@ -104,4 +103,4 @@ const RemoveSafeComponent = ({ classes, isOpen, onClose }) => {
   )
 }
 
-export const RemoveSafeModal = withStyles(styles as any)(RemoveSafeComponent)
+export const RemoveSafeModal = withStyles(styles)(RemoveSafeComponent)

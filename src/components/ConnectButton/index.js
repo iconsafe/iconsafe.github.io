@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { useSelector, useDispatch } from 'react-redux'
 import Button from '@components/core/Button'
 import Img from '@components/core/Img'
 import wallet from '@src/assets/icons/wallet.svg'
@@ -13,10 +14,8 @@ import CloseIcon from '@material-ui/icons/Close'
 import Typography from '@material-ui/core/Typography'
 import WalletIcon from '@components/HeaderBar/components/WalletIcon'
 import { WALLET_PROVIDER } from '@src/SCORE/Ancilia'
-import { setWalletConnected, setWalletProvider } from '@src/store/actions'
-import { getSafeAddressFromUrl } from '@src/utils/route'
+import * as dispatchers from '@src/store/actions'
 import { getMultiSigWalletAPI } from '@src/utils/msw'
-import { useDispatch } from 'react-redux'
 
 const cx = classNames.bind(styles)
 
@@ -71,8 +70,7 @@ const ProviderDialog = ({ provider, onClickCallback }) => {
   )
 }
 
-const SelectWalletDialog = ({ onClose, selectedValue, open }) => {
-  const msw = getMultiSigWalletAPI(getSafeAddressFromUrl())
+const SelectWalletDialog = ({ msw, onClose, selectedValue, open }) => {
   const dispatch = useDispatch()
 
   const handleClose = () => {
@@ -89,8 +87,8 @@ const SelectWalletDialog = ({ onClose, selectedValue, open }) => {
 
   const onClickProviderICONex = () => {
     msw.login(WALLET_PROVIDER.ICONEX).then(address => {
-      dispatch(setWalletConnected(address))
-      dispatch(setWalletProvider('ICONex'))
+      dispatch(dispatchers.setWalletConnected(address))
+      dispatch(dispatchers.setWalletProvider('ICONex'))
       onClose(address)
     }).catch(error => {
       // silently catch user cancellation
@@ -129,7 +127,10 @@ const SelectWalletDialog = ({ onClose, selectedValue, open }) => {
   )
 }
 
-const ConnectButton = (props) => {
+const ConnectButton = () => {
+  const safeAddress = useSelector((state) => state.safeAddress)
+  const msw = getMultiSigWalletAPI(safeAddress)
+
   const [dialogOpen, setDialogOpen] = useState(false)
   const [selectedValue, setSelectedValue] = useState(null)
 
@@ -146,17 +147,17 @@ const ConnectButton = (props) => {
     <div>
 
       <SelectWalletDialog
+        msw={msw}
         selectedValue={selectedValue}
         open={dialogOpen}
-        onClose={onDialogClose}
+        onClose={(value) => onDialogClose(value)}
       />
 
       <Button
         color='primary'
         minWidth={140}
-        onClick={onButtonClick}
+        onClick={() => onButtonClick()}
         variant='contained'
-        {...props}
       >
         Connect
       </Button>

@@ -10,14 +10,16 @@ import {
   getTokenDecimals
 } from '@src/utils/icon'
 import { getSymbolAndDecimalsFromContract } from '@src/utils/ancilia'
-import { getTransactionState, getMultiSigWalletAPI } from '@src/utils/msw'
+import { getTransactionState } from '@src/utils/msw'
+import { Loader, LoadingContainer } from '@components/ICON'
 
 import { IconConverter } from 'icon-sdk-js'
 
 const Transactions = () => {
   const [transactions, setTransactions] = useState(null)
+  const latestTransactions = useSelector((state) => state.latestTransactions)
   const safeAddress = useSelector((state) => state.safeAddress)
-  const msw = getMultiSigWalletAPI(safeAddress)
+  const [tokenCache, setTokenCache] = useState([])
 
   useEffect(() => {
     const convertTransactionToDisplay = async (transaction) => {
@@ -50,7 +52,6 @@ const Transactions = () => {
 
         case 'OUTGOING': {
           const tokens = {}
-          const cache = {}
 
           tokens[ICX_TOKEN_SYMBOL] = transaction.sub_transactions.filter(subtx => {
             return !subtx.amount.isEqualTo(0)
@@ -66,24 +67,24 @@ const Transactions = () => {
 
           // Fill symbol / decimals cache
           transaction.sub_transactions.forEach(subtx => {
-            if (isICONContractAddress(subtx.destination)) {
-              cache[subtx.destination] = getSymbolAndDecimalsFromContract(subtx.destination)
+            if (!(subtx.destination in tokenCache) && isICONContractAddress(subtx.destination)) {
+              tokenCache[subtx.destination] = getSymbolAndDecimalsFromContract(subtx.destination)
             }
           })
 
-          return Promise.allSettled(Object.values(cache)).then((values) => {
-            Object.keys(cache).forEach(k => {
+          return Promise.allSettled(Object.values(tokenCache)).then((values) => {
+            Object.keys(tokenCache).forEach(k => {
               const resolved = values.shift()
               if (resolved.status === 'fulfilled') {
-                cache[k] = resolved.value
+                tokenCache[k] = resolved.value
               } else {
-                delete cache[k]
+                delete tokenCache[k]
               }
             })
 
-            Object.keys(cache).forEach(address => {
-              if (cache[address]) {
-                const { symbol, decimals } = cache[address]
+            Object.keys(tokenCache).forEach(address => {
+              if (tokenCache[address]) {
+                const { symbol, decimals } = tokenCache[address]
 
                 tokens[symbol] = transaction.sub_transactions.filter(subtx => {
                   return subtx.amount.isEqualTo(0)
@@ -130,19 +131,24 @@ const Transactions = () => {
       }
     }
 
-    msw.get_all_transactions().then(transactions => {
-      const promises = transactions.map(t => convertTransactionToDisplay(t))
-      return Promise.allSettled(promises).then(result => {
-        result = result.filter(item => item.status === 'fulfilled')
-        result = result.map(item => item.value)
-        setTransactions(result)
-      })
+    latestTransactions && Promise.allSettled(latestTransactions.map(t => convertTransactionToDisplay(t))).then(result => {
+      result = result.filter(item => item.status === 'fulfilled')
+      result = result.map(item => item.value)
+      setTransactions(result)
     })
-  }, [safeAddress])
+  }, [latestTransactions])
+
+  if (!transactions) {
+    return (
+      <LoadingContainer>
+        <Loader size='md' />
+      </LoadingContainer>
+    )
+  }
 
   return (
     <div className={styles.root}>
-      <Table rows={transactions || []} />
+      <Table rows={transactions} />
     </div>
   )
 }

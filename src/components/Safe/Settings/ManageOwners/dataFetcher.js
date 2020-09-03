@@ -35,8 +35,9 @@ export const generateColumns = () => {
     id: OWNERS_TABLE_ACTIONS_ID,
     order: false,
     disablePadding: false,
-    label: '',
-    custom: true
+    label: 'Actions',
+    custom: false,
+    align: 'right'
   }
 
   return [nameColumn, addressColumn, actionsColumn]

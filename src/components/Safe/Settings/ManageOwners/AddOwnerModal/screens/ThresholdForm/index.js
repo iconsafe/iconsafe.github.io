@@ -46,39 +46,6 @@ const ThresholdForm = ({ classes, onClickBack, onClose, onSubmit }) => {
                   Set the required owner confirmations:
                 </Paragraph>
               </Row>
-              <Row>
-                <Paragraph weight='bolder'>Any transaction requires the confirmation of:</Paragraph>
-              </Row>
-              <Row align='center' className={classes.inputRow} margin='xl'>
-                <Col xs={2}>
-                  <Field
-                    data-testid='threshold-select-input'
-                    name='threshold'
-                    render={(props) => (
-                      <>
-                        <SelectField {...props} disableError>
-                          {[...Array(Number(owners.length + 1))].map((x, index) => (
-                            <MenuItem key={index} value={`${index + 1}`}>
-                              {index + 1}
-                            </MenuItem>
-                          ))}
-                        </SelectField>
-                        {props.meta.error && props.meta.touched && (
-                          <Paragraph className={classes.errorText} color='error' noMargin>
-                            {props.meta.error}
-                          </Paragraph>
-                        )}
-                      </>
-                    )}
-                    validate={composeValidators(required, mustBeInteger, minValue(1), maxValue(owners.length + 1))}
-                  />
-                </Col>
-                <Col xs={10}>
-                  <Paragraph className={classes.ownersText} color='primary' noMargin size='lg'>
-                    out of {owners.length + 1} owner(s)
-                  </Paragraph>
-                </Col>
-              </Row>
             </Block>
             <Hairline />
             <Row align='center' className={classes.buttonRow}>

@@ -17,11 +17,11 @@ import Img from '@components/core/Img'
 import Row from '@components/core/Row'
 import { border, headerHeight, md, screenSm, sm } from '@src/theme/variables'
 
-const logo = require('../assets/gnosis-safe-multisig-logo.svg')
+const logo = require('../assets/logo-big-vertical.png')
 
 const styles = () => ({
   root: {
-    backgroundColor: 'white',
+    backgroundColor: '#fafafa',
     borderRadius: sm,
     boxShadow: '0 0 10px 0 rgba(33, 48, 77, 0.1)',
     marginTop: '11px',
@@ -30,7 +30,7 @@ const styles = () => ({
   },
   summary: {
     alignItems: 'center',
-    backgroundColor: 'white',
+    backgroundColor: '#fafafa',
     borderBottom: `solid 2px ${border}`,
     boxShadow: '0 2px 4px 0 rgba(212, 212, 211, 0.59)',
     flexWrap: 'nowrap',
@@ -40,10 +40,10 @@ const styles = () => ({
     zIndex: 1301
   },
   logo: {
-    flexBasis: '95px',
+    flexBasis: '125px',
     flexShrink: '0',
     flexGrow: '0',
-    maxWidth: '55px',
+    maxWidth: '175px',
     padding: sm,
     [`@media (min-width: ${screenSm}px)`]: {
       maxWidth: 'none',
@@ -57,17 +57,14 @@ const styles = () => ({
 })
 
 const Layout = openHoc(({ classes, clickAway, open, providerDetails, providerInfo, toggle }) => {
-
   return (
     <Row className={classes.summary}>
       <Col className={classes.logo} middle='xs' start='xs'>
         <Link to='/'>
-          <Img alt='MultiSigWalletLogo' height={32} src={logo} />
+          <Img src={logo} />
         </Link>
       </Col>
       <Divider />
-      <Divider />
-      <NetworkLabel />
       <Spacer />
       <Provider
         info={providerInfo}

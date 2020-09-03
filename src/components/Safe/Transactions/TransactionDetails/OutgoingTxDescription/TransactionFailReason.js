@@ -17,8 +17,12 @@ export const TransactionFailReason = ({ tx }) => {
     const getReasonFromTxhash = (txHash) => {
       const ancilia = getAnciliaAPI()
       return ancilia.txResult(txHash).then(result => {
-        const eventLog = ancilia.extractEventLog(result.eventLogs, 'TransactionExecutionFailure(int,str)')
-        return eventLog.data[0]
+        try {
+          const eventLog = ancilia.extractEventLog(result.eventLogs, 'TransactionExecutionFailure(int,str)')
+          return eventLog.data[0]
+        } catch {
+          return 'Unknown'
+        }
       })
     }
 

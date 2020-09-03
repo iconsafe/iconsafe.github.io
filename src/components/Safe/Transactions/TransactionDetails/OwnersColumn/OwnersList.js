@@ -6,7 +6,7 @@ const OwnersList = ({ tx, arrayOwners, ...props }) => {
   return (
     <>
       {arrayOwners.map(ownerUid => (
-        <OwnerComponent confirmed tx={tx} key={ownerUid} ownerUid={ownerUid} {...props} />
+        <OwnerComponent confirmed tx={tx} key={ownerUid} currentOwnerUid={ownerUid} {...props} />
       ))}
     </>
   )

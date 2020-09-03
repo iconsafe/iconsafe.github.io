@@ -24,7 +24,7 @@ if (loggedWallet) {
 ReactDOM.render(
   <ThemeProvider theme={styledTheme}>
     <Provider store={store}>
-      <HashRouter basename='/iconsafe'>
+      <HashRouter>
         <MuiThemeProvider theme={theme}>
           <CssBaseline />
           <App />

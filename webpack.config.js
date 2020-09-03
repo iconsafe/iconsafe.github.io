@@ -1,13 +1,13 @@
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const path = require('path')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
-// const isDevelopment = process.env.NODE_ENV !== 'production'
+const isDevelopment = process.env.NODE_ENV !== 'production'
 
 module.exports = {
   entry: ['babel-polyfill', './src/main.js'],
   output: {
     path: path.join(__dirname, '/dist'),
-    publicPath: '/iconsafe/',
+    publicPath: isDevelopment ? '/' : '/iconsafe/',
     filename: 'main.[chunkhash:4].js'
   },
   devServer: {

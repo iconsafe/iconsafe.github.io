@@ -6,12 +6,13 @@ class InvalidTransactionType extends Error { }
 
 // EventLogs
 const TransactionCreated = 'TransactionCreated(int)'
+const TransactionRejected = 'TransactionRejected(int,int)'
 const TransactionConfirmed = 'TransactionConfirmed(int,int)'
 const TransactionRevoked = 'TransactionRevoked(int)'
 
 // --- Objects ---
 class BalanceHistory {
-  constructor(json) {
+  constructor (json) {
     this.uid = parseInt(json.uid)
     this.token = json.token
     this.balance = IconConverter.toBigNumber(json.balance)
@@ -21,7 +22,7 @@ class BalanceHistory {
 }
 
 class Transaction {
-  constructor(json) {
+  constructor (json) {
     this.uid = parseInt(json.uid)
     this.type = json.type
     this.created_txhash = json.created_txhash === 'None' ? null : json.created_txhash
@@ -30,7 +31,7 @@ class Transaction {
 }
 
 class SubOutgoingTransaction {
-  constructor(json) {
+  constructor (json) {
     this.destination = json.destination
     this.method_name = json.method_name
     this.params = json.params ? JSON.parse(json.params) : {}
@@ -50,7 +51,7 @@ class SubOutgoingTransaction {
 }
 
 class OutgoingTransaction extends Transaction {
-  constructor(json) {
+  constructor (json) {
     super(json)
     this.confirmations = json.confirmations.map(uid => parseInt(uid))
     this.rejections = json.rejections.map(uid => parseInt(uid))
@@ -64,7 +65,7 @@ class OutgoingTransaction extends Transaction {
 }
 
 class IncomingTransaction extends Transaction {
-  constructor(json) {
+  constructor (json) {
     super(json)
     this.token = json.token
     this.source = json.source
@@ -73,7 +74,7 @@ class IncomingTransaction extends Transaction {
 }
 
 class WalletOwner {
-  constructor(json) {
+  constructor (json) {
     this.uid = parseInt(json.uid)
     this.address = json.address
     this.name = json.name
@@ -81,7 +82,7 @@ class WalletOwner {
 }
 
 export class MultiSigWalletScore extends Ancilia {
-  constructor(network, scoreAddress) {
+  constructor (network, scoreAddress) {
     super(network)
     this._scoreAddress = scoreAddress
   }
@@ -94,6 +95,18 @@ export class MultiSigWalletScore extends Ancilia {
   // --- SettingsManager ---
   get_safe_name () {
     return this.__callROTx(this._scoreAddress, 'get_safe_name')
+  }
+
+  set_safe_name (safe_name) {
+    const wallet = this.getLoggedInWallet(true).address
+
+    return this.__iconexCallRWTx(
+      wallet,
+      this._scoreAddress,
+      'set_safe_name',
+      0,
+      { safe_name: safe_name }
+    )
   }
 
   // --- BalanceHistoryManager ---
@@ -172,11 +185,14 @@ export class MultiSigWalletScore extends Ancilia {
       'submit_transaction',
       0,
       { sub_transactions: JSON.stringify(sub_transactions) }
-    ).then(async tx => {
+    ).then(tx => {
       return this.getEventLog(tx.result, TransactionCreated).then(eventLog => {
         return {
           transaction_uid: parseInt(eventLog.indexed[1], 16)
         }
+      }).catch((error) => {
+        console.log('ERR SUBMIT:', error)
+        console.log('txsub=', tx)
       })
     })
   }
@@ -190,11 +206,14 @@ export class MultiSigWalletScore extends Ancilia {
       'confirm_transaction',
       0,
       { transaction_uid: IconConverter.toHex(transaction_uid) }
-    ).then(async tx => {
+    ).then(tx => {
       return this.getEventLog(tx.result, TransactionConfirmed).then(eventLog => {
         return {
           transaction_uid: parseInt(eventLog.indexed[1], 16)
         }
+      }).catch((error) => {
+        console.log('ERR CONFIRM:', error)
+        console.log('txconf=', tx)
       })
     })
   }
@@ -208,8 +227,8 @@ export class MultiSigWalletScore extends Ancilia {
       'reject_transaction',
       0,
       { transaction_uid: IconConverter.toHex(transaction_uid) }
-    ).then(async tx => {
-      return this.getEventLog(tx.result, TransactionConfirmed).then(eventLog => {
+    ).then(tx => {
+      return this.getEventLog(tx.result, TransactionRejected).then(eventLog => {
         return {
           transaction_uid: parseInt(eventLog.indexed[1], 16)
         }
@@ -226,7 +245,7 @@ export class MultiSigWalletScore extends Ancilia {
       'revoke_transaction',
       0,
       { transaction_uid: IconConverter.toHex(transaction_uid) }
-    ).then(async tx => {
+    ).then(tx => {
       return this.getEventLog(tx.result, TransactionRevoked).then(eventLog => {
         return {
           transaction_uid: parseInt(eventLog.indexed[1], 16),
@@ -305,7 +324,7 @@ export class MultiSigWalletScore extends Ancilia {
 
   get_wallet_owner (wallet_owner_uid) {
     return this.__callROTx(this._scoreAddress, 'get_wallet_owner', {
-      wallet_owner_uid: IconConverter.toHex(wallet_owner_uid)
+      wallet_owner_uid: IconConverter.toHex(parseInt(wallet_owner_uid))
     }).then(json => {
       return new WalletOwner(json)
     })
@@ -347,7 +366,7 @@ export class MultiSigWalletScore extends Ancilia {
       [{
         name: 'owners_required',
         type: 'int',
-        value: owners_required
+        value: IconConverter.toHex(parseInt(owners_required))
       }],
       0,
       `Change safe owners requirement to ${owners_required}`
@@ -389,7 +408,7 @@ export class MultiSigWalletScore extends Ancilia {
         {
           name: 'wallet_owner_uid',
           type: 'int',
-          value: wallet_owner_uid
+          value: IconConverter.toHex(parseInt(wallet_owner_uid))
         }
       ],
       0,
