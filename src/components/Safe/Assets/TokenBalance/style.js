@@ -2,7 +2,11 @@ import { border, lg, md } from '@src/theme/variables'
 
 const cssStyles = {
   expandedTxBlock: {
-    borderBottom: `2px solid ${border}`
+    borderBottom: `2px solid ${border}`,
+    minHeight: '300px',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center'
   },
   txDataContainer: {
     // padding: `${lg} ${md}`
@@ -18,6 +22,8 @@ const cssStyles = {
     paddingLeft: md,
     paddingBottom: md,
     borderRight: '2px solid rgb(232, 231, 230)'
+  },
+  loadingBalance: {
   }
 }
 

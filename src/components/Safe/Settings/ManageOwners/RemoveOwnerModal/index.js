@@ -7,7 +7,6 @@ import ReviewRemoveOwner from './screens/Review'
 import ThresholdForm from './screens/ThresholdForm'
 import Modal from '@src/components/Modal'
 import { getMultiSigWalletAPI } from '@src/utils/msw'
-import { refreshLatestTransactions } from '@components/Safe'
 
 const styles = () => ({
   biggerModalWindow: {
@@ -17,15 +16,12 @@ const styles = () => ({
   }
 })
 
-export const sendRemoveOwner = async (
+export const sendRemoveOwner = (
   ownerAddressToRemove,
-  msw,
-  dispatch
+  msw
 ) => {
   msw.get_wallet_owner_uid(ownerAddressToRemove).then(ownerUid => {
-    msw.remove_wallet_owner(ownerUid).then(tx => {
-      refreshLatestTransactions(msw, dispatch)
-    })
+    msw.remove_wallet_owner(ownerUid)
   })
 }
 

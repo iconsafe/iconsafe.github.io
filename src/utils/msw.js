@@ -21,6 +21,100 @@ export const logout = (msw) => {
   dispatch(dispatchers.setWalletProvider(null))
 }
 
+export const hashToEvents = (msw, hash) => {
+  return msw.txResult(hash).then(result => {
+    const events = []
+    result.eventLogs.forEach(eventLog => {
+      const eventSignature = eventLog.indexed[0]
+      console.log('Incoming event : ', eventSignature)
+
+      switch (eventSignature) {
+        // Balance History Manager
+        case 'BalanceHistoryCreated(int)':
+          events.push({
+            name: eventSignature.split('(')[0],
+            balance_history_uid: parseInt(eventLog.indexed[1])
+          })
+          break
+        // Transaction Manager
+        case 'TransactionCreated(int)':
+          events.push({
+            name: eventSignature.split('(')[0],
+            transaction_uid: parseInt(eventLog.indexed[1])
+          })
+          break
+        case 'TransactionCancelled(int)':
+          events.push({
+            name: eventSignature.split('(')[0],
+            transaction_uid: parseInt(eventLog.indexed[1])
+          })
+          break
+        case 'TransactionExecutionSuccess(int)':
+          events.push({
+            name: eventSignature.split('(')[0],
+            transaction_uid: parseInt(eventLog.indexed[1])
+          })
+          break
+        case 'TransactionRejectionSuccess(int)':
+          events.push({
+            name: eventSignature.split('(')[0],
+            transaction_uid: parseInt(eventLog.indexed[1])
+          })
+          break
+        case 'TransactionExecutionFailure(int,str)':
+          events.push({
+            name: eventSignature.split('(')[0],
+            transaction_uid: parseInt(eventLog.indexed[1]),
+            error: eventLog.data[0]
+          })
+          break
+        case 'TransactionConfirmed(int,int)':
+          events.push({
+            name: eventSignature.split('(')[0],
+            transaction_uid: parseInt(eventLog.indexed[1]),
+            wallet_owner_uid: parseInt(eventLog.indexed[2])
+          })
+          break
+        case 'TransactionRevoked(int,int)':
+          events.push({
+            name: eventSignature.split('(')[0],
+            transaction_uid: parseInt(eventLog.indexed[1]),
+            wallet_owner_uid: parseInt(eventLog.indexed[2])
+          })
+          break
+        case 'TransactionRejected(int,int)':
+          events.push({
+            name: eventSignature.split('(')[0],
+            transaction_uid: parseInt(eventLog.indexed[1]),
+            wallet_owner_uid: parseInt(eventLog.indexed[2])
+          })
+          break
+        // Wallet Owner Manager
+        case 'WalletOwnerAddition(int)':
+          events.push({
+            name: eventSignature.split('(')[0],
+            wallet_owner_uid: parseInt(eventLog.indexed[1])
+          })
+          break
+        case 'WalletOwnerRemoval(int)':
+          events.push({
+            name: eventSignature.split('(')[0],
+            wallet_owner_uid: parseInt(eventLog.indexed[1])
+          })
+          break
+        case 'WalletSettingsSafeNameChanged(str)':
+          events.push({
+            name: eventSignature.split('(')[0],
+            safe_name: eventLog.data[0]
+          })
+          break
+      }
+    })
+
+    return events
+  })
+}
+
 export const getTransactionState = (transaction) => {
   switch (transaction.type) {
     case 'INCOMING':

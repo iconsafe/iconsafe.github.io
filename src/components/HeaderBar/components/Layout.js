@@ -40,7 +40,7 @@ const styles = () => ({
     zIndex: 1301
   },
   logo: {
-    flexBasis: '125px',
+    flexBasis: '165px',
     flexShrink: '0',
     flexGrow: '0',
     maxWidth: '175px',
@@ -64,7 +64,6 @@ const Layout = openHoc(({ classes, clickAway, open, providerDetails, providerInf
           <Img src={logo} />
         </Link>
       </Col>
-      <Divider />
       <Spacer />
       <Provider
         info={providerInfo}

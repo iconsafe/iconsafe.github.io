@@ -1,11 +1,10 @@
 import { makeStyles } from '@material-ui/core/styles'
 import cn from 'classnames'
 import React, { useState, useEffect } from 'react'
-import { useSelector, useDispatch } from 'react-redux'
+import { useSelector } from 'react-redux'
 import { ICONHashInfo } from '@components/ICON/'
 import { getSafeAddressFromUrl } from '@src/utils/route'
 import { getMultiSigWalletAPI } from '@src/utils/msw'
-import { refreshLatestTransactions } from '@src/components/Safe'
 
 import CancelSmallFilledCircle from './assets/cancel-small-filled.svg'
 import ConfirmSmallFilledCircle from './assets/confirm-small-filled.svg'
@@ -17,8 +16,6 @@ import { styles } from './style'
 import Block from '@components/core/Block'
 import Button from '@components/core/Button'
 import Img from '@components/core/Img'
-// import { getNameFromAddressBook } from 'src/logic/addressBook/store/selectors'
-// import { OwnersWithoutConfirmations } from './index'
 
 const useStyles = makeStyles(styles)
 
@@ -41,21 +38,16 @@ const OwnerComponent = ({
     .filter(owner => !tx.confirmations.includes(owner.uid))
     .filter(owner => !tx.rejections.includes(owner.uid))
     .map(owner => owner.uid)
-  const dispatch = useDispatch()
 
   const showConfirmBtn = unconfirmed.includes(currentOwnerUid)
   const showRejectBtn = unconfirmed.includes(currentOwnerUid)
 
   const onTxConfirm = () => {
-    msw.confirm_transaction(tx.uid).then(txuid => {
-      refreshLatestTransactions(msw, dispatch)
-    })
+    msw.confirm_transaction(tx.uid)
   }
 
   const onTxReject = () => {
-    msw.reject_transaction(tx.uid).then(txuid => {
-      refreshLatestTransactions(msw, dispatch)
-    })
+    msw.reject_transaction(tx.uid)
   }
 
   useEffect(() => {

@@ -6,6 +6,7 @@ import Chart from 'react-google-charts'
 import { getSafeAddressFromUrl } from '@src/utils/route'
 import { getMultiSigWalletAPI } from '@src/utils/msw'
 import { convertTsToDate, getTokenDecimals, displayUnit } from '@src/utils/icon'
+import { Loader, LoadingContainer } from '@components/ICON'
 
 const useStyles = makeStyles(styles)
 
@@ -34,26 +35,28 @@ const TokenBalance = ({ token }) => {
   }, [token])
 
   return (
-    <>
+    <Block className={classes.expandedTxBlock}>
+      {!data &&
+        <LoadingContainer className={classes.loadingBalance}>
+          <Loader size='md' />
+        </LoadingContainer>}
       {data &&
-        <Block className={classes.expandedTxBlock}>
-          <Chart
-            width='100%'
-            height='300px'
-            chartType='LineChart'
-            loader={<div>Loading Chart</div>}
-            data={data}
-            options={{
-              pointSize: 5,
-              title: `${token.symbol} balance`,
-              backgroundColor: 'transparent',
-              hAxis: { title: 'Date', titleTextStyle: { color: '#333' } },
-              vAxis: { minValue: 0 },
-              chartArea: { width: '50%', height: '70%' }
-            }}
-          />
-        </Block>}
-    </>
+        <Chart
+          width='100%'
+          height='300px'
+          chartType='LineChart'
+          loader={<div>Loading Chart</div>}
+          data={data}
+          options={{
+            pointSize: 5,
+            title: `${token.symbol} balance`,
+            backgroundColor: 'transparent',
+            hAxis: { title: 'Date', titleTextStyle: { color: '#333' } },
+            vAxis: { minValue: 0 },
+            chartArea: { width: '50%', height: '70%' }
+          }}
+        />}
+    </Block>
   )
 }
 

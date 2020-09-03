@@ -1,8 +1,7 @@
 import { makeStyles } from '@material-ui/core/styles'
 import cn from 'classnames'
 import React from 'react'
-import { useSelector, useDispatch } from 'react-redux'
-import * as dispatchers from '@src/store/actions'
+import { useSelector } from 'react-redux'
 import { styles } from './style'
 import Field from '@components/core/Field'
 import GnoForm from '@components/core/GnoForm'
@@ -27,20 +26,13 @@ const SafeDetails = () => {
   const safeName = useSelector((state) => state.safeName)
   // const safeNeedsUpdate = useSelector(safeNeedsUpdateSelector)
   const contractVersion = useSelector((state) => state.contractVersion)
-  const dispatch = useDispatch()
 
   const safeAddress = useSelector((state) => state.safeAddress)
   const msw = getMultiSigWalletAPI(safeAddress)
   const granted = useSelector((state) => state.granted)
 
   const handleSubmit = (values) => {
-    msw.set_safe_name(values.safeName).then(tx => {
-      msw.txResult(tx.result).then(result => {
-        if (parseInt(result.status) === 1) {
-          dispatch(dispatchers.setSafeName(values.safeName))
-        }
-      })
-    })
+    msw.set_safe_name(values.safeName)
   }
 
   return (

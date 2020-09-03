@@ -50,7 +50,6 @@ const Provider = ({ render, classes, info, open, toggle }) => {
             {open ? <ExpandLess /> : <ExpandMore />}
           </IconButton>
         </Col>
-        <Divider />
       </div>
       {render(myRef)}
     </>

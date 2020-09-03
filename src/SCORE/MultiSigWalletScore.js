@@ -417,4 +417,20 @@ export class MultiSigWalletScore extends Ancilia {
 
     return this.submit_transaction(sub_transactions)
   }
+
+  // --- Event Manager ---
+  get_events (offset = 0) {
+    return this.__callROTx(
+      this._scoreAddress,
+      'get_events',
+      { offset: IconConverter.toHex(offset) }
+    ).then(result => {
+      return result.map(event => {
+        return {
+          uid: parseInt(event.uid),
+          hash: event.hash
+        }
+      })
+    })
+  }
 }

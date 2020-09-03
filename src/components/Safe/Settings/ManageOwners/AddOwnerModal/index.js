@@ -5,7 +5,6 @@ import OwnerForm from './screens/OwnerForm'
 import ReviewAddOwner from './screens/Review'
 import { getMultiSigWalletAPI } from '@src/utils/msw'
 import Modal from '@src/components/Modal'
-import { refreshLatestTransactions } from '@src/components/Safe'
 
 const styles = () => ({
   biggerModalWindow: {
@@ -15,16 +14,13 @@ const styles = () => ({
   }
 })
 
-export const sendAddOwner = (values, safeAddress, dispatch) => {
+export const sendAddOwner = (values, safeAddress) => {
   const { ownerName, ownerAddress } = values
   const msw = getMultiSigWalletAPI(safeAddress)
-
-  msw.add_wallet_owner(ownerAddress, ownerName).then(txuid => {
-    refreshLatestTransactions(msw, dispatch)
-  })
+  msw.add_wallet_owner(ownerAddress, ownerName)
 }
 
-const AddOwner = ({ classes, closeSnackbar, enqueueSnackbar, isOpen, onClose }) => {
+const AddOwner = ({ classes, isOpen, onClose }) => {
   const [activeScreen, setActiveScreen] = useState('selectOwner')
   const [values, setValues] = useState({})
   const dispatch = useDispatch()

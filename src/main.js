@@ -11,6 +11,7 @@ import { Provider } from 'react-redux'
 import { HashRouter } from 'react-router-dom'
 import App from './components/App'
 import { getAnciliaAPI } from '@src/utils/ancilia'
+import { SnackbarProvider } from 'notistack'
 
 // Initialize store
 const ancilia = getAnciliaAPI()
@@ -27,7 +28,9 @@ ReactDOM.render(
       <HashRouter>
         <MuiThemeProvider theme={theme}>
           <CssBaseline />
-          <App />
+          <SnackbarProvider maxSnack={10}>
+            <App />
+          </SnackbarProvider>
         </MuiThemeProvider>
       </HashRouter>
     </Provider>

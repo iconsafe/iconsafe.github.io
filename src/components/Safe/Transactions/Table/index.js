@@ -339,7 +339,7 @@ export default function EnhancedTable ({ rows }) {
                   )
                 })}
               {emptyRows > 0 && (
-                <TableRow style={{ height: 40 * emptyRows }}>
+                <TableRow style={{ height: expandedTx ? 0 : (20 * emptyRows) }}>
                   <TableCell colSpan={6} />
                 </TableRow>
               )}

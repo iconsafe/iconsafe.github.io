@@ -7,7 +7,7 @@ const isDevelopment = process.env.NODE_ENV !== 'production'
 const initialState = {
   walletConnected: null,
   walletProvider: null,
-  networkConnected: isDevelopment ? IconNetworks.YEOUIDO : IconNetworks.YEOUIDO,
+  networkConnected: isDevelopment ? IconNetworks.LOCALHOST : IconNetworks.YEOUIDO,
   multisigBalances: null,
   connectedWalletOwnerUid: null,
   forceReload: true,
@@ -15,7 +15,9 @@ const initialState = {
   contractVersion: null,
   granted: false,
   safeAddress: null,
-  latestTransactions: null
+  latestTransactions: null,
+  latestEvents: null,
+  currentEvent: null
 }
 
 function rootReducer (state = initialState, action) {
@@ -49,12 +51,15 @@ function rootReducer (state = initialState, action) {
     case Actions.CONNECTED_WALLET_OWNER_ACTION:
       return { ...state, connectedWalletOwner: action.connectedWalletOwner }
     case Actions.LATEST_TRANSACTIONS_ACTION:
-      console.log('update latestTransactions : length = ', action.latestTransactions.length)
       return { ...state, latestTransactions: action.latestTransactions }
     case Actions.NETWORK_CONNECTED_ACTION:
       return { ...state, networkConnected: action.networkConnected }
     case Actions.CONTRACT_VERSION_ACTION:
       return { ...state, contractVersion: action.contractVersion }
+    case Actions.LATEST_EVENTS_ACTION:
+      return { ...state, latestEvents: action.latestEvents }
+    case Actions.CURRENT_EVENT_ACTION:
+      return { ...state, currentEvent: action.currentEvent }
     default:
       return state
   }

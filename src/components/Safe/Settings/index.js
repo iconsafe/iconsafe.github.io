@@ -1,4 +1,3 @@
-import { IconText, Loader, LoadingContainer } from '@components/ICON'
 import { makeStyles } from '@material-ui/core/styles'
 import cn from 'classnames'
 import React, { useState } from 'react'
@@ -14,6 +13,7 @@ import Hairline from '@components/core/Hairline'
 import Paragraph from '@components/core/Paragraph'
 import Row from '@components/core/Row'
 import { isWalletOwner } from '@src/utils/msw'
+import { IconText, Loader, LoadingContainer } from '@components/ICON'
 
 const INITIAL_STATE = {
   showRemoveSafe: false,
