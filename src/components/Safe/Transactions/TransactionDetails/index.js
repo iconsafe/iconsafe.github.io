@@ -17,6 +17,8 @@ import { OutgoingTx } from './OutgoingTx'
 import { IncomingTxDescription } from '@components/Safe/Transactions/TransactionDetails/IncomingTxDescription'
 import { OutgoingTxDescription } from '@components/Safe/Transactions/TransactionDetails/OutgoingTxDescription'
 import OwnersColumn from './OwnersColumn'
+import CopyBtn from '@components/core/CopyBtn'
+import { useLocation } from 'react-router-dom'
 
 const useStyles = makeStyles(styles)
 
@@ -25,6 +27,7 @@ const TransactionDetails = ({ transaction }) => {
   const classes = useStyles()
   const [transactionStepUsed, setTransactionStepUsed] = useState(null)
   const [transactionStepPrice, setTransactionStepPrice] = useState(null)
+  const location = useLocation()
 
   const isIncomingTx = transaction.type === 'INCOMING'
   const isOutgoingTx = transaction.type === 'OUTGOING'
@@ -43,6 +46,10 @@ const TransactionDetails = ({ transaction }) => {
         <Row>
           <Col layout='column' xs={6}>
             <Block className={cn(classes.txDataContainer, (isIncomingTx) && classes.incomingTxBlock)}>
+              <div style={{ display: 'flex' }}>
+                <Bold className={classes.txHash}>Tx Permalink:</Bold>
+                <CopyBtn content={`${window.location.origin}/#${location.pathname}?transaction=${transaction.uid}`} />
+              </div>
               <div style={{ display: 'flex' }}>
                 <Bold className={classes.txHash}>Hash:</Bold>
                 {

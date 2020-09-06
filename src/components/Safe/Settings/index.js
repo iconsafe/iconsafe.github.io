@@ -14,6 +14,7 @@ import Paragraph from '@components/core/Paragraph'
 import Row from '@components/core/Row'
 import { isWalletOwner } from '@src/utils/msw'
 import { IconText, Loader, LoadingContainer } from '@components/ICON'
+import purple from '@material-ui/core/colors/purple'
 
 const INITIAL_STATE = {
   showRemoveSafe: false,
@@ -54,7 +55,7 @@ const Settings = () => {
                 textSize='xl'
                 iconType='info'
                 text='Safe Details'
-                color={menuOptionIndex === 1 ? 'primary' : 'secondary'}
+                color='disabled'
               />
             </Row>
             <Hairline className={classes.hairline} />

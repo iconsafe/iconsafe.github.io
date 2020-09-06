@@ -26,6 +26,7 @@ import { displayUnit, convertTsToDateString } from '@src/utils/icon'
 import TransactionDetails from '@components/Safe/Transactions/TransactionDetails'
 import Collapse from '@material-ui/core/Collapse'
 import cn from 'classnames'
+import { useRouteMatch, useHistory } from 'react-router-dom'
 
 function descendingComparator (a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -132,6 +133,13 @@ const useStyles = makeStyles((theme) => ({
     width: '100%',
     marginBottom: theme.spacing(2)
   },
+  singleTxContainer: {
+    borderRadius: '8px',
+    marginBottom: '10px'
+  },
+  singleTxPaper: {
+    marginBottom: '50px'
+  },
   table: {
     minWidth: 350
   },
@@ -201,8 +209,10 @@ const useStyles = makeStyles((theme) => ({
   }
 }))
 
-export default function EnhancedTable ({ rows }) {
+export default function EnhancedTable ({ rows, queriedTx }) {
   const classes = useStyles()
+  const match = useRouteMatch()
+  const history = useHistory()
 
   const [order, setOrder] = useState('desc')
   const [orderBy, setOrderBy] = useState('uid')
@@ -230,9 +240,41 @@ export default function EnhancedTable ({ rows }) {
   }
 
   const emptyRows = rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage)
+  const closeImgStyle = { cursor: 'pointer', float: 'right', marginTop: '15px', marginRight: '15px', width: '15px' }
+  const closeImg = require('./assets/close.png')
+
+  const closeTransaction = () => {
+    history.push(`${match.url}/transactions`)
+  }
 
   return (
     <div className={classes.root}>
+
+      {queriedTx &&
+        <Paper className={cn(classes.paper, classes.singleTxPaper)}>
+          <TableContainer className={classes.singleTxContainer}>
+            <Table
+              className={classes.table}
+              aria-labelledby='tableTitle'
+              size='medium'
+              aria-label='enhanced table'
+            >
+              <TableBody>
+                <TableRow>
+                  <TableCell
+                    className={queriedTx.status === 'FAILED' ? classes.extendedTxContainerError : classes.extendedTxContainer}
+                    colSpan={6}
+                    style={{ paddingBottom: 0, paddingTop: 0 }}
+                  >
+                    <Img style={closeImgStyle} src={closeImg} onClick={() => closeTransaction()} />
+                    <TransactionDetails transaction={queriedTx} />
+                  </TableCell>
+                </TableRow>
+              </TableBody>
+            </Table>
+          </TableContainer>
+        </Paper>}
+
       <Paper className={classes.paper}>
         <TableContainer>
           <Table
@@ -249,6 +291,7 @@ export default function EnhancedTable ({ rows }) {
               rowCount={rows.length}
             />
             <TableBody>
+
               {stableSort(rows, getComparator(order, orderBy))
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((row, index) => {

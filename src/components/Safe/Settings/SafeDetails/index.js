@@ -22,9 +22,7 @@ const useStyles = makeStyles(styles)
 
 const SafeDetails = () => {
   const classes = useStyles()
-  // const latestMasterContractVersion = useSelector(latestMasterContractVersionSelector)
   const safeName = useSelector((state) => state.safeName)
-  // const safeNeedsUpdate = useSelector(safeNeedsUpdateSelector)
   const contractVersion = useSelector((state) => state.contractVersion)
 
   const safeAddress = useSelector((state) => state.safeAddress)

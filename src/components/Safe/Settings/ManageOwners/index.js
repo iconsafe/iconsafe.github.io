@@ -12,8 +12,8 @@ import RemoveOwnerIcon from '../assets/icons/bin.svg'
 import OwnerAddressTableCell from './OwnerAddressTableCell'
 import AddOwnerModal from './AddOwnerModal'
 import RemoveOwnerModal from './RemoveOwnerModal'
-// import EditOwnerModal from './EditOwnerModal'
-// import ReplaceOwnerModal from './ReplaceOwnerModal'
+import EditOwnerModal from './EditOwnerModal'
+import ReplaceOwnerModal from './ReplaceOwnerModal'
 
 import RenameOwnerIcon from './assets/icons/rename-owner.svg'
 import ReplaceOwnerIcon from './assets/icons/replace-owner.svg'
@@ -21,7 +21,6 @@ import { OWNERS_TABLE_ADDRESS_ID, OWNERS_TABLE_NAME_ID, OWNERS_TABLE_ACTIONS_ID,
 import { styles } from './style'
 
 import Table from '@components/Table'
-import { cellWidth } from '@components/Table/TableHead'
 import Block from '@components/core/Block'
 import Button from '@components/core/Button'
 import Col from '@components/core/Col'
@@ -43,7 +42,6 @@ const ManageOwners = ({ granted }) => {
   const [showEditOwner, setShowEditOwner] = useState(false)
 
   const onShow = (action, row) => {
-    console.log('onShow ', action, row)
     setSelectedOwnerAddress(row && row.address)
     setSelectedOwnerName(row && row.name)
 
@@ -56,7 +54,6 @@ const ManageOwners = ({ granted }) => {
   }
 
   const onHide = (action) => {
-    console.log('onHide ', action)
     setSelectedOwnerAddress(undefined)
     setSelectedOwnerName(undefined)
 
@@ -107,21 +104,21 @@ const ManageOwners = ({ granted }) => {
                       )
                         : column.id === OWNERS_TABLE_ACTIONS_ID ? (
                           <Row align='end' className={classes.actions}>
-                            <Img
-                              alt='Edit owner'
-                              className={classes.editOwnerIcon}
-                              onClick={() => onShow('EditOwner', row)}
-                              src={RenameOwnerIcon}
-                            />
                             {granted && (
                               <>
+                                <Img
+                                  alt='Edit owner'
+                                  className={classes.editOwnerIcon}
+                                  onClick={() => onShow('EditOwner', row)}
+                                  src={RenameOwnerIcon}
+                                />
                                 <Img
                                   alt='Replace owner'
                                   className={classes.replaceOwnerIcon}
                                   onClick={() => onShow('ReplaceOwner', row)}
                                   src={ReplaceOwnerIcon}
                                 />
-                                {console.log('ownerData=', ownerData) || ownerData.length > 1 && (
+                                {ownerData.length > 1 && (
                                   <Img
                                     alt='Remove owner'
                                     className={classes.removeOwnerIcon}
@@ -200,18 +197,18 @@ const ManageOwners = ({ granted }) => {
         ownerAddress={selectedOwnerAddress}
         ownerName={selectedOwnerName}
       />
-      {/* <ReplaceOwnerModal
-          isOpen={showReplaceOwner}
-          onClose={() => onHide('ReplaceOwner')}
-          ownerAddress={selectedOwnerAddress}
-          ownerName={selectedOwnerName}
-        />
-        <EditOwnerModal
-          isOpen={showEditOwner}
-          onClose={() => onHide('EditOwner')}
-          ownerAddress={selectedOwnerAddress}
-          selectedOwnerName={selectedOwnerName}
-        /> */}
+      <ReplaceOwnerModal
+        isOpen={showReplaceOwner}
+        onClose={() => onHide('ReplaceOwner')}
+        ownerAddress={selectedOwnerAddress}
+        ownerName={selectedOwnerName}
+      />
+      <EditOwnerModal
+        isOpen={showEditOwner}
+        onClose={() => onHide('EditOwner')}
+        ownerAddress={selectedOwnerAddress}
+        selectedOwnerName={selectedOwnerName}
+      />
     </>
   )
 }

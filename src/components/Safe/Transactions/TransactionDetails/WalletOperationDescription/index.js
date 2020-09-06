@@ -6,12 +6,9 @@ import Block from '@src/components/core/Block'
 import Bold from '@src/components/core/Bold'
 import Span from '@src/components/core/Span'
 import { ICONTrackerLink } from '@components/ICON'
-import { displayUnit } from '@src/utils/icon'
-import Img from '@components/core/Img'
-import { getTokenIcon } from '@components/TokenIcon'
 import { styles } from './styles'
 import { makeStyles } from '@material-ui/core/styles'
-import ListItemIcon from '@material-ui/core/ListItemIcon'
+import cn from 'classnames'
 
 const useStyles = makeStyles(styles)
 
@@ -58,6 +55,36 @@ const WalletOperationDescription = ({ tx }) => {
               - <Bold>Remove an existing owner</Bold> ({owner.name}) :
               <Span className={classes.greenText}> <ICONTrackerLink value={owner.address} /> </Span>
             </div>
+          )
+        })
+
+      case 'replace_wallet_owner':
+        return msw.get_wallet_owner(getTxParam(tx, 'old_wallet_owner_uid').value).then(owner => {
+          return (
+            <Block className={classes.content}>
+              - <Bold>Replace or edit an existing owner</Bold> :<br />
+              <Block>
+                Old Name : <Span className={classes.greenText}> {owner.name} </Span>
+              </Block>
+
+              <Block className={classes.addressLine}>
+                Old Address :
+                <Span className={cn(classes.greenText, classes.trackerLink)}>
+                  <ICONTrackerLink value={owner.address} />
+                </Span>
+              </Block>
+
+              <Block>
+                New Name : <Span className={classes.greenText}> {getTxParam(tx, 'new_name').value} </Span>
+              </Block>
+
+              <Block className={classes.addressLine}>
+                New Address :
+                <Span className={cn(classes.greenText, classes.trackerLink)}>
+                  <ICONTrackerLink value={getTxParam(tx, 'new_address').value} /> 
+                </Span>
+              </Block>
+            </Block>
           )
         })
 

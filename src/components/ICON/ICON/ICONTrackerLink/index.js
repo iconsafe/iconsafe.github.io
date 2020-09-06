@@ -9,7 +9,6 @@ import Block from '@components/core/Block'
 import Span from '@components/core/Span'
 import { shortVersionOf } from '@src/utils/strings'
 import IconTrackerBtn from '@components/core/IconTrackerBtn'
-import { connect } from 'react-redux'
 
 const useStyles = makeStyles(styles)
 

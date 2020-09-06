@@ -22,16 +22,11 @@ import Col from '@src/components/core/Col'
 import Hairline from '@src/components/core/Hairline'
 import Paragraph from '@src/components/core/Paragraph'
 import Row from '@src/components/core/Row'
-import { (state) => state.walletOwners } from 'src/logic/safe/store/selectors'
-
-export const REPLACE_OWNER_NAME_INPUT_TEST_ID = 'replace-owner-name-input'
-export const REPLACE_OWNER_ADDRESS_INPUT_TEST_ID = 'replace-owner-address-testid'
-export const REPLACE_OWNER_NEXT_BTN_TEST_ID = 'replace-owner-next-btn'
 
 const formMutators = {
   setOwnerAddress: (args, state, utils) => {
     utils.changeValue(state, 'ownerAddress', () => args[0])
-  },
+  }
 }
 
 const OwnerForm = ({ classes, onClose, onSubmit, ownerAddress, ownerName }) => {
@@ -43,8 +38,8 @@ const OwnerForm = ({ classes, onClose, onSubmit, ownerAddress, ownerName }) => {
 
   return (
     <>
-      <Row align="center" className={classes.heading} grow>
-        <Paragraph className={classes.manage} noMargin weight="bolder">
+      <Row align='center' className={classes.heading} grow>
+        <Paragraph className={classes.manage} noMargin weight='bolder'>
           Replace owner
         </Paragraph>
         <Paragraph className={classes.annotation}>1 of 2</Paragraph>
@@ -81,20 +76,20 @@ const OwnerForm = ({ classes, onClose, onSubmit, ownerAddress, ownerName }) => {
                   <Paragraph>Current owner</Paragraph>
                 </Row>
                 <Row className={classes.owner}>
-                  <Col align="center" xs={1}>
+                  <Col align='center' xs={1}>
                     <Identicon address={ownerAddress} diameter={32} />
                   </Col>
                   <Col xs={7}>
                     <Block className={classNames(classes.name, classes.userName)}>
-                      <Paragraph noMargin size="lg" weight="bolder">
+                      <Paragraph noMargin size='lg' weight='bolder'>
                         {ownerName}
                       </Paragraph>
-                      <Block className={classes.user} justify="center">
-                        <Paragraph className={classes.address} color="disabled" noMargin size="md">
+                      <Block className={classes.user} justify='center'>
+                        <Paragraph className={classes.address} color='disabled' noMargin size='md'>
                           {ownerAddress}
                         </Paragraph>
                         <CopyBtn content={ownerAddress} />
-                        <IconTrackerBtn type="address" value={ownerAddress} />
+                        <IconTrackerBtn type='address' value={ownerAddress} />
                       </Block>
                     </Block>
                   </Col>
@@ -102,49 +97,46 @@ const OwnerForm = ({ classes, onClose, onSubmit, ownerAddress, ownerName }) => {
                 <Row>
                   <Paragraph>New owner</Paragraph>
                 </Row>
-                <Row margin="md">
+                <Row margin='md'>
                   <Col xs={8}>
                     <Field
                       className={classes.addressInput}
                       component={TextField}
-                      name="ownerName"
-                      placeholder="Owner name*"
-                      testId={REPLACE_OWNER_NAME_INPUT_TEST_ID}
-                      text="Owner name*"
-                      type="text"
+                      name='ownerName'
+                      placeholder='Owner name*'
+                      text='Owner name*'
+                      type='text'
                       validate={composeValidators(required, minMaxLength(1, 50))}
                     />
                   </Col>
                 </Row>
-                <Row margin="md">
+                <Row margin='md'>
                   <Col xs={8}>
                     <AddressInput
                       className={classes.addressInput}
                       fieldMutator={mutators.setOwnerAddress}
-                      name="ownerAddress"
-                      placeholder="Owner address*"
-                      testId={REPLACE_OWNER_ADDRESS_INPUT_TEST_ID}
-                      text="Owner address*"
+                      name='ownerAddress'
+                      placeholder='Owner address*'
+                      text='Owner address*'
                       validators={[ownerDoesntExist]}
                     />
                   </Col>
-                  <Col center="xs" className={classes} middle="xs" xs={1}>
+                  <Col center='xs' className={classes} middle='xs' xs={1}>
                     <ScanQRWrapper handleScan={handleScan} />
                   </Col>
                 </Row>
               </Block>
               <Hairline />
-              <Row align="center" className={classes.buttonRow}>
+              <Row align='center' className={classes.buttonRow}>
                 <Button className={classes.button} minWidth={140} onClick={onClose}>
                   Cancel
                 </Button>
                 <Button
                   className={classes.button}
-                  color="primary"
+                  color='primary'
                   minWidth={140}
-                  testId={REPLACE_OWNER_NEXT_BTN_TEST_ID}
-                  type="submit"
-                  variant="contained"
+                  type='submit'
+                  variant='contained'
                 >
                   Next
                 </Button>
@@ -157,4 +149,4 @@ const OwnerForm = ({ classes, onClose, onSubmit, ownerAddress, ownerName }) => {
   )
 }
 
-export default withStyles(styles as any)(OwnerForm)
+export default withStyles(styles)(OwnerForm)

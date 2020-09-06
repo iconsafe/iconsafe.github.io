@@ -56,9 +56,6 @@ export const styles = createStyles({
       width: '250px'
     }
   },
-  fillGreen: {
-    fill: 'green'
-  },
   menuOption: {
     alignItems: 'center',
     borderRight: `solid 1px ${border}`,

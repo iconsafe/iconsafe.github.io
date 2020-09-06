@@ -11,7 +11,7 @@ const App = () => {
     <div className={styles.root}>
       <HeaderBar />
       <Switch>
-        <Route exact path='/safe/:address' render={(props) => <Safe {...props} />} />
+        <Route path='/safe/:address' render={(props) => <Safe {...props} />} />
         <Route exact path='/' render={(props) => <Welcome {...props} />} />
         <Route render={() => <Redirect to='/' />} />
       </Switch>

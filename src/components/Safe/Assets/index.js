@@ -68,17 +68,15 @@ const Assets = () => {
     )
   }
 
-  if (!multisigBalances) {
-    return (
-      <LoadingContainer>
-        <Loader size='md' />
-      </LoadingContainer>
-    )
-  }
-
   return (
     <div className={css.root}>
-      <Table rows={multisigBalances} additionalChild={addNewTokenButton()} />
+      {!multisigBalances &&
+        <LoadingContainer>
+          <Loader size='md' />
+        </LoadingContainer>}
+
+      {multisigBalances &&
+        <Table rows={multisigBalances} additionalChild={addNewTokenButton()} />}
     </div>
   )
 }

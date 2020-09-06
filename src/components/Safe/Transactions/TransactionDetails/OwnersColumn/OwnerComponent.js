@@ -147,7 +147,7 @@ const OwnerComponent = ({
 
       <Block className={classes.spacer} />
 
-      {currentOwner && currentOwner.uid === connectedWalletOwner.uid &&
+      {currentOwner && connectedWalletOwner && currentOwner.uid === connectedWalletOwner.uid &&
         <Block>
           {rejectButton()}
           {confirmButton()}

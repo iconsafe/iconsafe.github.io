@@ -18,12 +18,13 @@ const useStyles = makeStyles(styles)
 
 const OwnersColumn = ({ tx }) => {
   const classes = useStyles()
+  const globalTreshold = useSelector((state) => state.walletOwnersRequired)
 
   const getThreshold = (tx) => {
     if (tx.status === 'FAILED') return Math.max(tx.confirmations.length, tx.rejections.length)
     if (tx.status === 'EXECUTED') return tx.confirmations.length
     if (tx.status === 'REJECTED') return tx.rejections.length
-    return useSelector((state) => state.walletOwnersRequired)
+    return globalTreshold
   }
 
   const threshold = getThreshold(tx)

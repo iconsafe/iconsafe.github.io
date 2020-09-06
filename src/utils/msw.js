@@ -43,29 +43,39 @@ export const hashToEvents = (msw, hash) => {
             transaction_uid: parseInt(eventLog.indexed[1])
           })
           break
-        case 'TransactionCancelled(int)':
-          events.push({
-            name: eventSignature.split('(')[0],
-            transaction_uid: parseInt(eventLog.indexed[1])
-          })
-          break
-        case 'TransactionExecutionSuccess(int)':
-          events.push({
-            name: eventSignature.split('(')[0],
-            transaction_uid: parseInt(eventLog.indexed[1])
-          })
-          break
-        case 'TransactionRejectionSuccess(int)':
-          events.push({
-            name: eventSignature.split('(')[0],
-            transaction_uid: parseInt(eventLog.indexed[1])
-          })
-          break
-        case 'TransactionExecutionFailure(int,str)':
+        case 'TransactionCancelled(int,int)':
           events.push({
             name: eventSignature.split('(')[0],
             transaction_uid: parseInt(eventLog.indexed[1]),
-            error: eventLog.data[0]
+            wallet_owner_uid: parseInt(eventLog.indexed[2])
+          })
+          break
+        case 'TransactionExecutionSuccess(int,int)':
+          events.push({
+            name: eventSignature.split('(')[0],
+            transaction_uid: parseInt(eventLog.indexed[1]),
+            wallet_owner_uid: parseInt(eventLog.data[0])
+          })
+          break
+        case 'WalletOwnersRequiredChanged(int)':
+          events.push({
+            name: eventSignature.split('(')[0],
+            required: parseInt(eventLog.indexed[1])
+          })
+          break
+        case 'TransactionRejectionSuccess(int,int)':
+          events.push({
+            name: eventSignature.split('(')[0],
+            transaction_uid: parseInt(eventLog.indexed[1]),
+            wallet_owner_uid: parseInt(eventLog.data[0])
+          })
+          break
+        case 'TransactionExecutionFailure(int,int,str)':
+          events.push({
+            name: eventSignature.split('(')[0],
+            transaction_uid: parseInt(eventLog.indexed[1]),
+            wallet_owner_uid: parseInt(eventLog.data[0]),
+            error: eventLog.data[1]
           })
           break
         case 'TransactionConfirmed(int,int)':

@@ -45,7 +45,7 @@ export const OutgoingTxDescription = ({ tx }) => {
           <ListItemIcon>
             <ViewListIcon />
           </ListItemIcon>
-          <ListItemText primary='Raw method calls' />
+          <ListItemText primary='Raw Sub Transactions' />
           {openedRawMethodCalls ? <ExpandLess /> : <ExpandMore />}
         </ListItem>
 
@@ -61,7 +61,7 @@ export const OutgoingTxDescription = ({ tx }) => {
                 key={`${tx.created_txhash}-${index}`}
                 button className={classes.nested}
               >
-                Transaction N° {index + 1}
+                SubTx {index + 1}
                 <RawMethodCallDescription
                   amount={subtx.amount}
                   params={subtx.params}

@@ -1,9 +1,9 @@
 import { makeStyles } from '@material-ui/core/styles'
 import React, { useState, useEffect } from 'react'
+import { useSelector } from 'react-redux'
 import { styles } from './style'
 import Block from '@components/core/Block'
 import Chart from 'react-google-charts'
-import { getSafeAddressFromUrl } from '@src/utils/route'
 import { getMultiSigWalletAPI } from '@src/utils/msw'
 import { convertTsToDate, getTokenDecimals, displayUnit } from '@src/utils/icon'
 import { Loader, LoadingContainer } from '@components/ICON'
@@ -13,24 +13,22 @@ const useStyles = makeStyles(styles)
 const TokenBalance = ({ token }) => {
   const classes = useStyles()
   const [data, setData] = useState(null)
-  const safeAddress = getSafeAddressFromUrl()
+  const safeAddress = useSelector((state) => state.safeAddress)
+  const multisigBalances = useSelector((state) => state.multisigBalances)
   const msw = getMultiSigWalletAPI(safeAddress)
 
   useEffect(() => {
     msw.get_token_balance_history(token.token).then(history => {
-      const promises = history.reverse().map(entry => {
-        return getTokenDecimals(entry.token).then(decimals => {
-          return [
-            convertTsToDate(entry.timestamp),
-            parseFloat(displayUnit(entry.balance, decimals))
-          ]
-        })
+      const result = history.reverse().map(entry => {
+        const token = multisigBalances.filter(balance => balance.token === entry.token)[0]
+        return [
+          convertTsToDate(entry.timestamp),
+          parseFloat(displayUnit(entry.balance, token.decimals))
+        ]
       })
 
-      Promise.all(promises).then(result => {
-        result.unshift(['Date', token.symbol])
-        setData(result)
-      })
+      result.unshift(['Date', token.symbol])
+      setData(result)
     })
   }, [token])
 

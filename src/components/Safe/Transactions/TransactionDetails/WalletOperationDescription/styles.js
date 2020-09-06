@@ -10,5 +10,12 @@ export const styles = createStyles({
   },
   greenText: {
     color: 'green'
+  },
+  addressLine: {
+    display: 'flex',
+    flexDirection: 'row'
+  },
+  trackerLink: {
+    paddingLeft: '5px'
   }
 })

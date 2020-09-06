@@ -56,6 +56,8 @@ export const styles = createStyles({
     flexDirection: 'row'
   },
   failReasonBox: {
-    paddingLeft: '5px'
+    paddingLeft: '5px',
+    whiteSpace: 'normal',
+    wordWrap: 'break-word'
   }
 })

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import styles from './index.module'
 import TabPanel from '@components/core/TabPanel'
 import Assets from '@components/Safe/Assets'
@@ -17,6 +17,8 @@ import AccountBalanceWalletIcon from '@material-ui/icons/AccountBalanceWallet'
 import AppsIcon from '@material-ui/icons/Apps'
 import ImportExportIcon from '@material-ui/icons/ImportExport'
 import { createStyles } from '@material-ui/core'
+import { useRouteMatch, useLocation, useHistory } from 'react-router-dom'
+import Link from '@material-ui/core/Link'
 
 export const inlineStyles = createStyles({
   root: {
@@ -42,27 +44,36 @@ export const inlineStyles = createStyles({
 const useStyles = makeStyles(inlineStyles)
 
 const tabs = [
-  { label: 'ASSETS', icon: <AccountBalanceWalletIcon />, disabled: false },
-  { label: 'TRANSACTIONS', icon: <ImportExportIcon />, disabled: false },
-  { label: 'APPS', icon: <AppsIcon />, disabled: false },
-  { label: 'ADDRESS BOOK', icon: <PersonPinIcon />, disabled: false },
-  { label: 'SETTINGS', icon: <SettingsIcon />, disabled: false }
+  { label: 'ASSETS', icon: <AccountBalanceWalletIcon />, disabled: false, value: '/assets' },
+  { label: 'TRANSACTIONS', icon: <ImportExportIcon />, disabled: false, value: '/transactions' },
+  { label: 'APPS', icon: <AppsIcon />, disabled: false, value: '/apps' },
+  { label: 'ADDRESS BOOK', icon: <PersonPinIcon />, disabled: false, value: '/address-book' },
+  { label: 'SETTINGS', icon: <SettingsIcon />, disabled: false, value: '/settings' }
 ]
 
 const SafeTabChoser = ({ assets }) => {
-  const [value, setValue] = useState(0)
   const classes = useStyles()
+  const match = useRouteMatch()
+  const location = useLocation()
+  const history = useHistory()
 
-  const handleChange = (event, newValue) => {
-    setValue(newValue)
+  const selectedTab = tabs.map(t => `${match.url}${t.value}`).includes(location.pathname) ? location.pathname : `${match.url}/assets`
+  const [value, setValue] = useState(selectedTab)
+
+  const handleChange = (value) => {
+    history.push(value)
   }
+
+  useEffect(() => {
+    setValue(location.pathname)
+  }, [location])
 
   return (
     <div className={styles.root}>
       <AppBar elevation={0} position='static' style={{ background: 'transparent', boxShadow: 'none' }}>
         <Tabs
           value={value}
-          onChange={handleChange}
+          onChange={(event, value) => handleChange(value)}
           variant='scrollable'
           classes={{
             indicator: classes.indicator
@@ -80,25 +91,26 @@ const SafeTabChoser = ({ assets }) => {
               label={t.label}
               icon={t.icon}
               disabled={t.disabled}
+              value={`${match.url}${t.value}`}
             />
           ))}
         </Tabs>
       </AppBar>
       <div className={styles.tabBar} />
 
-      <TabPanel value={value} index={0}>
+      <TabPanel value={value} index={`${match.url}${tabs[0].value}`}>
         <Assets />
       </TabPanel>
-      <TabPanel value={value} index={1}>
+      <TabPanel value={value} index={`${match.url}${tabs[1].value}`}>
         <Transactions />
       </TabPanel>
-      <TabPanel value={value} index={2}>
+      <TabPanel value={value} index={`${match.url}${tabs[2].value}`}>
         <Apps />
       </TabPanel>
-      <TabPanel value={value} index={3}>
+      <TabPanel value={value} index={`${match.url}${tabs[3].value}`}>
         <AddressBook />
       </TabPanel>
-      <TabPanel value={value} index={4}>
+      <TabPanel value={value} index={`${match.url}${tabs[4].value}`}>
         <Settings />
       </TabPanel>
 
