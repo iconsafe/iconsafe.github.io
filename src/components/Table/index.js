@@ -47,7 +47,7 @@ const nextProps = {
 }
 
 class GnoTable extends React.Component {
-  constructor (props) {
+  constructor(props) {
     super(props)
 
     this.state = {
@@ -78,7 +78,6 @@ class GnoTable extends React.Component {
   }
 
   handleSort (newOrderBy, orderProp) {
-    console.log('this=', this)
     const { order, orderBy } = this.state
     const { defaultOrder } = this.props
     let newOrder = 'desc'

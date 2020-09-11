@@ -5,6 +5,11 @@ import { useSelector } from 'react-redux'
 import { ICONHashInfo } from '@components/ICON/'
 import { getSafeAddressFromUrl } from '@src/utils/route'
 import { getMultiSigWalletAPI } from '@src/utils/msw'
+import orange from '@material-ui/core/colors/orange'
+import red from '@material-ui/core/colors/red'
+import ThumbDownIcon from '@material-ui/icons/ThumbDown'
+import ThumbUpIcon from '@material-ui/icons/ThumbUp'
+import CancelIcon from '@material-ui/icons/Cancel'
 
 import CancelSmallFilledCircle from './assets/cancel-small-filled.svg'
 import ConfirmSmallFilledCircle from './assets/confirm-small-filled.svg'
@@ -16,6 +21,8 @@ import { styles } from './style'
 import Block from '@components/core/Block'
 import Button from '@components/core/Button'
 import Img from '@components/core/Img'
+import Span from '@components/core/Span'
+import Bold from '@components/core/Bold'
 
 const useStyles = makeStyles(styles)
 
@@ -39,16 +46,13 @@ const OwnerComponent = ({
     .filter(owner => !tx.rejections.includes(owner.uid))
     .map(owner => owner.uid)
 
-  const showConfirmBtn = unconfirmed.includes(currentOwnerUid)
-  const showRejectBtn = unconfirmed.includes(currentOwnerUid)
+  const showConfirmBtn = tx.status === 'WAITING' && unconfirmed.includes(connectedWalletOwner?.uid)
+  const showRejectBtn = tx.status === 'WAITING' && unconfirmed.includes(connectedWalletOwner?.uid)
+  const showRevokeBtn = tx.status === 'WAITING' && (tx.confirmations.includes(connectedWalletOwner?.uid) || tx.rejections.includes(connectedWalletOwner?.uid))
 
-  const onTxConfirm = () => {
-    msw.confirm_transaction(tx.uid)
-  }
-
-  const onTxReject = () => {
-    msw.reject_transaction(tx.uid)
-  }
+  const onTxConfirm = () => { msw.confirm_transaction(tx.uid) }
+  const onTxReject = () => { msw.reject_transaction(tx.uid) }
+  const onTxRevoke = () => { msw.revoke_transaction(tx.uid) }
 
   useEffect(() => {
     if (!walletOwners.map(owner => owner.uid).includes(currentOwnerUid)) {
@@ -59,7 +63,7 @@ const OwnerComponent = ({
       const cachedOwner = walletOwners.filter(owner => { return owner.uid === currentOwnerUid })[0]
       setCurrentOwner(cachedOwner)
     }
-  }, [currentOwnerUid])
+  }, [currentOwnerUid, connectedWalletOwner])
 
   React.useMemo(() => {
     if (isUnconfirmed) {
@@ -97,7 +101,8 @@ const OwnerComponent = ({
             onClick={onTxConfirm}
             variant='contained'
           >
-            Confirm
+            <ThumbUpIcon />
+            <Span style={{ marginLeft: '10px' }}>Confirm</Span>
           </Button>
         )}
       </>
@@ -114,9 +119,39 @@ const OwnerComponent = ({
             onClick={onTxReject}
             variant='contained'
           >
-            Reject
+            <ThumbDownIcon />
+            <Span style={{ marginLeft: '10px' }}>Reject</Span>
           </Button>
         )}
+      </>
+    )
+  }
+
+  const revokeButton = () => {
+    return (
+      <>
+        {showRevokeBtn && (
+          <Button
+            size='small'
+            className={cn(classes.button, classes.lastButton)}
+            color='primary'
+            onClick={onTxRevoke}
+            variant='contained'
+          >
+            <CancelIcon />
+            <Span style={{ marginLeft: '10px' }}>Revoke vote</Span>
+          </Button>
+        )}
+      </>
+    )
+  }
+
+  const ownerName = () => {
+    return (
+      <>
+        {currentOwner.name}
+        {(currentOwner.address === connectedWalletOwner?.address) &&
+          <Bold> (You)</Bold>}
       </>
     )
   }
@@ -137,7 +172,7 @@ const OwnerComponent = ({
       {currentOwner &&
         <ICONHashInfo
           hash={currentOwner.address}
-          name={currentOwner.name}
+          name={ownerName()}
           shortenHash={4}
           showIdenticon
           showCopyBtn
@@ -145,12 +180,11 @@ const OwnerComponent = ({
           network={networkConnected}
         />}
 
-      <Block className={classes.spacer} />
-
-      {currentOwner && connectedWalletOwner && currentOwner.uid === connectedWalletOwner.uid &&
-        <Block>
+      {currentOwner && connectedWalletOwner && currentOwner.address === connectedWalletOwner.address &&
+        <Block className={classes.spacer}>
           {rejectButton()}
           {confirmButton()}
+          {revokeButton()}
         </Block>}
     </Block>
   )

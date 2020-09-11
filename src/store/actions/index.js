@@ -10,7 +10,7 @@ export const setLatestEvents = (latestEvents) => ({ type: Actions.LATEST_EVENTS_
 export const setCurrentEvent = (currentEvent) => ({ type: Actions.CURRENT_EVENT_ACTION, currentEvent })
 export const setForceReload = (forceReload) => ({ type: Actions.FORCE_RELOAD_ACTION, forceReload })
 export const setConnectedWalletOwnerUid = (connectedWalletOwnerUid) => ({ type: Actions.CONNECTED_WALLET_OWNER_UID_ACTION, connectedWalletOwnerUid })
-export const setSonnectedWalletOwner = (connectedWalletOwner) => ({ type: Actions.CONNECTED_WALLET_OWNER_ACTION, connectedWalletOwner })
+export const setConnectedWalletOwner = (connectedWalletOwner) => ({ type: Actions.CONNECTED_WALLET_OWNER_ACTION, connectedWalletOwner })
 export const setLatestTransactions = (latestTransactions) => ({ type: Actions.LATEST_TRANSACTIONS_ACTION, latestTransactions })
 export const setNetworkConnected = (networkConnected) => ({ type: Actions.NETWORK_CONNECTED_ACTION, networkConnected })
 export const setSafeAddress = (safeAddress) => ({ type: Actions.SAFE_ADDRESS_ACTION, safeAddress })

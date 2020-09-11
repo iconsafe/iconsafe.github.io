@@ -1,5 +1,5 @@
 {
-  "homepage": "/iconsafe/",
+  "homepage": "https://iconation.github.io/iconsafe/",
   "name": "iconsafe",
   "version": "1.0.0",
   "description": "",
@@ -73,6 +73,7 @@
     "react-google-charts": "^3.0.15",
     "react-media": "^1.10.0",
     "react-qr-reader": "^2.2.1",
+    "react-text-loop": "^2.3.0",
     "recompose": "^0.30.0",
     "semantic-ui-react": "^1.2.1",
     "url-loader": "^4.1.0"

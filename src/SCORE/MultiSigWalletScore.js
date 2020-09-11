@@ -5,14 +5,15 @@ import { IconConverter } from 'icon-sdk-js'
 class InvalidTransactionType extends Error { }
 
 // EventLogs
-const TransactionCreated = 'TransactionCreated(int)'
+const TransactionCreated = 'TransactionCreated(int,int)'
 const TransactionRejected = 'TransactionRejected(int,int)'
 const TransactionConfirmed = 'TransactionConfirmed(int,int)'
-const TransactionRevoked = 'TransactionRevoked(int)'
+const TransactionRevoked = 'TransactionRevoked(int,int)'
+const TransactionCancelled = 'TransactionCancelled(int,int)'
 
 // --- Objects ---
 class BalanceHistory {
-  constructor(json) {
+  constructor (json) {
     this.uid = parseInt(json.uid)
     this.token = json.token
     this.balance = IconConverter.toBigNumber(json.balance)
@@ -22,7 +23,7 @@ class BalanceHistory {
 }
 
 class Transaction {
-  constructor(json) {
+  constructor (json) {
     this.uid = parseInt(json.uid)
     this.type = json.type
     this.created_txhash = json.created_txhash === 'None' ? null : json.created_txhash
@@ -30,42 +31,75 @@ class Transaction {
   }
 }
 
-class SubOutgoingTransaction {
-  constructor(json) {
-    this.destination = json.destination
-    this.method_name = json.method_name
-    this.params = json.params ? JSON.parse(json.params) : {}
-    this.amount = IconConverter.toBigNumber(json.amount)
-    this.description = json.description
+export class SubOutgoingTransaction {
+  constructor (destination, method_name, params, amount, description) {
+    this.destination = destination
+    this.method_name = method_name
+    this.params = params ? JSON.parse(params) : null
+    this.amount = IconConverter.toBigNumber(amount)
+    this.description = description
   }
 
-  static create (destination, method_name, params, amount, description) {
+  static fromJson (json) {
+    return new SubOutgoingTransaction(
+      json.destination,
+      json.method_name,
+      json.params,
+      json.amount,
+      json.description
+    )
+  }
+
+  serialize () {
+    return SubOutgoingTransaction.serialize(
+      this.destination,
+      this.method_name,
+      this.params,
+      this.amount,
+      this.description
+    )
+  }
+
+  static serialize (destination, method_name, params, amount, description) {
     return {
       destination: destination,
       method_name: method_name,
-      params: JSON.stringify(params),
-      amount: IconConverter.toHex(parseInt(amount)),
+      params: params ? JSON.stringify(params) : '',
+      amount: IconConverter.toHex(amount),
       description: description
     }
   }
 }
 
-class OutgoingTransaction extends Transaction {
-  constructor(json) {
+export class OutgoingTransaction extends Transaction {
+  constructor (json) {
     super(json)
     this.confirmations = json.confirmations.map(uid => parseInt(uid))
     this.rejections = json.rejections.map(uid => parseInt(uid))
+    this.type = json.type
     this.state = json.state
     this.sub_transactions = json.sub_transactions.map(subtx => {
-      return new SubOutgoingTransaction(subtx)
+      return SubOutgoingTransaction.fromJson(subtx)
     })
     this.executed_timestamp = parseInt(json.executed_timestamp)
     this.executed_txhash = json.executed_txhash === 'None' ? null : json.executed_txhash
   }
+
+  static create (confirmations, rejections, state, sub_transactions, executed_timestamp, executed_txhash) {
+    return {
+      confirmations: confirmations,
+      type: 'OUTGOING',
+      rejections: rejections,
+      state: state,
+      sub_transactions: sub_transactions,
+      executed_timestamp: executed_timestamp,
+      executed_txhash: executed_txhash
+    }
+  }
 }
 
 class IncomingTransaction extends Transaction {
-  constructor(json) {
+  constructor (json) {
     super(json)
     this.token = json.token
     this.source = json.source
@@ -74,7 +108,7 @@ class IncomingTransaction extends Transaction {
 }
 
 class WalletOwner {
-  constructor(json) {
+  constructor (json) {
     this.uid = parseInt(json.uid)
     this.address = json.address
     this.name = json.name
@@ -82,7 +116,7 @@ class WalletOwner {
 }
 
 export class MultiSigWalletScore extends Ancilia {
-  constructor(network, scoreAddress) {
+  constructor (network, scoreAddress) {
     super(network)
     this._scoreAddress = scoreAddress
   }
@@ -187,11 +221,11 @@ export class MultiSigWalletScore extends Ancilia {
     ).then(tx => {
       return this.getEventLog(tx.result, TransactionCreated).then(eventLog => {
         return {
-          transaction_uid: parseInt(eventLog.indexed[1], 16)
+          transaction_uid: parseInt(eventLog.indexed[1], 16),
+          wallet_owner_uid: parseInt(eventLog.data[0], 16)
         }
       }).catch((error) => {
         console.log('ERR SUBMIT:', error)
-        console.log('txsub=', tx)
       })
     })
   }
@@ -212,7 +246,6 @@ export class MultiSigWalletScore extends Ancilia {
         }
       }).catch((error) => {
         console.log('ERR CONFIRM:', error)
-        console.log('txconf=', tx)
       })
     })
   }
@@ -249,6 +282,25 @@ export class MultiSigWalletScore extends Ancilia {
         return {
           transaction_uid: parseInt(eventLog.indexed[1], 16),
           wallet_owner_uid: parseInt(eventLog.indexed[2], 16)
+        }
+      })
+    })
+  }
+
+  cancel_transaction (transaction_uid) {
+    const wallet = this.getLoggedInWallet(true).address
+
+    return this.__iconexCallRWTx(
+      wallet,
+      this._scoreAddress,
+      'cancel_transaction',
+      0,
+      { transaction_uid: IconConverter.toHex(parseInt(transaction_uid)) }
+    ).then(tx => {
+      return this.getEventLog(tx.result, TransactionCancelled).then(eventLog => {
+        return {
+          transaction_uid: parseInt(eventLog.indexed[1], 16),
+          wallet_owner_uid: parseInt(eventLog.data[0], 16)
         }
       })
     })
@@ -361,7 +413,7 @@ export class MultiSigWalletScore extends Ancilia {
 
   set_wallet_owners_required (owners_required) {
     const sub_transactions = []
-    sub_transactions.push(SubOutgoingTransaction.create(
+    sub_transactions.push(SubOutgoingTransaction.serialize(
       this._scoreAddress,
       'set_wallet_owners_required',
       [{
@@ -378,7 +430,7 @@ export class MultiSigWalletScore extends Ancilia {
 
   add_wallet_owner (address, name) {
     const sub_transactions = []
-    sub_transactions.push(SubOutgoingTransaction.create(
+    sub_transactions.push(SubOutgoingTransaction.serialize(
       this._scoreAddress,
       'add_wallet_owner',
       [
@@ -402,7 +454,7 @@ export class MultiSigWalletScore extends Ancilia {
 
   remove_wallet_owner (wallet_owner_uid) {
     const sub_transactions = []
-    sub_transactions.push(SubOutgoingTransaction.create(
+    sub_transactions.push(SubOutgoingTransaction.serialize(
       this._scoreAddress,
       'remove_wallet_owner',
       [
@@ -421,7 +473,7 @@ export class MultiSigWalletScore extends Ancilia {
 
   replace_wallet_owner (old_wallet_owner_uid, new_address, new_name) {
     const sub_transactions = []
-    sub_transactions.push(SubOutgoingTransaction.create(
+    sub_transactions.push(SubOutgoingTransaction.serialize(
       this._scoreAddress,
       'replace_wallet_owner',
       [

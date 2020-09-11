@@ -1,5 +1,5 @@
 import memoize from 'lodash.memoize'
-import { getSymbolAndDecimalsFromContract } from '@src/utils/ancilia'
+import { getSymbolAndDecimalsFromContract, getNameFromContract } from '@src/utils/ancilia'
 import { isICONContractAddress, isICONAddress } from '@src/utils/icon'
 
 export const required = (value) => {
@@ -27,6 +27,13 @@ export const mustBeIRC2ContractAddress = memoize(
   async (address) => {
     const info = await getSymbolAndDecimalsFromContract(address)
     return info ? undefined : 'Address should be a valid ICON IRC2 token'
+  }
+)
+
+export const mustBeSafeContractAddress = memoize(
+  async (address) => {
+    const info = await getNameFromContract(address)
+    return info === 'ICONSafe' ? undefined : 'Address should be a valid ICONSafe contract'
   }
 )
 

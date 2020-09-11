@@ -16,70 +16,61 @@ import { Loader, LoadingContainer } from '@components/ICON'
 
 import { IconConverter } from 'icon-sdk-js'
 
-const Transactions = () => {
-  const [transactions, setTransactions] = useState(null)
-  const latestTransactions = useSelector((state) => state.latestTransactions)
-  const safeAddress = useSelector((state) => state.safeAddress)
-  const [tokenCache, setTokenCache] = useState([])
-  const [queriedTx, setQueriedTx] = useState(null)
-  const location = useLocation()
-  const urlParams = new URLSearchParams(location.search)
-  const queriedTxUid = urlParams.get('transaction')
+export const convertTransactionToDisplay = async (transaction, safeAddress, tokenCache) => {
+  console.log('tx before display transformation: ', transaction)
+  switch (transaction.type) {
+    case 'INCOMING':
+      return Promise.all([
+        getTokenDecimals(transaction.token),
+        getTokenSymbol(transaction.token)]
+      ).then(([decimals, symbol]) => {
+        const state = getTransactionState(transaction)
+        return {
+          uid: transaction.uid,
+          type: transaction.type,
+          created_txhash: transaction.created_txhash,
+          source: transaction.source,
+          // There is always always one token and one transfer per incoming transaction
+          tokens: [{
+            symbol: symbol,
+            decimals: decimals,
+            transfers: [{
+              amount: transaction.amount,
+              source: transaction.source
+            }]
+          }],
+          created_timestamp: transaction.created_timestamp,
+          status: state
+        }
+      })
 
-  const convertTransactionToDisplay = async (transaction) => {
-    console.log('tx before display transformation: ', transaction)
-    switch (transaction.type) {
-      case 'INCOMING':
-        return Promise.all([
-          getTokenDecimals(transaction.token),
-          getTokenSymbol(transaction.token)]
-        ).then(([decimals, symbol]) => {
-          const state = getTransactionState(transaction)
-          return {
-            uid: transaction.uid,
-            type: transaction.type,
-            created_txhash: transaction.created_txhash,
-            source: transaction.source,
-            // There is always always one token and one transfer per incoming transaction
-            tokens: [{
-              symbol: symbol,
-              decimals: decimals,
-              transfers: [{
-                amount: transaction.amount,
-                source: transaction.source
-              }]
-            }],
-            created_timestamp: transaction.created_timestamp,
-            status: state
-          }
-        })
+    case 'OUTGOING': {
+      const tokens = {}
 
-      case 'OUTGOING': {
-        const tokens = {}
+      tokens[ICX_TOKEN_SYMBOL] = transaction.sub_transactions.filter(subtx => {
+        return !subtx.amount.isEqualTo(0)
+      }).map(subtx => {
+        return {
+          amount: subtx.amount,
+          decimals: ICX_TOKEN_DECIMALS,
+          destination: subtx.destination
+        }
+      })
 
-        tokens[ICX_TOKEN_SYMBOL] = transaction.sub_transactions.filter(subtx => {
-          return !subtx.amount.isEqualTo(0)
-        }).map(subtx => {
-          return {
-            amount: subtx.amount,
-            decimals: ICX_TOKEN_DECIMALS,
-            destination: subtx.destination
-          }
-        })
+      if (tokens[ICX_TOKEN_SYMBOL].length === 0) delete tokens[ICX_TOKEN_SYMBOL]
 
-        if (tokens[ICX_TOKEN_SYMBOL].length === 0) delete tokens[ICX_TOKEN_SYMBOL]
+      // Fill symbol / decimals cache
+      transaction.sub_transactions.forEach(subtx => {
+        if (!(subtx.destination in tokenCache) && isICONContractAddress(subtx.destination)) {
+          tokenCache[subtx.destination] = getSymbolAndDecimalsFromContract(subtx.destination)
+        }
+      })
 
-        // Fill symbol / decimals cache
-        transaction.sub_transactions.forEach(subtx => {
-          if (!(subtx.destination in tokenCache) && isICONContractAddress(subtx.destination)) {
-            tokenCache[subtx.destination] = getSymbolAndDecimalsFromContract(subtx.destination)
-          }
-        })
-
-        return Promise.allSettled(Object.values(tokenCache)).then((values) => {
+      return Promise.allSettled(Object.values(tokenCache))
+        .then(values => {
           Object.keys(tokenCache).forEach(k => {
             const resolved = values.shift()
-            if (resolved.status === 'fulfilled') {
+            if (resolved && resolved.status === 'fulfilled') {
               tokenCache[k] = resolved.value
             } else {
               delete tokenCache[k]
@@ -90,19 +81,29 @@ const Transactions = () => {
             if (tokenCache[address]) {
               const { symbol, decimals } = tokenCache[address]
 
-              tokens[symbol] = transaction.sub_transactions.filter(subtx => {
-                return subtx.amount.isEqualTo(0)
-              }).map(subtx => {
-                const to = subtx.params.filter(tx => tx.name === '_to')[0].value
-                const value = IconConverter.toBigNumber(subtx.params.filter(tx => tx.name === '_value')[0].value)
+              tokens[symbol] = transaction.sub_transactions
+                .filter(subtx => {
+                  return subtx.amount.isEqualTo(0)
+                })
+                .filter(subtx => {
+                  // Detect IRC2 transfer
+                  return (subtx.method_name === 'transfer' &&
+                    subtx.params[0].name === '_to' &&
+                    subtx.params[1].name === '_value')
+                })
+                .map(subtx => {
+                  const to = subtx.params.filter(tx => tx.name === '_to')[0].value
+                  const value = IconConverter.toBigNumber(subtx.params.filter(tx => tx.name === '_value')[0].value)
 
-                return {
-                  amount: value,
-                  decimals: decimals,
-                  destination: to,
-                  address: address
-                }
-              })
+                  return {
+                    amount: value,
+                    decimals: decimals,
+                    destination: to,
+                    address: address
+                  }
+                })
+
+              if (tokens[symbol].length === 0) delete tokens[symbol]
             }
           })
 
@@ -130,27 +131,42 @@ const Transactions = () => {
             executed_timestamp: transaction.executed_timestamp,
             status: getTransactionState(transaction)
           }
-        })
-      }
+        }
+        )
     }
+
+    default:
+      throw Error('unsupported transaction type')
   }
+}
+
+const Transactions = () => {
+  const [transactions, setTransactions] = useState(null)
+  const latestTransactions = useSelector((state) => state.latestTransactions)
+  const safeAddress = useSelector((state) => state.safeAddress)
+  const [tokenCache, setTokenCache] = useState([])
+  const [queriedTx, setQueriedTx] = useState(null)
+  const location = useLocation()
+  const urlParams = new URLSearchParams(location.search)
+  const queriedTxUid = urlParams.get('transaction')
 
   useEffect(() => {
-    latestTransactions && Promise.allSettled(latestTransactions.map(t => convertTransactionToDisplay(t))).then(result => {
-      result = result.filter(item => item.status === 'fulfilled')
-      result = result.map(item => item.value)
-      setTransactions(result)
-    })
+    latestTransactions && Promise.allSettled(
+      latestTransactions.map(t => convertTransactionToDisplay(t, safeAddress, tokenCache)))
+      .then(result => {
+        console.log('result=', result)
+        result = result.filter(item => item.status === 'fulfilled')
+        result = result.map(item => item.value)
+        setTransactions(result)
+      })
   }, [latestTransactions])
 
   useEffect(() => {
-    console.log('queriedTxUid=', queriedTxUid)
-    console.log('safeAddress=', safeAddress)
     if (safeAddress) {
       const msw = getMultiSigWalletAPI(safeAddress)
       if (queriedTxUid) {
         msw.get_transaction(queriedTxUid).then(transaction => {
-          convertTransactionToDisplay(transaction).then(result => {
+          convertTransactionToDisplay(transaction, safeAddress, tokenCache).then(result => {
             setQueriedTx(result)
           })
         })

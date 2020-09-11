@@ -130,24 +130,5 @@ export const styles = createStyles({
     '&:hover': {
       cursor: 'pointer'
     }
-  },
-  removeSafeBtn: {
-    display: 'flex',
-    alignItems: 'center',
-    marginTop: '-1px' // to make it the same as row in Balances component
-  },
-  removeSafeIcon: {
-    marginLeft: sm,
-    height: md,
-    cursor: 'pointer'
-  },
-  counter: {
-    background: border,
-    borderRadius: '3px',
-    color: fontColor,
-    lineHeight: 'normal',
-    margin: `-2px 0 -2px ${sm}`,
-    padding: xs,
-    fontSize: '11px'
   }
 })

@@ -6,14 +6,17 @@ import styled from 'styled-components'
 const CustomTextField = styled((props) => (
   <TextFieldMui {...props} />
 ))`
+  width: 100%;
+  background-color: #f0efee;
+
   && {
-    width: 400px;
 
     .MuiFilledInput-input {
       cursor: ${({ readOnly }) => (readOnly === true ? 'not-allowed' : 'auto')};
     }
 
     .MuiFormLabel-root.Mui-focused {
+      
       color: ${({ theme, error }) =>
     error ? theme.colors.error : theme.colors.primary};
     }

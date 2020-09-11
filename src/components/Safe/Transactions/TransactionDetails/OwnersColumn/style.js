@@ -1,4 +1,4 @@
-import { boldFont, border, error, primary, secondary, secondaryText, sm, warning } from '@src/theme/variables'
+import { boldFont, screenSm, border, error, primary, secondary, secondaryText, sm, warning } from '@src/theme/variables'
 import { createStyles } from '@material-ui/core/styles'
 
 export const styles = createStyles({
@@ -74,7 +74,11 @@ export const styles = createStyles({
     height: '20px'
   },
   spacer: {
-    flex: 'auto'
+    // flex: 'auto'
+    width: '50%',
+    display: 'flex',
+    justifyContent: 'space-around',
+    marginLeft: '30px'
   },
   circleState: {
     display: 'flex',
@@ -88,12 +92,17 @@ export const styles = createStyles({
     }
   },
   button: {
-    alignSelf: 'center',
-    flexGrow: 0,
-    fontSize: '16px',
-    justifyContent: 'center',
-    paddingLeft: '14px',
-    paddingRight: '14px'
+    borderRadius: '4px',
+    width: '50%',
+    color: '#ffffff',
+
+    '& > span': {
+      fontSize: '14px'
+    },
+    [`@media (min-width: ${screenSm}px)`]: {
+      minWidth: '95px',
+      width: 'auto'
+    }
   },
   lastButton: {
     marginLeft: '10px'

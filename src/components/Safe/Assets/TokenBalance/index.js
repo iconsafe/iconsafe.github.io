@@ -30,7 +30,7 @@ const TokenBalance = ({ token }) => {
       result.unshift(['Date', token.symbol])
       setData(result)
     })
-  }, [token])
+  }, [token, multisigBalances])
 
   return (
     <Block className={classes.expandedTxBlock}>

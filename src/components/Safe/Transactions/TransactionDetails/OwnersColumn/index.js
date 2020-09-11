@@ -12,7 +12,11 @@ import Block from '@src/components/core/Block'
 import Col from '@src/components/core/Col'
 import Img from '@src/components/core/Img'
 import { makeStyles } from '@material-ui/core/styles'
+import { getSafeAddressFromUrl } from '@src/utils/route'
+import { getMultiSigWalletAPI } from '@src/utils/msw'
+import Button from '@components/core/Button'
 import { styles } from './style'
+import DeleteIcon from '@material-ui/icons/Delete'
 
 const useStyles = makeStyles(styles)
 
@@ -32,10 +36,12 @@ const OwnersColumn = ({ tx }) => {
   const thresholdRejectionsReached = tx.rejections.length >= threshold
   const thresholdReached = thresholdConfirmationsReached || thresholdRejectionsReached
   const owners = useSelector((state) => state.walletOwners)
+  const granted = useSelector((state) => state.granted)
   const unconfirmed = owners
     .filter(owner => !tx.confirmations.includes(owner.uid))
     .filter(owner => !tx.rejections.includes(owner.uid))
     .map(owner => owner.uid)
+  const msw = getMultiSigWalletAPI(getSafeAddressFromUrl())
 
   const getConfirmedThread = () => {
     return (
@@ -111,6 +117,23 @@ const OwnersColumn = ({ tx }) => {
     )
   }
 
+  const showCancelBtn = granted && tx.status === 'WAITING' && (tx.confirmations.length === 0 && tx.rejections.length === 0)
+  const onTxCancel = () => { msw.cancel_transaction(tx.uid) }
+
+  const cancelButton = () => {
+    return (
+      <Button
+        className={cn(classes.button, classes.lastButton)}
+        style={{ color: 'red', float: 'right', position: 'absolute', right: '0', bottom: '0', margin: '0 15px 15px 0' }}
+        color='primary'
+        onClick={onTxCancel}
+      >
+        <DeleteIcon />
+        Cancel transaction
+      </Button>
+    )
+  }
+
   return (
     <Col className={classes.rightCol} layout='block' xs={6}>
 
@@ -142,14 +165,17 @@ const OwnersColumn = ({ tx }) => {
         <div className={classes.circleState}>
           {tx.status === 'WAITING' && <Img alt='Confirm / Execute tx' src={ConfirmLargeGreyCircle} />}
           {tx.status === 'FAILED' && <Img alt='Failed tx' src={ErrorLargeFilledRedCircle} />}
+          {tx.status === 'CANCELLED' && <Img alt='Failed tx' src={ErrorLargeFilledRedCircle} />}
           {!(tx.status === 'FAILED') && thresholdConfirmationsReached && <Img alt='TX Executed icon' src={CheckLargeFilledGreenCircle} />}
           {!(tx.status === 'FAILED') && thresholdRejectionsReached && <Img alt='TX Executed icon' src={CheckLargeFilledRedCircle} />}
         </div>
 
         {tx.status === 'WAITING' && 'Waiting'}
         {tx.status === 'FAILED' && 'Failed'}
+        {tx.status === 'CANCELLED' && 'Cancelled'}
         {!(tx.status === 'FAILED') && thresholdConfirmationsReached && 'Executed'}
         {!(tx.status === 'FAILED') && thresholdRejectionsReached && 'Rejected'}
+        {showCancelBtn && cancelButton()}
       </Block>
 
     </Col>

@@ -11,20 +11,20 @@ const IconImg = styled.img`
   margin-right: 10px;
 `
 
+const StyledFormControl = styled(FormControl)`
+  width: 100%;
+`
+
 const StyledSelect = styled(SelectMUI)`
   background-color: ${(props) => props.theme.colors.separator};
   border-radius: 5px;
   height: 56px;
-  width: 140px;
+  width: 100%;
+  background-color: #f0efee;
 
   .MuiSelect-select {
     display: flex;
     align-items: center;
-    padding-left: 15px;
-  }
-
-  .MuiSelect-selectMenu {
-    font-family: ${(props) => props.theme.fonts.fontFamily};
   }
 
   &.MuiInput-underline:hover:not(.Mui-disabled):before {
@@ -67,44 +67,42 @@ function Select ({
   }
 
   return (
-    <div>
-      <FormControl>
-        <StyledSelect
-          labelId={id || 'generic-select'}
-          id={id || 'generic-select'}
-          open={open}
-          onClose={handleClose}
-          onOpen={handleOpen}
-          value={activeItemId}
-          onChange={handleChange}
-          {...rest}
-        >
-          {items.map((i) => {
-            return (
-              <MenuItem value={i.id} key={i.id}>
-                {i.iconUrl && (
-                  <IconImg
-                    alt={i.label}
-                    onError={onFallbackImage}
-                    src={i.iconUrl}
-                  />
-                )}
-                <div>
-                  <Text size='sm' color='text'>
-                    {i.label}
+    <StyledFormControl>
+      <StyledSelect
+        labelId={id || 'generic-select'}
+        id={id || 'generic-select'}
+        open={open}
+        onClose={handleClose}
+        onOpen={handleOpen}
+        value={activeItemId}
+        onChange={handleChange}
+        {...rest}
+      >
+        {items.map((i) => {
+          return (
+            <MenuItem value={i.id} key={i.id}>
+              {i.iconUrl && (
+                <IconImg
+                  alt={i.label}
+                  onError={onFallbackImage}
+                  src={i.iconUrl}
+                />
+              )}
+              <div>
+                <Text size='lg' color='text'>
+                  {i.label}
+                </Text>
+                {i.subLabel && (
+                  <Text size='lg' color='secondary' strong>
+                    {i.subLabel}
                   </Text>
-                  {i.subLabel && (
-                    <Text size='sm' color='secondary' strong>
-                      {i.subLabel}
-                    </Text>
-                  )}
-                </div>
-              </MenuItem>
-            )
-          })}
-        </StyledSelect>
-      </FormControl>
-    </div>
+                )}
+              </div>
+            </MenuItem>
+          )
+        })}
+      </StyledSelect>
+    </StyledFormControl>
   )
 }
 

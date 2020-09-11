@@ -1,5 +1,65 @@
-.root {
-    margin: auto;
-    padding: 120px 10% 0;
-    width: 100%;
+@import "src/theme/variables.scss";
+
+.screenAnimation {
+  animation: MoveUpDown 6s ease-in-out infinite;
+  position: relative;
+  top: 20px;
+}
+
+@keyframes MoveUpDown {
+  0%, 100% {
+    top: 20px;
+  }
+  50% {
+    top: 40px;
+  }
+}
+
+
+.dialog-wallet {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: inherit;
+  font-family: inherit;
+  padding: 0.6em;
+  border-radius: 30px;
+  background: #eeeeee;
+}
+
+.dialog-title {
+  display: flex;
+  align-items: center;
+  font-size: inherit;
+  font-family: inherit;
+  margin-bottom: 1em;
+}
+
+.dialog-title-text {
+  color: #4a4a4a;
+  margin-left: 10px;
+  font-weight: 800;
+}
+
+.provider {
+  display: flex;
+  flex-direction: row;
+  width: 40%;
+  padding: 20px;
+}
+
+.provider:hover {
+  background: #eee;
+  border-radius: 30px;
+  cursor: pointer;
+}
+
+.provider-icon {
+  width: 50px;
+}
+
+.provider-label {
+  font-size: 14px;
+  font-weight: 800;
+  color: #4a4a4a;
 }

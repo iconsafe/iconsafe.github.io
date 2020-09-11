@@ -1,5 +1,8 @@
 import IcxIcon from './icons/icx.svg'
 import TapIcon from './icons/tap.png'
+import SportsIcon from './icons/sports.png'
+import WokIcon from './icons/wok.png'
+import Ac3Icon from './icons/ac3.png'
 import UnknownIcon from './icons/unknown.png'
 import TokenPlaceholder from '@src/assets/icons/token_placeholder.svg'
 
@@ -10,6 +13,18 @@ const TOKENS = {
   },
   TAP: {
     src: TapIcon,
+    height: 25
+  },
+  SPORTS: {
+    src: SportsIcon,
+    height: 25
+  },
+  WOK: {
+    src: WokIcon,
+    height: 25
+  },
+  AC3: {
+    src: Ac3Icon,
     height: 25
   },
   GENERIC_TOKEN: {

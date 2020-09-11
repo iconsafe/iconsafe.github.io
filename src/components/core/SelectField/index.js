@@ -3,6 +3,8 @@ import FormHelperText from '@material-ui/core/FormHelperText'
 import InputLabel from '@material-ui/core/InputLabel'
 import Select from '@material-ui/core/Select'
 import React from 'react'
+import { OnChange } from 'react-final-form-listeners'
+import { trimSpaces } from '@src/utils/strings'
 
 const style = {
   minWidth: '100%'
@@ -16,6 +18,7 @@ const SelectInput = ({
   label,
   meta,
   renderValue,
+  fieldMutator,
   ...rest
 }) => {
   const showError = ((meta.submitError && !meta.dirtySinceLastSubmit) || meta.error) && meta.touched && !disableError
@@ -35,6 +38,11 @@ const SelectInput = ({
         value={value}
         {...rest}
       />
+      <OnChange name={name}>
+        {async (value) => {
+          fieldMutator && fieldMutator(trimSpaces(value))
+        }}
+      </OnChange>
       {showError && <FormHelperText>{meta.error || meta.submitError}</FormHelperText>}
     </FormControl>
   )

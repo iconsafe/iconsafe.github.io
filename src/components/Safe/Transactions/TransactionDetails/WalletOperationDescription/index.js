@@ -48,6 +48,14 @@ const WalletOperationDescription = ({ tx }) => {
           </div>
         )
 
+      case 'force_cancel_transaction':
+        return (
+          <div className={classes.content}>
+            {getTxParam(tx)}
+            - <Bold>Force cancel</Bold> a transaction (UID = {getTxParam(tx, 'transaction_uid').value})
+          </div>
+        )
+
       case 'remove_wallet_owner':
         return msw.get_wallet_owner(getTxParam(tx, 'wallet_owner_uid').value).then(owner => {
           return (
@@ -81,7 +89,7 @@ const WalletOperationDescription = ({ tx }) => {
               <Block className={classes.addressLine}>
                 New Address :
                 <Span className={cn(classes.greenText, classes.trackerLink)}>
-                  <ICONTrackerLink value={getTxParam(tx, 'new_address').value} /> 
+                  <ICONTrackerLink value={getTxParam(tx, 'new_address').value} />
                 </Span>
               </Block>
             </Block>

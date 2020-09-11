@@ -73,7 +73,7 @@ const Footer = () => {
       <Link
         className={cn(classes.item, classes.link)}
         target='_blank'
-        to='https://github.com/iconation/iconsafe-SCORE/releases'
+        to='https://github.com/iconation/iconsafe/releases'
       >
         {appVersion}
       </Link>

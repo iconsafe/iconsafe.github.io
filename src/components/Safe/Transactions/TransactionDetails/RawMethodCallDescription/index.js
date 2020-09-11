@@ -42,12 +42,12 @@ const RawMethodCallDescription = ({
             <Box fontFamily='Monospace'>{methodName}</Box>
           </ListItem>}
 
-        {Object.keys(params).length !== 0 &&
+        {params && Object.keys(params).length !== 0 &&
           <ListItem classes={{ root: classes.item }}>
             <Bold className={classes.boldTitle}>Params: </Bold>
             <List component='div' disablePadding>
-              {params.map(param => (
-                <ListItem key={0} classes={{ root: classes.item }}>
+              {params.map((param, index) => (
+                <ListItem key={index} classes={{ root: classes.item }}>
                   <Box fontFamily='Monospace' className={classes.paramName}>{param.name}: </Box>
                   <Box fontFamily='Monospace' className={classes.paramType}>{param.type}</Box>
                   <Box fontFamily='Monospace' className={classes.paramValue}> = {param.value}</Box>

@@ -26,7 +26,6 @@ export const hashToEvents = (msw, hash) => {
     const events = []
     result.eventLogs.forEach(eventLog => {
       const eventSignature = eventLog.indexed[0]
-      console.log('Incoming event : ', eventSignature)
 
       switch (eventSignature) {
         // Balance History Manager
@@ -37,17 +36,18 @@ export const hashToEvents = (msw, hash) => {
           })
           break
         // Transaction Manager
-        case 'TransactionCreated(int)':
+        case 'TransactionCreated(int,int)':
           events.push({
             name: eventSignature.split('(')[0],
-            transaction_uid: parseInt(eventLog.indexed[1])
+            transaction_uid: parseInt(eventLog.indexed[1]),
+            wallet_owner_uid: parseInt(eventLog.data[0])
           })
           break
         case 'TransactionCancelled(int,int)':
           events.push({
             name: eventSignature.split('(')[0],
             transaction_uid: parseInt(eventLog.indexed[1]),
-            wallet_owner_uid: parseInt(eventLog.indexed[2])
+            wallet_owner_uid: parseInt(eventLog.data[0])
           })
           break
         case 'TransactionExecutionSuccess(int,int)':
@@ -141,6 +141,8 @@ export const getTransactionState = (transaction) => {
           return 'REJECTED'
         case 'WAITING':
           return 'WAITING'
+        case 'CANCELLED':
+          return 'CANCELLED'
         default:
           return 'UNKNOWN'
       }

@@ -90,6 +90,15 @@ const SelectWalletDialog = ({ msw, onClose, selectedValue, open }) => {
       dispatch(dispatchers.setWalletConnected(address))
       dispatch(dispatchers.setWalletProvider('ICONex'))
       onClose(address)
+      Promise.all([msw.get_wallet_owner_uid(address)]).then(([connectedWalletOwnerUid]) => {
+        dispatch(dispatchers.setConnectedWalletOwnerUid(connectedWalletOwnerUid))
+        msw.get_wallet_owner(connectedWalletOwnerUid).then(connectedWalletOwner => {
+          dispatch(dispatchers.setConnectedWalletOwner(connectedWalletOwner))
+        })
+      }).catch(error => {
+        if (error.includes('WalletOwnerDoesntExist')) {
+        }
+      })
     }).catch(error => {
       // silently catch user cancellation
       console.log(error)

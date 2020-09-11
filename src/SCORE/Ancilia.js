@@ -98,12 +98,22 @@ export class Ancilia {
     return this.__getNetworkInfo(this._network).name
   }
 
+  // SDK Interface ============================================================
+  getScoreApi (address) {
+    return this.__getIconService().getScoreApi(address).execute()
+  }
+
   // ICX Interface ============================================================
   icxBalance (address) {
     // Assume ICX has 18 decimals
     return this.__getIconService().getBalance(address).execute().then(balance => {
       return IconConverter.toBigNumber(balance)
     })
+  }
+
+  // Generic Contract Interface ============================================================
+  getName (contract) {
+    return this.__callROTx(contract, 'name')
   }
 
   // IRC2 Token Interface ============================================================

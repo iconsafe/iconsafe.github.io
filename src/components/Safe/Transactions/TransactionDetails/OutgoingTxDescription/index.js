@@ -20,11 +20,11 @@ import SettingsIcon from '@material-ui/icons/Settings'
 
 const useStyles = makeStyles(styles)
 
-export const OutgoingTxDescription = ({ tx }) => {
+export const OutgoingTxDescription = ({ tx, defaultOpenedRawMethodCalls = false }) => {
   const classes = useStyles()
   const [openedTokenTransfers, setOpenedTokenTransfers] = useState(true)
   const [openedSafeOperations, setOpenedSafeOperations] = useState(true)
-  const [openedRawMethodCalls, setOpenedRawMethodCalls] = useState(false)
+  const [openedRawMethodCalls, setOpenedRawMethodCalls] = useState(defaultOpenedRawMethodCalls)
 
   const handleClickTokenTransfers = () => {
     setOpenedTokenTransfers(!openedTokenTransfers)
@@ -161,10 +161,9 @@ export const OutgoingTxDescription = ({ tx }) => {
           }
           className={classes.root}
         >
-          {tx.tokens.length > 0 && getTokenTransfers()}
-          {tx.safeOperations.length > 0 && getSafeOperations()}
-
-          {tx.subTx.length > 0 && getSubTx()}
+          {tx.tokens?.length > 0 && getTokenTransfers()}
+          {tx.safeOperations?.length > 0 && getSafeOperations()}
+          {tx.subTx?.length > 0 && getSubTx()}
         </List>
       </Paper>
     </Block>

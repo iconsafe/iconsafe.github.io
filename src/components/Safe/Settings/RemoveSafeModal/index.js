@@ -89,9 +89,7 @@ const RemoveSafeComponent = ({ classes, isOpen, onClose }) => {
           className={classes.buttonRemove}
           minWidth={140}
           onClick={() => {
-            // dispatch(removeSafe(safeAddress))
             onClose()
-            // history.push(SAFELIST_ADDRESS)
           }}
           type='submit'
           variant='contained'
