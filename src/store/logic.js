@@ -1,5 +1,5 @@
 
-import { getTokenSymbol, getTokenDecimals, ICX_TOKEN_ADDRESS, ZERO } from '@src/utils/icon'
+import { getTokenSymbol, getTokenDecimals, getTokenPrice, ICX_TOKEN_ADDRESS, ZERO } from '@src/utils/icon'
 import { IconConverter } from 'icon-sdk-js'
 import * as dispatchers from '@src/store/actions'
 
@@ -9,15 +9,16 @@ export const refreshMultisigBalances = (msw, domainNames) =>
       return Promise.all([
         getTokenSymbol(token),
         msw.get_token_balance_history(token),
-        getTokenDecimals(token)
-      ]).then(([symbol, balanceHistory, decimals]) => {
+        getTokenDecimals(token),
+        getTokenPrice(token)
+      ]).then(([symbol, balanceHistory, decimals, price]) => {
         const balance = balanceHistory.length > 0 ? balanceHistory[0].balance : ZERO
         const result = {
           token: token,
           symbol: symbol,
           balance: balance,
           decimals: decimals,
-          value: '? USD' // `${(balance * Math.random() / 1000000000000000000).toFixed(2)} USD` // todo
+          value: price === '?' ? price : balance.multipliedBy(price)
         }
 
         if (token === ICX_TOKEN_ADDRESS && domainNames) {

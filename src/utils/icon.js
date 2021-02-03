@@ -1,5 +1,6 @@
 import { getAnciliaAPI } from '@src/utils/ancilia'
 import { IconConverter } from 'icon-sdk-js'
+import { tokenPriceCalculator } from './priceCalculator'
 
 export const ICX_TOKEN_ADDRESS = 'cx0000000000000000000000000000000000000000'
 export const ICX_TOKEN_DECIMALS = 18
@@ -51,6 +52,10 @@ export const getTokenDecimals = (token) => {
 export const getTokenBalance = (address, token) => {
   const ancilia = getAnciliaAPI()
   return token === ICX_TOKEN_ADDRESS ? ancilia.icxBalance(address) : ancilia.irc2Balance(address, token)
+}
+
+export const getTokenPrice = (token) => {
+  return tokenPriceCalculator(token)
 }
 
 export const convertTsToDateString = (timestamp) => {
