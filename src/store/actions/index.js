@@ -1,0 +1,18 @@
+import * as Actions from '@store/actions/actionTypes'
+
+export const setWalletConnected = (walletConnected) => ({ type: Actions.WALLET_CONNECTED_ACTION, walletConnected })
+export const setDomainNames = (domainNames) => ({ type: Actions.DOMAIN_NAMES_ACTION, domainNames })
+export const setWalletProvider = (walletProvider) => ({ type: Actions.WALLET_PROVIDER_ACTION, walletProvider })
+export const setWalletOwners = (walletOwners) => ({ type: Actions.WALLET_OWNERS_ACTION, walletOwners })
+export const setWalletOwnersRequired = (walletOwnersRequired) => ({ type: Actions.WALLET_OWNERS_REQUIRED_ACTION, walletOwnersRequired })
+export const setMultisigBalances = (multisigBalances) => ({ type: Actions.MULTISIG_BALANCES_ACTION, multisigBalances })
+export const setContractVersion = (contractVersion) => ({ type: Actions.CONTRACT_VERSION_ACTION, contractVersion })
+export const setLatestEvents = (latestEvents) => ({ type: Actions.LATEST_EVENTS_ACTION, latestEvents })
+export const setCurrentEvent = (currentEvent) => ({ type: Actions.CURRENT_EVENT_ACTION, currentEvent })
+export const setForceReload = (forceReload) => ({ type: Actions.FORCE_RELOAD_ACTION, forceReload })
+export const setConnectedWalletOwnerUid = (connectedWalletOwnerUid) => ({ type: Actions.CONNECTED_WALLET_OWNER_UID_ACTION, connectedWalletOwnerUid })
+export const setConnectedWalletOwner = (connectedWalletOwner) => ({ type: Actions.CONNECTED_WALLET_OWNER_ACTION, connectedWalletOwner })
+export const setLatestTransactions = (latestTransactions) => ({ type: Actions.LATEST_TRANSACTIONS_ACTION, latestTransactions })
+export const setNetworkConnected = (networkConnected) => ({ type: Actions.NETWORK_CONNECTED_ACTION, networkConnected })
+export const setSafeAddress = (safeAddress) => ({ type: Actions.SAFE_ADDRESS_ACTION, safeAddress })
+export const setSafeName = (safeName) => ({ type: Actions.SAFE_NAME_ACTION, safeName })
