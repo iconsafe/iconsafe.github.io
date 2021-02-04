@@ -125,46 +125,6 @@ const Welcome = () => {
       }}
       >
         <Bold style={{ fontSize: '20px' }}>Input your ICONSafe public address below: </Bold>
-        {/* 
-        <Bold style={{ fontSize: '20px' }}>Instructions for the ICONation TestNet: </Bold>
-        <br />
-        <br />
-        <Col>
-          <Row>
-            <Span>• <b>Copy and paste</b> the demo Safe Contract address below : </Span>
-          </Row>
-          <br />
-
-          <Row>
-            <Span style={{ display: 'flex' }}>
-              <Span>cxcb6469ba90e726fa1862dd4dfb2e4497c0108654</Span>
-              <CopyBtn content='cxcb6469ba90e726fa1862dd4dfb2e4497c0108654' />
-            </Span>
-          </Row>
-          <br />
-
-          <Row>
-            <Span>• Once connected, <Bold> feel free to do anything!</Bold></Span>
-          </Row>
-          <Row>
-            <Span>
-              <Bold>Only 1 confirmation</Bold> is required to confirm any outgoing transaction, so you will be able to confirm transaction by yourself.
-            </Span>
-          </Row>
-          <br />
-
-          <Row>
-            <Span>
-              • You may want to some <Bold>send some testnet ICX</Bold> to the safe address for testing, feel free to use the Sharpn Yeouido Faucet:
-              <br />
-              <a style={{ display: 'flex' }} target='_blank' rel='noopener noreferrer' href='https://faucet.sharpn.tech/'>
-                https://faucet.sharpn.tech/ <Img src={TrackerOpenIcon} />
-              </a>
-            </Span>
-          </Row> 
-
-        </Col>
-          */}
       </Block>
 
       <DialogContent dividers style={{ display: 'flex', flexDirection: 'column' }}>
