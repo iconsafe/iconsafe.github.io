@@ -254,8 +254,7 @@ export default function EnhancedTable ({ rows, additionalChild }) {
                           {displayUnit(row.balance.plus(row.unstaking ? row.iiss.unstaking : 0), row.decimals)}
                           {row.token === ICX_TOKEN_ADDRESS && displayIcxBalance(row)}
                         </TableCell>
-                        <TableCell align='right'>{row.value}</TableCell>
-
+                        <TableCell align='right'>{row.value === '?' ? row.value : parseFloat(displayUnit(row.value, row.decimals)).toFixed(2)} USD</TableCell>
                         <TableCell align='right' className={classes.expandCellStyle}>
                           <IconButton disableRipple>
                             {expandedTx === row.token ? <ExpandLess /> : <ExpandMore />}
