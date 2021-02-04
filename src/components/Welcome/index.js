@@ -124,7 +124,7 @@ const Welcome = () => {
         maxWidth: '500px'
       }}
       >
-        <Bold style={{ fontSize: '20px' }}>Input your ICONSafe public address below: </Bold>
+        <Bold style={{ fontSize: '20px' }}>Input your ICONSafe public address below:</Bold>
       </Block>
 
       <DialogContent dividers style={{ display: 'flex', flexDirection: 'column' }}>
