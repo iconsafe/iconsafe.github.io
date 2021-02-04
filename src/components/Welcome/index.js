@@ -124,11 +124,12 @@ const Welcome = () => {
         maxWidth: '500px'
       }}
       >
+        <Bold style={{ fontSize: '20px' }}>Input your ICONSafe public address below: </Bold>
+        {/* 
         <Bold style={{ fontSize: '20px' }}>Instructions for the ICONation TestNet: </Bold>
         <br />
         <br />
         <Col>
-
           <Row>
             <Span>• <b>Copy and paste</b> the demo Safe Contract address below : </Span>
           </Row>
@@ -160,9 +161,10 @@ const Welcome = () => {
                 https://faucet.sharpn.tech/ <Img src={TrackerOpenIcon} />
               </a>
             </Span>
-          </Row>
+          </Row> 
 
         </Col>
+          */}
       </Block>
 
       <DialogContent dividers style={{ display: 'flex', flexDirection: 'column' }}>
