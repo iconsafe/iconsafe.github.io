@@ -17,9 +17,10 @@ import { SCORE_INSTALL_ADDRESS } from '@src/SCORE/Ancilia'
 
 import { IconConverter } from 'icon-sdk-js'
 
-export const convertTransactionToDisplay = async (transaction, safeAddress, tokenCache) => {
+export const convertTransactionToDisplay = async (transaction, safeAddress) => {
 
   const msw = getMultiSigWalletAPI(safeAddress)
+  const tokenCache = []
 
   switch (transaction.type) {
     case 'CLAIM_ISCORE':
@@ -77,6 +78,7 @@ export const convertTransactionToDisplay = async (transaction, safeAddress, toke
       })
 
     case 'OUTGOING': {
+      console.log("transaction outgoing=", transaction)
       const tokens = {}
 
       tokens[ICX_TOKEN_SYMBOL] = transaction.sub_transactions.filter(subtx => {
@@ -100,7 +102,6 @@ export const convertTransactionToDisplay = async (transaction, safeAddress, toke
 
       return Promise.allSettled(Object.values(tokenCache))
         .then(values => {
-
           Object.keys(tokenCache).forEach(k => {
             const resolved = values.shift()
             tokenCache[k] = resolved.value
@@ -151,6 +152,7 @@ export const convertTransactionToDisplay = async (transaction, safeAddress, toke
             return subtx.destination === SCORE_INSTALL_ADDRESS
           })
 
+          console.log("transaction outgoing 2=", transaction)
           return {
             uid: transaction.uid,
             type: transaction.type,
@@ -166,8 +168,7 @@ export const convertTransactionToDisplay = async (transaction, safeAddress, toke
             executed_timestamp: transaction.executed_timestamp,
             status: getTransactionState(transaction)
           }
-        }
-        )
+        })
     }
 
     default:
@@ -179,7 +180,6 @@ const Transactions = () => {
   const [transactions, setTransactions] = useState(null)
   const latestTransactions = useSelector((state) => state.latestTransactions)
   const safeAddress = useSelector((state) => state.safeAddress)
-  const [tokenCache, setTokenCache] = useState([])
   const [queriedTx, setQueriedTx] = useState(null)
   const location = useLocation()
   const urlParams = new URLSearchParams(location.search)
@@ -187,7 +187,7 @@ const Transactions = () => {
 
   useEffect(() => {
     latestTransactions && Promise.allSettled(
-      latestTransactions.map(t => convertTransactionToDisplay(t, safeAddress, tokenCache)))
+      latestTransactions.map(t => convertTransactionToDisplay(t, safeAddress)))
       .then(result => {
         result = result.filter(item => item.status === 'fulfilled')
         result = result.map(item => item.value)
@@ -200,7 +200,7 @@ const Transactions = () => {
       const msw = getMultiSigWalletAPI(safeAddress)
       if (queriedTxUid) {
         msw.get_transaction(queriedTxUid).then(transaction => {
-          convertTransactionToDisplay(transaction, safeAddress, tokenCache).then(result => {
+          convertTransactionToDisplay(transaction, safeAddress).then(result => {
             setQueriedTx(result)
           })
         })
