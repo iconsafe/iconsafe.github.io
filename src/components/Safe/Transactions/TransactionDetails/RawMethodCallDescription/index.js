@@ -1,6 +1,6 @@
 import React from 'react'
-import Block from '@src/components/core/Block'
-import Bold from '@src/components/core/Bold'
+import Block from '@components/core/Block'
+import Bold from '@components/core/Bold'
 import { ICONTrackerLink } from '@components/ICON'
 import { displayUnit } from '@src/utils/icon'
 import { styles } from './styles'

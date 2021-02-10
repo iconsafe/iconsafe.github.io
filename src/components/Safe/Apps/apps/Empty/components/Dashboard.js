@@ -1,12 +1,12 @@
 import { Text, Title } from '@components/ICON'
-import Button from '@src/components/core/Button'
+import Button from '@components/core/Button'
 import React, { useEffect } from 'react'
 import styled from 'styled-components'
 import WidgetWrapper from '@components/Safe/Apps/components/WidgetWrapper'
-import GnoForm from '@src/components/core/GnoForm'
+import GnoForm from '@components/core/GnoForm'
 import { styles } from './style'
 import { makeStyles } from '@material-ui/core/styles'
-import Col from '@src/components/core/Col'
+import Col from '@components/core/Col'
 import { useSelector } from 'react-redux'
 
 const StyledTitle = styled(Title)`

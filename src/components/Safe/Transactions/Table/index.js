@@ -346,19 +346,30 @@ export default function EnhancedTable ({ rows, queriedTx }) {
                         </TableCell>
                         <TableCell align='left'>
 
-                          {row.type === 'INCOMING' &&
+                          {row.type === 'INCOMING' && <>
                             <CallReceived
                               alt='Incoming transaction'
                               className={classNames(classes.greenIcon, classes.leftIcon, classes.iconSmall)}
-                            />}
+                            />
+                            <span>Incoming transfer</span>
+                          </>}
 
-                          {row.type === 'OUTGOING' &&
+                          {row.type === 'CLAIM_ISCORE' && <>
+                            <CallReceived
+                              alt='Incoming transaction'
+                              className={classNames(classes.greenIcon, classes.leftIcon, classes.iconSmall)}
+                            />
+                            <span>I-Score claimed</span>
+                          </>}
+
+                          {row.type === 'OUTGOING' && <>
                             <CallMade
                               alt='Outgoing transaction'
                               className={classNames(classes.redIcon, classes.leftIcon, classes.iconSmall)}
-                            />}
+                            />
+                            <span>Outgoing transaction</span>
+                          </>}
 
-                          {lowercaseWithCapital(row.type)}
                         </TableCell>
                         <TableCell align='left'>
 

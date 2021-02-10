@@ -2,8 +2,8 @@ import React from 'react'
 // import { useSelector } from 'react-redux'
 
 // import { getNameFromAddressBook } from 'src/logic/addressBook/store/selectors'
-import Block from '@src/components/core/Block'
-import Bold from '@src/components/core/Bold'
+import Block from '@components/core/Block'
+import Bold from '@components/core/Bold'
 // import OwnerAddressTableCell from 'src/routes/safe/components/Settings/ManageOwners/OwnerAddressTableCell'
 import { ICONTrackerLink } from '@components/ICON'
 import { displayUnit } from '@src/utils/icon'
@@ -21,7 +21,7 @@ const TokenTransferDescription = ({ amount, decimals, symbol, address, incoming 
   return (
     <Block className={classes.transactionDescriptionContainer}>
 
-      <ListItemIcon>
+      <ListItemIcon style={{ marginRight: '5px' }}>
         <Img
           style={{ paddingRight: '5px', paddingLeft: '8px', verticalAlign: 'bottom' }}
           height={20}
@@ -29,8 +29,8 @@ const TokenTransferDescription = ({ amount, decimals, symbol, address, incoming 
         />
       </ListItemIcon>
 
-      {incoming && <Bold>Receive {displayUnit(amount, decimals)} {symbol} from:</Bold>}
-      {!incoming && <Bold>Send {displayUnit(amount, decimals)} {symbol} to:</Bold>}
+      {incoming && <span><Bold>Receive {displayUnit(amount, decimals)} {symbol} </Bold> from:</span>}
+      {!incoming && <span><Bold>Send {displayUnit(amount, decimals)} {symbol} </Bold> to:</span>}
       <ICONTrackerLink className={classes.transferDestination} knownAddress={false} value={address} />
     </Block>
   )

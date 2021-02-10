@@ -13,7 +13,7 @@ const initialState = {
   connectedWalletOwnerUid: null,
   forceReload: true,
   walletOwnersRequired: 0,
-  contractVersion: null,
+  contractVersions: null,
   granted: false,
   safeAddress: null,
   latestTransactions: null,
@@ -57,8 +57,8 @@ function rootReducer (state = initialState, action) {
       return { ...state, latestTransactions: action.latestTransactions }
     case Actions.NETWORK_CONNECTED_ACTION:
       return { ...state, networkConnected: action.networkConnected }
-    case Actions.CONTRACT_VERSION_ACTION:
-      return { ...state, contractVersion: action.contractVersion }
+    case Actions.CONTRACT_VERSIONS_ACTION:
+      return { ...state, contractVersions: action.contractVersions }
     case Actions.LATEST_EVENTS_ACTION: {
       return { ...state, latestEvents: action.latestEvents }
     } case Actions.CURRENT_EVENT_ACTION:

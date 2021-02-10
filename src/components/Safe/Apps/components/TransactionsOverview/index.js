@@ -2,9 +2,9 @@ import React from 'react'
 import { Text, Title } from '@components/ICON'
 
 import WidgetWrapper from '../../components/WidgetWrapper'
-import GnoForm from '@src/components/core/GnoForm'
+import GnoForm from '@components/core/GnoForm'
 import { OutgoingTxDescription } from '@components/Safe/Transactions/TransactionDetails/OutgoingTxDescription'
-import Button from '@src/components/core/Button'
+import Button from '@components/core/Button'
 import styled from 'styled-components'
 
 const StyledTitle = styled(Title)`

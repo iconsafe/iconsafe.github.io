@@ -127,6 +127,10 @@ export const hashToEvents = (msw, hash) => {
 
 export const getTransactionState = (transaction) => {
   switch (transaction.type) {
+    case 'CLAIM_ISCORE':
+      // Claim I-Score cannot fail
+      return 'EXECUTED'
+
     case 'INCOMING':
       // Incoming transaction cannot fail
       return 'EXECUTED'

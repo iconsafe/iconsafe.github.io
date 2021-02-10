@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import OwnerForm from './screens/OwnerForm'
 import ReviewAddOwner from './screens/Review'
 import { getMultiSigWalletAPI } from '@src/utils/msw'
-import Modal from '@src/components/Modal'
+import Modal from '@components/Modal'
 
 const styles = () => ({
   biggerModalWindow: {

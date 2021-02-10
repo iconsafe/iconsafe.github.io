@@ -7,16 +7,16 @@ import { useSelector } from 'react-redux'
 
 import { styles } from './style'
 
-import Field from '@src/components/core/Field'
-import GnoForm from '@src/components/core/GnoForm'
-import SelectField from '@src/components/core/SelectField'
-import { composeValidators, maxValue, minValue, mustBeInteger, required } from '@src/components/core/validator'
-import Block from '@src/components/core/Block'
-import Button from '@src/components/core/Button'
-import Col from '@src/components/core/Col'
-import Hairline from '@src/components/core/Hairline'
-import Paragraph from '@src/components/core/Paragraph'
-import Row from '@src/components/core/Row'
+import Field from '@components/core/Field'
+import GnoForm from '@components/core/GnoForm'
+import SelectField from '@components/core/SelectField'
+import { composeValidators, maxValue, minValue, mustBeInteger, required } from '@components/core/validator'
+import Block from '@components/core/Block'
+import Button from '@components/core/Button'
+import Col from '@components/core/Col'
+import Hairline from '@components/core/Hairline'
+import Paragraph from '@components/core/Paragraph'
+import Row from '@components/core/Row'
 
 const ThresholdForm = ({ classes, onClickBack, onClose, onSubmit }) => {
   const owners = useSelector((state) => state.walletOwners)

@@ -2,9 +2,9 @@ import React, { useState, useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import { getMultiSigWalletAPI } from '@src/utils/msw'
 
-import Block from '@src/components/core/Block'
-import Bold from '@src/components/core/Bold'
-import Span from '@src/components/core/Span'
+import Block from '@components/core/Block'
+import Bold from '@components/core/Bold'
+import Span from '@components/core/Span'
 import { ICONTrackerLink } from '@components/ICON'
 import { styles } from './styles'
 import { makeStyles } from '@material-ui/core/styles'
@@ -34,7 +34,7 @@ const WalletOperationDescription = ({ tx }) => {
       case 'set_wallet_owners_required':
         return (
           <div className={classes.content}>
-            - Change <Bold>safe owners requirement</Bold> to
+            Change <Bold>safe owners requirement</Bold> to
             <Span className={classes.cyanText}> {parseInt(getTxParam(tx, 'owners_required').value)}</Span>
           </div>
         )
@@ -43,7 +43,7 @@ const WalletOperationDescription = ({ tx }) => {
         return (
           <div className={classes.content}>
             {getTxParam(tx)}
-            - <Bold>Add a new owner</Bold> ({getTxParam(tx, 'name').value}) :
+            <Bold>Add a new owner</Bold> ({getTxParam(tx, 'name').value}) :
             <Span className={classes.cyanText}> <ICONTrackerLink value={getTxParam(tx, 'address').value} /> </Span>
           </div>
         )
@@ -52,7 +52,7 @@ const WalletOperationDescription = ({ tx }) => {
         return (
           <div className={classes.content}>
             {getTxParam(tx)}
-            - <Bold>Force cancel</Bold> a transaction (UID = {getTxParam(tx, 'transaction_uid').value})
+            <Bold>Force cancel</Bold> a transaction (UID = {getTxParam(tx, 'transaction_uid').value})
           </div>
         )
 
@@ -60,7 +60,7 @@ const WalletOperationDescription = ({ tx }) => {
         return msw.get_wallet_owner(getTxParam(tx, 'wallet_owner_uid').value).then(owner => {
           return (
             <div className={classes.content}>
-              - <Bold>Remove an existing owner</Bold> ({owner.name}) :
+              <Bold>Remove an existing owner</Bold> ({owner.name}) :
               <Span className={classes.cyanText}> <ICONTrackerLink value={owner.address} /> </Span>
             </div>
           )
@@ -70,7 +70,7 @@ const WalletOperationDescription = ({ tx }) => {
         return msw.get_wallet_owner(getTxParam(tx, 'old_wallet_owner_uid').value).then(owner => {
           return (
             <Block className={classes.content}>
-              - <Bold>Replace or edit an existing owner</Bold> :<br />
+              <Bold>Replace or edit an existing owner</Bold> :<br />
               <Block>
                 Old Name : <Span className={classes.cyanText}> {owner.name} </Span>
               </Block>

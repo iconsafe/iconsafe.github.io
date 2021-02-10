@@ -5,19 +5,20 @@ import { Text, Title } from '@components/ICON'
 import Button from '@components/core/Button'
 import styled from 'styled-components'
 import WidgetWrapper from '@components/Safe/Apps/components/WidgetWrapper'
-import GnoForm from '@src/components/core/GnoForm'
+import GnoForm from '@components/core/GnoForm'
 import { styles } from './style'
 import { makeStyles } from '@material-ui/core/styles'
-import Col from '@src/components/core/Col'
+import Col from '@components/core/Col'
 import { SubOutgoingTransaction } from '@src/SCORE/MultiSigWalletScore'
-import AmountInput from '@src/components/core/AmountInput'
-import TextInput from '@src/components/core/TextInput'
-import AddressInput from '@src/components/core/AddressInput'
+import AmountInput from '@components/core/AmountInput'
+import TextInput from '@components/core/TextInput'
+import AddressInput from '@components/core/AddressInput'
 import { ICX_TOKEN_ADDRESS, displayUnit, getTokenSymbol } from '@src/utils/icon'
 import { Alert, AlertTitle } from '@material-ui/lab'
 import { IconConverter } from 'icon-sdk-js'
 import Select from 'react-select'
 import Checkbox from '@material-ui/core/Checkbox'
+import { mustBeHex } from '@components/core/validator'
 
 const ButtonContainer = styled.div`
   display: flex;
@@ -220,6 +221,7 @@ const Dashboard = ({ subTransactions, setSubTransactions }) => {
                     placeholder='Data (in HEX) (optional)'
                     text='Data (in HEX) (optional)'
                     fieldMutator={mutators.setIrc2TransferData}
+                    validators={[mustBeHex]}
                   />
                 </Col>
 

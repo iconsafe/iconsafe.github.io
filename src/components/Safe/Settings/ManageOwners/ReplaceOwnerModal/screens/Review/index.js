@@ -7,15 +7,15 @@ import { useSelector } from 'react-redux'
 
 import { styles } from './style'
 
-import CopyBtn from '@src/components/core/CopyBtn'
-import IconTrackerBtn from '@src/components/core/IconTrackerBtn'
-import Identicon from '@src/components/core/Identicon'
-import Block from '@src/components/core/Block'
-import Button from '@src/components/core/Button'
-import Col from '@src/components/core/Col'
-import Hairline from '@src/components/core/Hairline'
-import Paragraph from '@src/components/core/Paragraph'
-import Row from '@src/components/core/Row'
+import CopyBtn from '@components/core/CopyBtn'
+import IconTrackerBtn from '@components/core/IconTrackerBtn'
+import Identicon from '@components/core/Identicon'
+import Block from '@components/core/Block'
+import Button from '@components/core/Button'
+import Col from '@components/core/Col'
+import Hairline from '@components/core/Hairline'
+import Paragraph from '@components/core/Paragraph'
+import Row from '@components/core/Row'
 
 const ReviewRemoveOwner = ({ classes, onClickBack, onClose, onSubmit, ownerAddress, ownerName, values }) => {
   const safeName = useSelector((state) => state.safeName)

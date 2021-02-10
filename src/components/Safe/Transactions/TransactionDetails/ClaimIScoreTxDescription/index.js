@@ -1,5 +1,6 @@
+import { useSelector } from 'react-redux'
 import { makeStyles } from '@material-ui/core/styles'
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { styles } from './styles'
 import TokenTransferDescription from '@components/Safe/Transactions/TransactionDetails/TokenTransferDescription'
 import Block from '@components/core/Block'
@@ -13,10 +14,45 @@ import SwapHorizIcon from '@material-ui/icons/SwapHoriz'
 import ExpandLess from '@material-ui/icons/ExpandLess'
 import ExpandMore from '@material-ui/icons/ExpandMore'
 import Collapse from '@material-ui/core/Collapse'
+import AccountBalanceIcon from '@material-ui/icons/AccountBalance'
+import { getMultiSigWalletAPI } from '@src/utils/msw'
+import Span from '@components/core/Span'
+import Bold from '@components/core/Bold'
+import { displayUnit } from '@src/utils/icon'
+import Link from '@components/core/Link'
 
 const useStyles = makeStyles(styles)
 
-export const IncomingTxDescription = ({ tx }) => {
+const ClaimIScoreTx = ({ tx }) => {
+  const safeAddress = useSelector((state) => state.safeAddress)
+  const msw = getMultiSigWalletAPI(safeAddress)
+  const [content, setContent] = useState('Loading...')
+  const classes = useStyles()
+
+  useEffect(() => {
+    getContent().then(result => {
+      setContent(result)
+    })
+  }, [])
+
+  const getContent = async () => {
+    return (
+      <div className={classes.content}>
+        <Link target='_blank' href={msw.getTrackerEndpoint() + "/address/" + tx.claimer.address}> {tx.claimer.name} </Link>
+          has claimed <Span className={classes.cyanText}> <Bold>{displayUnit(tx.iscore, 18)} I-Score</Bold></Span>
+      </div>
+    )
+  }
+
+  return (
+    <Block className={classes.container}>
+      {content}
+    </Block>
+  )
+}
+
+
+export const ClaimIScoreTxDescription = ({ tx }) => {
   const classes = useStyles()
   const [openedTokenTransfers, setOpenedTokenTransfers] = React.useState(true)
 
@@ -63,32 +99,28 @@ export const IncomingTxDescription = ({ tx }) => {
       </>)
   }
 
-  const getIissOperations = () => {
+  const getClaimIScoreOperation = () => {
     return (
       <>
-        <ListItem button onClick={handleClickSafeOperations}>
+        <ListItem button onClick={handleClick}>
           <ListItemIcon style={{ marginRight: '5px' }}>
-            <SettingsIcon />
+            <AccountBalanceIcon />
           </ListItemIcon>
-          <ListItemText primary='IISS Operations' />
-          {openedSafeOperations ? <ExpandLess /> : <ExpandMore />}
+          <ListItemText primary='I-Score Claim operations' />
+          {openedTokenTransfers ? <ExpandLess /> : <ExpandMore />}
         </ListItem>
 
-        <Collapse
-          in={openedSafeOperations} timeout='auto' unmountOnExit
-        >
+        <Collapse in={openedTokenTransfers} timeout='auto' unmountOnExit>
           <List
             component='div'
             disablePadding
           >
-            {tx.iissOperations.map((subtx, index) => (
-              <ListItem
-                key={`${tx.created_txhash}-${index}`}
-                className={classes.nested}
-              >
-                <IissOperationDescription tx={subtx} />
-              </ListItem>
-            ))}
+            <ListItem
+              key={`${tx.created_txhash}`}
+              className={classes.nested}
+            >
+              <ClaimIScoreTx tx={tx} />
+            </ListItem>
           </List>
         </Collapse>
       </>
@@ -108,7 +140,7 @@ export const IncomingTxDescription = ({ tx }) => {
           }
           className={classes.root}
         >
-          {tx.iissOperations?.length > 0 && getIissOperations()}
+          {getClaimIScoreOperation()}
           {tx.tokens.length > 0 && getTokenTransfers()}
         </List>
       </Paper>

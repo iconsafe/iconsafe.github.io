@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import OwnerForm from './screens/OwnerForm'
 import ReviewReplaceOwner from './screens/Review'
-import Modal from '@src/components/Modal'
+import Modal from '@components/Modal'
 import { getMultiSigWalletAPI } from '@src/utils/msw'
 
 const styles = () => ({

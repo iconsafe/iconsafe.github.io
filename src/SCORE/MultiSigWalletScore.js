@@ -109,6 +109,14 @@ class IncomingTransaction extends Transaction {
   }
 }
 
+class ClaimIscoreTransaction extends IncomingTransaction {
+  constructor(json) {
+    super(json)
+    this.claimer_uid = json.claimer_uid
+    this.iscore = IconConverter.toBigNumber(json.iscore)
+  }
+}
+
 class WalletOwner {
   constructor(json) {
     this.uid = parseInt(json.uid)
@@ -124,8 +132,17 @@ export class MultiSigWalletScore extends Ancilia {
   }
 
   // --- VersionManager ---
-  get_version_number () {
-    return this.__iconexCallROTx(this._scoreAddress, 'get_version_number')
+  get_versions_number () {
+    return this.__iconexCallROTx(this._scoreAddress, 'get_domain').then(domain => {
+      const promises = Object.entries(domain).map(k => this.__iconexCallROTx(k[1], 'get_version_number'))
+      return Promise.all(promises).then(result => {
+        console.log("result=", result)
+        return Object.entries(domain).map(k => {
+          const entry = result.shift()
+          return [entry, k[0]]
+        })
+      })
+    })
   }
 
   // --- SettingsManager ---
@@ -222,6 +239,9 @@ export class MultiSigWalletScore extends Ancilia {
 
       case 'INCOMING':
         return new IncomingTransaction(json)
+
+      case 'CLAIM_ISCORE':
+        return new ClaimIscoreTransaction(json)
 
       default:
         throw new InvalidTransactionType(baseTransaction.type)
@@ -335,22 +355,20 @@ export class MultiSigWalletScore extends Ancilia {
       0,
       {}
     ).then(tx => {
-      try {
-        return this.getEventLog(tx.result, IScoreClaimedV2).then(eventLog => {
-          return {
-            address: eventLog.indexed[1],
-            iscore: IconConverter.toBigNumber(eventLog.data[0]),
-            icx: IconConverter.toBigNumber(eventLog.data[1])
-          }
-        })
-      } catch {
+      return this.getEventLog(tx.result, IScoreClaimedV2).then(eventLog => {
+        return {
+          address: eventLog.indexed[1],
+          iscore: IconConverter.toBigNumber(eventLog.data[0]),
+          icx: IconConverter.toBigNumber(eventLog.data[1])
+        }
+      }).catch((error => {
         return this.getEventLog(tx.result, IScoreClaimed).then(eventLog => {
           return {
             iscore: IconConverter.toBigNumber(eventLog.indexed[1]),
             icx: IconConverter.toBigNumber(eventLog.indexed[2])
           }
         })
-      }
+      }))
     })
   }
 

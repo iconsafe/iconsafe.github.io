@@ -18,13 +18,45 @@ import { SCORE_INSTALL_ADDRESS } from '@src/SCORE/Ancilia'
 import { IconConverter } from 'icon-sdk-js'
 
 export const convertTransactionToDisplay = async (transaction, safeAddress, tokenCache) => {
+
+  const msw = getMultiSigWalletAPI(safeAddress)
+
   switch (transaction.type) {
+    case 'CLAIM_ISCORE':
+      return Promise.all([
+        getTokenDecimals(transaction.token),
+        getTokenSymbol(transaction.token),
+        msw.get_wallet_owner(transaction.claimer_uid)
+      ]).then(([decimals, symbol, claimer]) => {
+        const state = getTransactionState(transaction)
+        return {
+          uid: transaction.uid,
+          type: transaction.type,
+          created_txhash: transaction.created_txhash,
+          source: transaction.source,
+          // There is always always one token and one transfer per incoming transaction
+          tokens: [{
+            symbol: symbol,
+            decimals: decimals,
+            transfers: [{
+              amount: transaction.amount,
+              source: transaction.source
+            }]
+          }],
+          created_timestamp: transaction.created_timestamp,
+          claimer: claimer,
+          iscore: transaction.iscore,
+          status: state
+        }
+      })
+
     case 'INCOMING':
       return Promise.all([
         getTokenDecimals(transaction.token),
         getTokenSymbol(transaction.token)]
       ).then(([decimals, symbol]) => {
         const state = getTransactionState(transaction)
+
         return {
           uid: transaction.uid,
           type: transaction.type,
@@ -68,13 +100,10 @@ export const convertTransactionToDisplay = async (transaction, safeAddress, toke
 
       return Promise.allSettled(Object.values(tokenCache))
         .then(values => {
+
           Object.keys(tokenCache).forEach(k => {
             const resolved = values.shift()
-            if (resolved && resolved.status === 'fulfilled') {
-              tokenCache[k] = resolved.value
-            } else {
-              delete tokenCache[k]
-            }
+            tokenCache[k] = resolved.value
           })
 
           Object.keys(tokenCache).forEach(address => {

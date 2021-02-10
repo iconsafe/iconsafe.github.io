@@ -22,7 +22,6 @@ export const styles = () => ({
     width: '100%'
   },
   versionNumber: {
-    height: '21px',
     display: 'flex',
     alignItems: 'center'
   },

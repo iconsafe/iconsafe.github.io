@@ -44,6 +44,15 @@ export const mustBeICONAddress = memoize(
   }
 )
 
+export const mustBeHex = memoize(
+  (input) => {
+    if (!input || input.length == 0) return undefined
+    const regexp = /^(0x)?[0-9a-f]+$/i;
+    const isHex = regexp.test(input) && !(input.length % 2)
+    return isHex ? undefined : 'Input must be in Hexadecimal format'
+  }
+)
+
 export const mustBeInteger = (value) =>
   !Number.isInteger(Number(value)) || value.includes('.') ? 'Must be an integer' : undefined
 

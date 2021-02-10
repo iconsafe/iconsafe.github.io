@@ -15,8 +15,10 @@ import cn from 'classnames'
 import { getAnciliaAPI } from '@src/utils/ancilia'
 import { IncomingTx } from './IncomingTx'
 import { OutgoingTx } from './OutgoingTx'
-import { IncomingTxDescription } from '@components/Safe/Transactions/TransactionDetails/IncomingTxDescription'
-import { OutgoingTxDescription } from '@components/Safe/Transactions/TransactionDetails/OutgoingTxDescription'
+import { ClaimIScoreTx } from './ClaimIScoreTx'
+import { IncomingTxDescription } from './IncomingTxDescription'
+import { OutgoingTxDescription } from './OutgoingTxDescription'
+import { ClaimIScoreTxDescription } from './ClaimIScoreTxDescription'
 import OwnersColumn from './OwnersColumn'
 import CopyBtn from '@components/core/CopyBtn'
 import { useLocation } from 'react-router-dom'
@@ -31,6 +33,7 @@ const TransactionDetails = ({ transaction }) => {
   const location = useLocation()
 
   const isIncomingTx = transaction.type === 'INCOMING'
+  const isClaimIScoreTx = transaction.type === 'CLAIM_ISCORE'
   const isOutgoingTx = transaction.type === 'OUTGOING'
   const ancilia = getAnciliaAPI()
 
@@ -80,9 +83,11 @@ const TransactionDetails = ({ transaction }) => {
             </Paragraph>
           ) : null}
           <IncomingTx isIncomingTx={isIncomingTx} tx={transaction} />
+          <ClaimIScoreTx isClaimIScoreTx={isClaimIScoreTx} tx={transaction} />
           <OutgoingTx isOutgoingTx={isOutgoingTx} tx={transaction} />
         </Block>
         <Hairline />
+        {isClaimIScoreTx && <ClaimIScoreTxDescription tx={transaction} />}
         {isIncomingTx && <IncomingTxDescription tx={transaction} />}
         {isOutgoingTx && <OutgoingTxDescription tx={transaction} />}
       </div>

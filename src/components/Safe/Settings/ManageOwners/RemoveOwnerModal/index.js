@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import CheckOwner from './screens/CheckOwner'
 import ReviewRemoveOwner from './screens/Review'
 import ThresholdForm from './screens/ThresholdForm'
-import Modal from '@src/components/Modal'
+import Modal from '@components/Modal'
 import { getMultiSigWalletAPI } from '@src/utils/msw'
 
 const styles = () => ({

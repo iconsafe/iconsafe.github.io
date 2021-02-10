@@ -33,8 +33,8 @@ const Safe = ({ enqueueSnackbar }) => {
 
   const refreshContractVersion = (msw) =>
     async (dispatch, getState) => {
-      Promise.all([msw.get_version_number()]).then(([contractVersion]) => {
-        dispatch(dispatchers.setContractVersion(contractVersion))
+      msw.get_versions_number().then(contractVersions => {
+        dispatch(dispatchers.setContractVersions(contractVersions))
       })
     }
 

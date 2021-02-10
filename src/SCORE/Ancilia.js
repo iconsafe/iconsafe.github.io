@@ -238,7 +238,16 @@ export class Ancilia {
   // Event log
   getEventLog (txHash, eventLogSignature) {
     return this.txResult(txHash).then(txResult => {
-      return this.extractEventLog(txResult.eventLogs, eventLogSignature)
+      const result = this.extractEventLog(txResult.eventLogs, eventLogSignature)
+      if (!result) {
+        const isDevelopment = process.env.NODE_ENV !== 'production'
+        let error = `Cannot find ${eventLogSignature} in ${JSON.stringify(txResult.eventLogs)}. `
+        if (isDevelopment) {
+          error += `TxDetails: ${JSON.stringify(txResult.failure, null, 4)}`
+        }
+        throw new WrongEventSignature(error)
+      }
+      return result
     })
   }
 
@@ -246,10 +255,6 @@ export class Ancilia {
     const eventLog = eventLogs.filter(eventLogs => {
       return eventLogs.indexed[0] === eventLogSignature
     })[0]
-
-    if (eventLog === undefined) {
-      throw new WrongEventSignature(`Cannot find ${eventLogSignature} in ${JSON.stringify(eventLogs)}`)
-    }
 
     return eventLog
   }
@@ -325,7 +330,7 @@ export class Ancilia {
   __iconexCallRWTx (from, to, method, value, params) {
     return this.__estimateStep(from, to, method, value, params).then(stepLimit => {
       // Step Estimation may be a little wrong, increase it a bit
-      return this.__iconexCallRWTxEx(from, to, method, value, stepLimit * 1.5, params)
+      return this.__iconexCallRWTxEx(from, to, method, value, stepLimit * 5, params)
     }).catch(() => {
       // The estimation failed for some reason. Try to call it with a fixed steplimit
       return this.__iconexCallRWTxEx(from, to, method, value, 100000000, params)

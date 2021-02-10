@@ -2,9 +2,9 @@ import React, { useState, useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import { getMultiSigWalletAPI } from '@src/utils/msw'
 
-import Block from '@src/components/core/Block'
-import Bold from '@src/components/core/Bold'
-import Span from '@src/components/core/Span'
+import Block from '@components/core/Block'
+import Bold from '@components/core/Bold'
+import Span from '@components/core/Span'
 import { styles } from './styles'
 import { makeStyles } from '@material-ui/core/styles'
 import { displayUnit } from '@src/utils/icon'
@@ -38,7 +38,7 @@ const IissOperationDescription = ({ tx }) => {
     delegation = JSON.parse(delegation.value)
     return (
       <React.Fragment key={delegation.address}>
-        - Delegate <Bold><Span className={classes.cyanText}>{displayUnit(delegation.value.value, 18)} ICX </Span></Bold> to <Bold>{getPrepName(preps, delegation.address.value)}</Bold>
+        Delegate <Bold><Span className={classes.cyanText}>{displayUnit(delegation.value.value, 18)} ICX </Span></Bold> to <Bold>{getPrepName(preps, delegation.address.value)}</Bold>
         <br />
       </React.Fragment>
     )
@@ -49,7 +49,7 @@ const IissOperationDescription = ({ tx }) => {
       case 'setStake':
         return (
           <div className={classes.content}>
-            - Change <Bold>stake amount </Bold> to
+            Change <Bold>stake amount </Bold> to
             <Span className={classes.cyanText}> {displayUnit(getTxParam(tx, 'value').value, 18)} ICX</Span>
           </div>
         )
@@ -59,7 +59,7 @@ const IissOperationDescription = ({ tx }) => {
         const delegations = JSON.parse(tx.params[0].value)
         const delegationsContent = (delegations.length > 0)
           ? delegations.map(delegation => displayDelegation(preps, delegation))
-          : '- Remove delegations from all P-Reps'
+          : 'Remove delegations from all P-Reps'
 
         return (
           <div className={classes.content}>

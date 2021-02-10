@@ -5,7 +5,7 @@ import IissOperationDescription from '@components/Safe/Transactions/TransactionD
 import WalletOperationDescription from '@components/Safe/Transactions/TransactionDetails/WalletOperationDescription'
 import TokenTransferDescription from '@components/Safe/Transactions/TransactionDetails/TokenTransferDescription'
 import RawMethodCallDescription from '@components/Safe/Transactions/TransactionDetails/RawMethodCallDescription'
-import Block from '@src/components/core/Block'
+import Block from '@components/core/Block'
 import Paper from '@material-ui/core/Paper'
 import List from '@material-ui/core/List'
 import ListSubheader from '@material-ui/core/ListSubheader'
@@ -43,7 +43,7 @@ export const OutgoingTxDescription = ({ tx, defaultOpenedRawMethodCalls = false 
     return (
       <>
         <ListItem button onClick={handleClickRawMethodCalls}>
-          <ListItemIcon>
+          <ListItemIcon style={{ marginRight: '5px' }}>
             <ViewListIcon />
           </ListItemIcon>
           <ListItemText primary='Raw Sub Transactions' />
@@ -84,7 +84,7 @@ export const OutgoingTxDescription = ({ tx, defaultOpenedRawMethodCalls = false 
     return (
       <>
         <ListItem button onClick={handleClickSafeOperations}>
-          <ListItemIcon>
+          <ListItemIcon style={{ marginRight: '5px' }}>
             <SettingsIcon />
           </ListItemIcon>
           <ListItemText primary='Safe Settings' />
@@ -116,7 +116,7 @@ export const OutgoingTxDescription = ({ tx, defaultOpenedRawMethodCalls = false 
     return (
       <>
         <ListItem button onClick={handleClickSafeOperations}>
-          <ListItemIcon>
+          <ListItemIcon style={{ marginRight: '5px' }}>
             <SettingsIcon />
           </ListItemIcon>
           <ListItemText primary='IISS Operations' />
@@ -148,7 +148,7 @@ export const OutgoingTxDescription = ({ tx, defaultOpenedRawMethodCalls = false 
     return (
       <>
         <ListItem button onClick={handleClickTokenTransfers}>
-          <ListItemIcon>
+          <ListItemIcon style={{ marginRight: '5px' }}>
             <SwapHorizIcon />
           </ListItemIcon>
           <ListItemText primary='Token transfers' />
