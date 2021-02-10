@@ -41,6 +41,7 @@ const ICXStaking = ({
   const [staked, setStaked] = useState(ZERO)
   const domainNames = useSelector((state) => state.domainNames)
   const [pRepOptions, setPRepOptions] = useState(null)
+  const [preps, setPreps] = useState(null)
 
   const tooManyVotes = staked && selectedDelegates ? sumVotes(selectedDelegates).gt(staked) : false
   const selectedMaxDelegates = selectedDelegates.length === 100
@@ -50,6 +51,7 @@ const ICXStaking = ({
     if (domainNames) {
       // Preps
       msw.getPReps().then(pReps => {
+        setPreps(pReps)
         const pRepOptions = pReps.map(pRep => ({
           value: pRep.address,
           label: `${pRep.name} (${pRep.country})`
@@ -88,9 +90,14 @@ const ICXStaking = ({
       }
     })
 
+    const getPrepName = (pReps, address) => {
+      const value = pReps?.find(prep => prep.address === address)
+      return value ? value.name : address
+    }
+
     const subtx = new SubOutgoingTransaction(SCORE_INSTALL_ADDRESS, 'setDelegation', [
       { name: 'delegations', type: 'List', value: JSON.stringify(formattedDelegation) }
-    ], 0, 'Delegation description'
+    ], 0, `Update delegation to ${selectedDelegates.map(delegate => getPrepName(preps, delegate.value)).join(', ')}`
     )
     subTransactions.push(subtx)
     setSubTransactions([...subTransactions])
