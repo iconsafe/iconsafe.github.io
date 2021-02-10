@@ -136,7 +136,6 @@ export class MultiSigWalletScore extends Ancilia {
     return this.__iconexCallROTx(this._scoreAddress, 'get_domain').then(domain => {
       const promises = Object.entries(domain).map(k => this.__iconexCallROTx(k[1], 'get_version_number'))
       return Promise.all(promises).then(result => {
-        console.log("result=", result)
         return Object.entries(domain).map(k => {
           const entry = result.shift()
           return [entry, k[0]]

@@ -18,6 +18,7 @@ import ArrowRightIcon from '@material-ui/icons/ArrowRight'
 import SaveIcon from '@material-ui/icons/Save'
 import { getMultiSigWalletAPI } from '@src/utils/msw'
 import { lowercaseWithCapital } from '@src/utils/strings'
+import packageJson from '@src/../package.json'
 
 const useStyles = makeStyles(styles)
 
@@ -44,9 +45,15 @@ const SafeVersion = () => {
         {() => (
           <>
             <Block className={classes.formContainer}>
-              <Heading tag='h2' style={{ marginBottom: '10px', marginTop: '10px' }}>ICONSafe Version</Heading>
+              <Heading tag='h2' style={{ marginBottom: '10px', marginTop: '10px' }}>ICONSafe Versions</Heading>
+              <Heading tag='h3' style={{ marginBottom: '10px', marginTop: '5px' }}>User Interface</Heading>
+              <div className={classes.versionNumber}>
+                <ArrowRightIcon />
+                ICONSafe React User Interface : {packageJson.version}
+              </div>
+              <Heading tag='h3' style={{ marginBottom: '10px', marginTop: '5px' }}>Smart contracts</Heading>
               {contractVersions && contractVersions.map(version => (
-                <div className={classes.versionNumber}>
+                <div key={version[1]} className={classes.versionNumber}>
                   <ArrowRightIcon />
                   {convertName(version[1])} : {version[0]}
                 </div>
@@ -57,14 +64,14 @@ const SafeVersion = () => {
                   color='black'
                   target='_blank'
                   to='https://github.com/iconation/ICONSafe-SCORE'
-                >SCORE on GitHub</Link>
+                >Smart contracts source code on GitHub</Link>
                 <br />
               - <Link
                   className={cn(classes.item, classes.link)}
                   color='black'
                   target='_blank'
                   to='https://github.com/iconsafe/iconsafe.github.io'
-                >React User Interface on GitHub</Link>
+                >React User Interface source code on GitHub</Link>
               </div>
             </Block>
 
