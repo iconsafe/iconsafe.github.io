@@ -201,7 +201,7 @@ const OwnersColumn = ({ tx }) => {
   }
 
   return (
-    <Col className={classes.rightCol} layout='block' xs={6}>
+    <Col className={classes.rightCol} layout='block'>
 
       {/* Set the confirmed at the bottom */}
       {getConfirmedThread()}
@@ -247,12 +247,13 @@ const OwnersColumn = ({ tx }) => {
       </Block>
 
       {connectedWalletOwner &&
-        <div className={classes.spacer}>
+        <div className={classes.actionButtons}>
           {rejectButton()}
           {confirmButton()}
           {revokeButton()}
           {cancelButton()}
         </div>}
+
     </Col>
   )
 }

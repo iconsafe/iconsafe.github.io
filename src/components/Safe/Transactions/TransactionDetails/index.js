@@ -45,58 +45,63 @@ const TransactionDetails = ({ transaction }) => {
   }, [JSON.stringify(transaction)])
 
   return (
-    <Block className={classes.expandedTxBlock}>
-      <div className={classes.colLeft}>
-        <Block className={cn(classes.txDataContainer, (isIncomingTx) && classes.incomingTxBlock)}>
-          <div style={{ display: 'flex' }}>
-            <Bold className={classes.txHash}>Tx Permalink:</Bold>
-            <CopyBtn content={`${window.location.origin}/#${location.pathname}?transaction=${transaction.uid}`} />
-          </div>
-          <div style={{ display: 'flex' }}>
-            <Bold className={classes.txHash}>Hash:</Bold>
-            {transaction.created_txhash
-              ? (
-                <ICONHashInfo
-                  hash={transaction.created_txhash}
-                  shortenHash={4}
-                  showCopyBtn
-                  showTrackerBtn
-                  network={networkConnected}
-                />) : 'n/a'}
-          </div>
-          {transaction.created_txhash && transactionStepUsed ? (
-            <Paragraph noMargin>
-              <Bold>Step Used: </Bold>
-              {`${displayBigInt(transactionStepUsed)} steps` || 'n/a'}
-            </Paragraph>
-          ) : null}
-          {transaction.created_txhash && transactionStepPrice ? (
-            <Paragraph noMargin>
-              <Bold>Step Price: </Bold>
-              {`${displayBigInt(transactionStepPrice)}` || 'n/a'}
-            </Paragraph>
-          ) : null}
-          {transaction.created_txhash && transactionStepUsed && transactionStepPrice ? (
-            <Paragraph noMargin>
-              <Bold>TxFee: </Bold>
-              {`${displayBigInt(ancilia.convertDecimalsToUnit(transactionStepUsed.multipliedBy(transactionStepPrice), 18))} ICX` || 'n/a'}
-            </Paragraph>
-          ) : null}
-          <IncomingTx isIncomingTx={isIncomingTx} tx={transaction} />
-          <ClaimIScoreTx isClaimIScoreTx={isClaimIScoreTx} tx={transaction} />
-          <OutgoingTx isOutgoingTx={isOutgoingTx} tx={transaction} />
-        </Block>
-        <Hairline />
-        {isClaimIScoreTx && <ClaimIScoreTxDescription tx={transaction} />}
-        {isIncomingTx && <IncomingTxDescription tx={transaction} />}
-        {isOutgoingTx && <OutgoingTxDescription tx={transaction} />}
-      </div>
-      {isOutgoingTx && (
-        <div className={classes.colRight}>
-          <OwnersColumn tx={transaction} />
+    <>
+      <Block className={classes.expandedTxBlock}>
+        <div className={classes.colLeft}>
+          <Block className={cn(classes.txDataContainer, (isIncomingTx) && classes.incomingTxBlock)}>
+            <div style={{ display: 'flex' }}>
+              <Bold className={classes.txHash}>Tx Permalink:</Bold>
+              <CopyBtn content={`${window.location.origin}/#${location.pathname}?transaction=${transaction.uid}`} />
+            </div>
+            <div style={{ display: 'flex' }}>
+              <Bold className={classes.txHash}>Hash:</Bold>
+              {transaction.created_txhash
+                ? (
+                  <ICONHashInfo
+                    hash={transaction.created_txhash}
+                    shortenHash={4}
+                    showCopyBtn
+                    showTrackerBtn
+                    network={networkConnected}
+                  />) : 'n/a'}
+            </div>
+            {transaction.created_txhash && transactionStepUsed ? (
+              <Paragraph noMargin>
+                <Bold>Step Used: </Bold>
+                {`${displayBigInt(transactionStepUsed)} steps` || 'n/a'}
+              </Paragraph>
+            ) : null}
+            {transaction.created_txhash && transactionStepPrice ? (
+              <Paragraph noMargin>
+                <Bold>Step Price: </Bold>
+                {`${displayBigInt(transactionStepPrice)}` || 'n/a'}
+              </Paragraph>
+            ) : null}
+            {transaction.created_txhash && transactionStepUsed && transactionStepPrice ? (
+              <Paragraph noMargin>
+                <Bold>TxFee: </Bold>
+                {`${displayBigInt(ancilia.convertDecimalsToUnit(transactionStepUsed.multipliedBy(transactionStepPrice), 18))} ICX` || 'n/a'}
+              </Paragraph>
+            ) : null}
+            <IncomingTx isIncomingTx={isIncomingTx} tx={transaction} />
+            <ClaimIScoreTx isClaimIScoreTx={isClaimIScoreTx} tx={transaction} />
+            <OutgoingTx isOutgoingTx={isOutgoingTx} tx={transaction} />
+          </Block>
+          <Hairline />
+          {isClaimIScoreTx && <ClaimIScoreTxDescription tx={transaction} />}
+          {isIncomingTx && <IncomingTxDescription tx={transaction} />}
+          {isOutgoingTx && <OutgoingTxDescription tx={transaction} />}
         </div>
-      )}
-    </Block>
+        {isOutgoingTx && (
+          <div className={classes.colRight}>
+            <OwnersColumn tx={transaction} />
+          </div>
+        )}
+
+      </Block>
+
+      <Hairline />
+    </>
   )
 }
 

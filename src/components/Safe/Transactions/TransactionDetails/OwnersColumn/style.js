@@ -9,6 +9,7 @@ export const styles = createStyles({
     width: '100%'
   },
   rightCol: {
+    width: '100%'
   },
   verticalLine: {
     backgroundColor: secondaryText,
@@ -80,8 +81,9 @@ export const styles = createStyles({
   address: {
     height: '20px'
   },
-  spacer: {
-    width: '100%'
+  actionButtons: {
+    width: '100%',
+    paddingBottom: '20px'
   },
   circleState: {
     display: 'flex',
