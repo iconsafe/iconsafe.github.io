@@ -43,41 +43,6 @@ export const hashToEvents = (msw, hash) => {
             wallet_owner_uid: parseInt(eventLog.data[0])
           })
           break
-        case 'TransactionCancelled(int,int)':
-          events.push({
-            name: eventSignature.split('(')[0],
-            transaction_uid: parseInt(eventLog.indexed[1]),
-            wallet_owner_uid: parseInt(eventLog.data[0])
-          })
-          break
-        case 'TransactionExecutionSuccess(int,int)':
-          events.push({
-            name: eventSignature.split('(')[0],
-            transaction_uid: parseInt(eventLog.indexed[1]),
-            wallet_owner_uid: parseInt(eventLog.data[0])
-          })
-          break
-        case 'WalletOwnersRequiredChanged(int)':
-          events.push({
-            name: eventSignature.split('(')[0],
-            required: parseInt(eventLog.indexed[1])
-          })
-          break
-        case 'TransactionRejectionSuccess(int,int)':
-          events.push({
-            name: eventSignature.split('(')[0],
-            transaction_uid: parseInt(eventLog.indexed[1]),
-            wallet_owner_uid: parseInt(eventLog.data[0])
-          })
-          break
-        case 'TransactionExecutionFailure(int,int,str)':
-          events.push({
-            name: eventSignature.split('(')[0],
-            transaction_uid: parseInt(eventLog.indexed[1]),
-            wallet_owner_uid: parseInt(eventLog.data[0]),
-            error: eventLog.data[1]
-          })
-          break
         case 'TransactionConfirmed(int,int)':
           events.push({
             name: eventSignature.split('(')[0],
@@ -99,7 +64,45 @@ export const hashToEvents = (msw, hash) => {
             wallet_owner_uid: parseInt(eventLog.indexed[2])
           })
           break
+        case 'TransactionCancelled(int,int)':
+          events.push({
+            name: eventSignature.split('(')[0],
+            transaction_uid: parseInt(eventLog.indexed[1]),
+            wallet_owner_uid: parseInt(eventLog.data[0])
+          })
+          break
+        case 'TransactionForceCancelled(int)':
+          events.push({
+            name: eventSignature.split('(')[0],
+            transaction_uid: parseInt(eventLog.indexed[1])
+          })
+          break
+        case 'TransactionExecutionSuccess(int)':
+          events.push({
+            name: eventSignature.split('(')[0],
+            transaction_uid: parseInt(eventLog.indexed[1])
+          })
+          break
+        case 'TransactionRejectionSuccess(int)':
+          events.push({
+            name: eventSignature.split('(')[0],
+            transaction_uid: parseInt(eventLog.indexed[1])
+          })
+          break
+        case 'TransactionExecutionFailure(int,str)':
+          events.push({
+            name: eventSignature.split('(')[0],
+            transaction_uid: parseInt(eventLog.indexed[1]),
+            error: eventLog.data[0]
+          })
+          break
         // Wallet Owner Manager
+        case 'WalletOwnersRequiredChanged(int)':
+          events.push({
+            name: eventSignature.split('(')[0],
+            required: parseInt(eventLog.indexed[1])
+          })
+          break
         case 'WalletOwnerAddition(int)':
           events.push({
             name: eventSignature.split('(')[0],
