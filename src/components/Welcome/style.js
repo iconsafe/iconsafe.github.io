@@ -8,7 +8,8 @@ export const styles = createStyles({
   root: {
     flexGrow: 0,
     padding: `0 ${sm}`,
-    paddingTop: '140px',
+    paddingTop: '2%',
+    paddingBottom: '3%',
     [`@media (min-width: ${screenSm}px)`]: {
       paddingLeft: md,
       paddingRight: md
@@ -17,14 +18,14 @@ export const styles = createStyles({
   },
 
   container: {
-    maxWidth: '400px',
+    maxWidth: '100%',
     margin: 'auto',
     justifyContent: 'center',
     alignItems: 'center',
     textAlign: 'center',
     [`@media (min-width: ${screenSm}px)`]: {
       display: 'flex',
-      maxWidth: '1500px'
+      maxWidth: '90%'
     }
   },
 
@@ -34,14 +35,15 @@ export const styles = createStyles({
   },
 
   screen: {
-    height: '700px',
+    maxHeight: '90vh',
     borderRadius: '15px',
     boxShadow: '0px 0px 50px -40px rgba(0,0,0,0.75)'
   },
 
   textLeft: {
     display: 'flex',
-    flexDirection: 'column'
+    flexDirection: 'column',
+    maxWidth: '85%'
   },
 
   textLeftContent: {
@@ -59,7 +61,7 @@ export const styles = createStyles({
   },
 
   button: {
-    padding: '0 50px 0 50px'
+    padding: '0 10% 0 10%'
   },
 
   textLoop: {

@@ -173,7 +173,7 @@ const Welcome = () => {
             <Img src={logoImg} />
 
             <Heading align='left' margin='lg' tag='h1' weight='bold' className={classes.textLeftContent}>
-              The first multisig <br /> wallet to manage digital assets on <br /> ICON for
+              The first multisig wallet <br /> to manage digital assets <br /> on ICON for
               <TextLoop>
                 <Span className={classes.textLoop}>DAOs</Span>
                 <Span className={classes.textLoop}>holders</Span>
