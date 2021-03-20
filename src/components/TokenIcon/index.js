@@ -3,7 +3,7 @@ import TapIcon from './icons/tap.png'
 import SportsIcon from './icons/sports.png'
 import WokIcon from './icons/wok.png'
 import Ac3Icon from './icons/ac3.png'
-import iethIcon from './icons/ieth.png'
+import uethIcon from './icons/ueth.png'
 import metxIcon from './icons/metx.png'
 import seedIcon from './icons/seed.png'
 import upIcon from './icons/up.png'
@@ -35,8 +35,8 @@ const TOKENS = {
     src: Ac3Icon,
     height: 25
   },
-  IETH: {
-    src: iethIcon,
+  UETH: {
+    src: uethIcon,
     height: 25
   },
   METX: {

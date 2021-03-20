@@ -34,7 +34,7 @@ export const styles = createStyles({
   },
 
   screen: {
-    height: '500px',
+    height: '700px',
     borderRadius: '15px',
     boxShadow: '0px 0px 50px -40px rgba(0,0,0,0.75)'
   },

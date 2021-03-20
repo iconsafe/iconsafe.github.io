@@ -47,9 +47,9 @@ const Footer = () => {
 
   return (
     <footer className={classes.footer}>
-      <span className={classes.item}>©{date.getFullYear()} ICONation</span>
+      <span className={classes.item}>Powered by ICONation</span>
       <span className={classes.sep}>|</span>
-      <Link className={cn(classes.item, classes.link)} target='_blank' to=''>
+      {/* <Link className={cn(classes.item, classes.link)} target='_blank' to=''>
         Terms
       </Link>
       <span className={classes.sep}>|</span>
@@ -67,15 +67,15 @@ const Footer = () => {
       <span className={classes.sep}>|</span>
       <Link className={cn(classes.item, classes.link)} target='_blank' to=''>
         Cookie Policy
-      </Link>
+      </Link> */}
       {/* <span className={classes.sep}>-</span> */}
-      <span className={classes.sep}>|</span>
+      {/* <span className={classes.sep}>|</span> */}
       <Link
         className={cn(classes.item, classes.link)}
         target='_blank'
-        to='https://github.com/iconation/iconsafe/releases'
+        to='https://github.com/iconation/ICONSafe-SCORE'
       >
-        {appVersion}
+        Source code
       </Link>
     </footer>
   )

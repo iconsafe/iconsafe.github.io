@@ -161,7 +161,7 @@ const Safe = ({ enqueueSnackbar }) => {
 
                   case 'TransactionRejectionSuccess': {
                     enqueueSnackbar(`Transaction #${event.transaction_uid} has been rejected successfully`, {
-                      variant: 'warning',
+                      variant: 'success',
                       autoHideDuration: 10000,
                       anchorOrigin: { vertical: 'bottom', horizontal: 'right' },
                       action: getTransactionLink(event.transaction_uid)

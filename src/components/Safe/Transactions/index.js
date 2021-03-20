@@ -78,7 +78,6 @@ export const convertTransactionToDisplay = async (transaction, safeAddress) => {
       })
 
     case 'OUTGOING': {
-      console.log("transaction outgoing=", transaction)
       const tokens = {}
 
       tokens[ICX_TOKEN_SYMBOL] = transaction.sub_transactions.filter(subtx => {
@@ -152,7 +151,6 @@ export const convertTransactionToDisplay = async (transaction, safeAddress) => {
             return subtx.destination === SCORE_INSTALL_ADDRESS
           })
 
-          console.log("transaction outgoing 2=", transaction)
           return {
             uid: transaction.uid,
             type: transaction.type,

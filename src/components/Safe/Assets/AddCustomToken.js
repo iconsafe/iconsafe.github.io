@@ -49,6 +49,7 @@ const AddCustomToken = ({
     const address = values.address
 
     msw.add_balance_tracker(address).then((tx) => {
+      console.log("tx=", tx)
       msw.txResult(tx.result).then(() => {
         dispatch(refreshMultisigBalances(msw, domainNames))
         onClose()
