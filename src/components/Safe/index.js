@@ -97,7 +97,7 @@ const Safe = ({ enqueueSnackbar }) => {
                 switch (event.name) {
                   case 'TransactionCreated': {
                     const owner = await msw.get_wallet_owner(event.wallet_owner_uid)
-                    enqueueSnackbar(`A new transaction has been created by "${owner.name}"`, {
+                    enqueueSnackbar(`Transaction #${event.transaction_uid} has been created by "${owner.name}"`, {
                       variant: 'info',
                       autoHideDuration: 10000,
                       anchorOrigin: { vertical: 'bottom', horizontal: 'right' },
@@ -118,9 +118,19 @@ const Safe = ({ enqueueSnackbar }) => {
                     dispatch(refreshLatestTransactions(msw))
                   } break
 
+                  case 'TransactionForceCancelled': {
+                    enqueueSnackbar(`Transaction #${event.transaction_uid} has been force cancelled"`, {
+                      variant: 'warning',
+                      autoHideDuration: 10000,
+                      anchorOrigin: { vertical: 'bottom', horizontal: 'right' },
+                      action: getTransactionLink(event.transaction_uid)
+                    })
+                    dispatch(refreshLatestTransactions(msw))
+                  } break
+
                   case 'TransactionCancelled': {
                     const owner = await msw.get_wallet_owner(event.wallet_owner_uid)
-                    enqueueSnackbar(`A transaction has been cancelled by "${owner.name}"`, {
+                    enqueueSnackbar(`Transaction #${event.transaction_uid} has been cancelled by "${owner.name}"`, {
                       variant: 'warning',
                       autoHideDuration: 10000,
                       anchorOrigin: { vertical: 'bottom', horizontal: 'right' },
@@ -130,7 +140,7 @@ const Safe = ({ enqueueSnackbar }) => {
                   } break
 
                   case 'WalletOwnersRequiredChanged':
-                    enqueueSnackbar(`The number of owners required for executing the transaction has changed to ${event.required}`, {
+                    enqueueSnackbar(`The owners count required for transaction execution has been changed to ${event.required}`, {
                       variant: 'warning',
                       autoHideDuration: 10000,
                       anchorOrigin: { vertical: 'bottom', horizontal: 'right' }
@@ -139,8 +149,7 @@ const Safe = ({ enqueueSnackbar }) => {
                     break
 
                   case 'TransactionExecutionSuccess': {
-                    const owner = await msw.get_wallet_owner(event.wallet_owner_uid)
-                    enqueueSnackbar(`A transaction has been executed successfully by "${owner.name}"`, {
+                    enqueueSnackbar(`Transaction #${event.transaction_uid} has been executed successfully.`, {
                       variant: 'success',
                       autoHideDuration: 10000,
                       anchorOrigin: { vertical: 'bottom', horizontal: 'right' },
@@ -151,8 +160,7 @@ const Safe = ({ enqueueSnackbar }) => {
                   } break
 
                   case 'TransactionRejectionSuccess': {
-                    const owner = await msw.get_wallet_owner(event.wallet_owner_uid)
-                    enqueueSnackbar(`A transaction has been rejected by "${owner.name}"`, {
+                    enqueueSnackbar(`Transaction #${event.transaction_uid} has been rejected successfully`, {
                       variant: 'warning',
                       autoHideDuration: 10000,
                       anchorOrigin: { vertical: 'bottom', horizontal: 'right' },
@@ -162,8 +170,7 @@ const Safe = ({ enqueueSnackbar }) => {
                   } break
 
                   case 'TransactionExecutionFailure': {
-                    const owner = await msw.get_wallet_owner(event.wallet_owner_uid)
-                    enqueueSnackbar(`A transaction has failed to be executed by "${owner.name}"`, {
+                    enqueueSnackbar(`Transaction #${event.transaction_uid} has failed to be executed.`, {
                       variant: 'error',
                       autoHideDuration: 10000,
                       anchorOrigin: { vertical: 'bottom', horizontal: 'right' },
@@ -177,7 +184,7 @@ const Safe = ({ enqueueSnackbar }) => {
                       return
                     }
                     const owner = await msw.get_wallet_owner(event.wallet_owner_uid)
-                    enqueueSnackbar(`"${owner.name}" voted for confirming a transaction`, {
+                    enqueueSnackbar(`"${owner.name}" voted for confirming Transaction #${event.transaction_uid}`, {
                       variant: 'success',
                       autoHideDuration: 10000,
                       anchorOrigin: { vertical: 'bottom', horizontal: 'right' },
@@ -188,7 +195,7 @@ const Safe = ({ enqueueSnackbar }) => {
 
                   case 'TransactionRevoked': {
                     const owner = await msw.get_wallet_owner(event.wallet_owner_uid)
-                    enqueueSnackbar(`"${owner.name}" cancelled his vote on a transaction`, {
+                    enqueueSnackbar(`"${owner.name}" cancelled his vote on Transaction #${event.transaction_uid}`, {
                       variant: 'warning',
                       autoHideDuration: 10000,
                       anchorOrigin: { vertical: 'bottom', horizontal: 'right' },
@@ -202,7 +209,7 @@ const Safe = ({ enqueueSnackbar }) => {
                       return
                     }
                     const owner = await msw.get_wallet_owner(event.wallet_owner_uid)
-                    enqueueSnackbar(`"${owner.name}" voted for rejecting a transaction`, {
+                    enqueueSnackbar(`"${owner.name}" voted for rejecting Transaction #${event.transaction_uid}`, {
                       variant: 'warning',
                       autoHideDuration: 10000,
                       anchorOrigin: { vertical: 'bottom', horizontal: 'right' },
