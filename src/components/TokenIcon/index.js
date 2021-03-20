@@ -3,6 +3,10 @@ import TapIcon from './icons/tap.png'
 import SportsIcon from './icons/sports.png'
 import WokIcon from './icons/wok.png'
 import Ac3Icon from './icons/ac3.png'
+import iethIcon from './icons/ieth.png'
+import metxIcon from './icons/metx.png'
+import seedIcon from './icons/seed.png'
+import upIcon from './icons/up.png'
 import UnknownIcon from './icons/unknown.png'
 import TokenPlaceholder from '@src/assets/icons/token_placeholder.svg'
 
@@ -12,6 +16,10 @@ const TOKENS = {
     height: 25
   },
   TAP: {
+    src: TapIcon,
+    height: 25
+  },
+  UTAP: {
     src: TapIcon,
     height: 25
   },
@@ -25,6 +33,22 @@ const TOKENS = {
   },
   AC3: {
     src: Ac3Icon,
+    height: 25
+  },
+  IETH: {
+    src: iethIcon,
+    height: 25
+  },
+  METX: {
+    src: metxIcon,
+    height: 25
+  },
+  UP: {
+    src: upIcon,
+    height: 25
+  },
+  SEED: {
+    src: seedIcon,
     height: 25
   },
   GENERIC_TOKEN: {
