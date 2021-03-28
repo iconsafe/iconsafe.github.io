@@ -385,9 +385,9 @@ export default function EnhancedTable ({ rows, queriedTx }) {
                                 height={20}
                                 src={getTokenIcon(token.symbol).src} alt={token.symbol}
                               />
-                              {displayUnit(token.transfers
+                              {parseFloat(displayUnit(token.transfers
                                 .map(transfer => transfer.amount)
-                                .reduce((acc, cur) => acc.plus(cur)), token.decimals)} {token.symbol}
+                                .reduce((acc, cur) => acc.plus(cur)), token.decimals)).toLocaleString()} {token.symbol}
                             </Row>
                           ))}
                         </TableCell>

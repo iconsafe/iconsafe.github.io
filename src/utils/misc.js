@@ -14,6 +14,8 @@ export function nFormatter (num, digits) {
     { value: 1E15, symbol: 'P' },
     { value: 1E18, symbol: 'E' }
   ]
+  num = typeof num === 'number' ? num.toString() : num
+  num = num.replace(/[,]+/g, '').trim() // Removes commas from number
   const rx = /\.0+$|(\.[0-9]*[1-9])0+$/
   let i
   for (i = si.length - 1; i > 0; i--) {
