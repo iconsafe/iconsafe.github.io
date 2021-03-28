@@ -189,7 +189,7 @@ const Welcome = () => {
                 className={classes.button}
                 color='primary'
                 onClick={() => onOpenSafe()}
-                size='small'
+                size='large'
                 variant='contained'
               >
                 Open Safe
@@ -199,7 +199,7 @@ const Welcome = () => {
                 className={classes.button}
                 color='primary'
                 onClick={() => onHowItWorks()}
-                size='small'
+                size='large'
                 variant='contained'
               >
                 How it works
