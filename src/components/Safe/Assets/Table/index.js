@@ -205,7 +205,7 @@ export default function EnhancedTable ({ rows, additionalChild }) {
     }
 
     if (!row.iiss.unstaking.isZero()) {
-      result += ` + ${nFormatter(displayUnit(row.iiss.unstaking, row.decimals), 2)} unstacking`
+      result += ` + ${nFormatter(displayUnit(row.iiss.unstaking, row.decimals), 2)} unstaking`
     }
 
     result += ')'
@@ -251,10 +251,10 @@ export default function EnhancedTable ({ rows, additionalChild }) {
                           {row.symbol}
                         </TableCell>
                         <TableCell align='left'>
-                          {displayUnit(row.balance.plus(row.unstaking ? row.iiss.unstaking : 0), row.decimals)}
+                          {parseFloat(displayUnit(row.balance.plus(row.unstaking ? row.iiss.unstaking : 0), row.decimals)).toLocaleString()}
                           {row.token === ICX_TOKEN_ADDRESS && displayIcxBalance(row)}
                         </TableCell>
-                        <TableCell align='right'>{row.value === '?' ? row.value : parseFloat(displayUnit(row.value, row.decimals)).toFixed(2)} USD</TableCell>
+                        <TableCell align='right'>{row.value === '?' ? row.value : nFormatter(displayUnit(row.value, row.decimals), 2)} USD</TableCell>
                         <TableCell align='right' className={classes.expandCellStyle}>
                           <IconButton disableRipple>
                             {expandedTx === row.token ? <ExpandLess /> : <ExpandMore />}

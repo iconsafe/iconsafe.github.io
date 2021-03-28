@@ -111,7 +111,7 @@ const Dashboard = ({ subTransactions, setSubTransactions }) => {
               <Col style={{ marginTop: '20px' }}>
                 <Alert severity={icxTransferAlertSeverity}>
                   <AlertTitle>ICX available for transfer:</AlertTitle>
-                  {available.toFixed(5)} ICX
+                  {available.toLocaleString()} ICX
                 </Alert>
               </Col>
 
