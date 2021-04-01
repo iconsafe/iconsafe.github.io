@@ -78,7 +78,7 @@ const EditOwnerComponent = ({
               </Row>
               <Row>
                 <Block className={classes.user} justify='center'>
-                  <Identicon address={ownerAddress} diameter={32} />
+                  <Identicon className='inverted' address={ownerAddress} diameter={32} />
                   <Paragraph color='disabled' noMargin size='md' style={{ marginLeft: sm, marginRight: sm }}>
                     {ownerAddress}
                   </Paragraph>

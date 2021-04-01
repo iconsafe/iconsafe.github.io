@@ -100,7 +100,7 @@ const Receive = ({ onClose }) => {
           <QRCode size={135} value={safeAddress} />
         </Block>
         <Block className={classes.addressContainer} justify='center'>
-          <Identicon address={safeAddress} diameter={32} />
+          <Identicon className='inverted' address={safeAddress} diameter={32} />
           <Paragraph
             className={classes.address}
             onClick={() => {

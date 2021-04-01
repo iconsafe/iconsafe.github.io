@@ -54,7 +54,7 @@ const ICONHashInfo = ({
     <StyledContainer className={className}>
       {showIdenticon && (
         <IdenticonContainer>
-          <Identicon address={hash} size={identiconSize} />
+          <Identicon className='inverted' address={hash} size={identiconSize} />
         </IdenticonContainer>
       )}
 

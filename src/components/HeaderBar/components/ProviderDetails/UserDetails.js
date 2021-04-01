@@ -99,7 +99,7 @@ const UserDetails = ({ classes, connected, network, onDisconnect, openDashboard,
       <Block className={classes.container}>
         <Row align='center' className={classes.identicon} margin='md'>
           {connected ? (
-            <Identicon address={userAddress || 'random'} size='lg' />
+            <Identicon className='inverted' address={userAddress || 'random'} size='lg' />
           )
             : (
               <CircleDot circleSize={75} dotRight={25} dotSize={25} dotTop={50} hideDot keySize={30} mode='warning' />

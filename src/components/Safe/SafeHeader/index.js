@@ -59,7 +59,7 @@ const SafeHeader = () => {
     <>
       <Block className={classes.container} margin='xl'>
         <Row className={classes.userInfo}>
-          <Identicon address={address} diameter={50} />
+          <Identicon className='inverted' address={address} diameter={50} />
           <Block className={classes.name}>
             <Row>
               <Heading className={classes.nameText} color='primary' tag='h2'>

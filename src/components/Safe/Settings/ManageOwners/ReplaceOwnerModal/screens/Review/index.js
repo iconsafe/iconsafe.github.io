@@ -74,7 +74,7 @@ const ReviewRemoveOwner = ({ classes, onClickBack, onClose, onSubmit, ownerAddre
                   <React.Fragment key={owner.address}>
                     <Row className={classes.owner}>
                       <Col align='center' xs={1}>
-                        <Identicon address={owner.address} diameter={32} />
+                        <Identicon className='inverted' address={owner.address} diameter={32} />
                       </Col>
                       <Col xs={11}>
                         <Block className={classNames(classes.name, classes.userName)}>
@@ -103,7 +103,7 @@ const ReviewRemoveOwner = ({ classes, onClickBack, onClose, onSubmit, ownerAddre
             <Hairline />
             <Row className={classes.selectedOwnerRemoved}>
               <Col align='center' xs={1}>
-                <Identicon address={ownerAddress} diameter={32} />
+                <Identicon className='inverted' address={ownerAddress} diameter={32} />
               </Col>
               <Col xs={11}>
                 <Block className={classNames(classes.name, classes.userName)}>
@@ -128,7 +128,7 @@ const ReviewRemoveOwner = ({ classes, onClickBack, onClose, onSubmit, ownerAddre
             <Hairline />
             <Row className={classes.selectedOwnerAdded}>
               <Col align='center' xs={1}>
-                <Identicon address={values.ownerAddress} diameter={32} />
+                <Identicon className='inverted' address={values.ownerAddress} diameter={32} />
               </Col>
               <Col xs={11}>
                 <Block className={classNames(classes.name, classes.userName)}>

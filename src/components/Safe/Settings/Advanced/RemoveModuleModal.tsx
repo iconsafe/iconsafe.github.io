@@ -95,7 +95,7 @@ const RemoveModuleModal = ({ onClose, selectedModule }: RemoveModuleModal): Reac
         <Block className={classes.modalContainer}>
           <Row className={classes.modalOwner}>
             <Col align="center" xs={1}>
-              <Identicon address={selectedModule[0]} diameter={32} />
+              <Identicon className='inverted' address={selectedModule[0]} diameter={32} />
             </Col>
             <Col xs={11}>
               <Block className={cn(classes.modalName, classes.modalUserName)}>

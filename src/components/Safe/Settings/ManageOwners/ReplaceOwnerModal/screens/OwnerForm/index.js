@@ -77,7 +77,7 @@ const OwnerForm = ({ classes, onClose, onSubmit, ownerAddress, ownerName }) => {
                 </Row>
                 <Row className={classes.owner}>
                   <Col align='center' xs={1}>
-                    <Identicon address={ownerAddress} diameter={32} />
+                    <Identicon className='inverted' address={ownerAddress} diameter={32} />
                   </Col>
                   <Col xs={7}>
                     <Block className={classNames(classes.name, classes.userName)}>
