@@ -36,3 +36,11 @@ ReactDOM.render(
   ,
   document.querySelector('#root')
 )
+
+const displayPreference = window.localStorage.getItem('theme')
+if (displayPreference === 'dark') {
+  document.documentElement.classList.toggle('dark-mode')
+  document.querySelectorAll('.inverted').forEach((result) => {
+    result.classList.toggle('dark-mode')
+  })
+}
