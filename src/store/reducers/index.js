@@ -2,7 +2,7 @@ import * as Actions from '@store/actions/actionTypes'
 import { isWalletOwner } from '@src/utils/msw'
 import { IconNetworks } from '@src/SCORE/Ancilia'
 
-const isDevelopment = false // process.env.NODE_ENV !== 'production'
+const isDevelopment = process.env.NODE_ENV !== 'production'
 
 const initialState = {
   walletConnected: null,
