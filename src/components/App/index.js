@@ -1,4 +1,4 @@
-import React, { useRef } from 'react'
+import React, { useEffect, useRef } from 'react'
 import { Switch, Route, Redirect } from 'react-router-dom'
 import styles from './App.module'
 import Safe from '@components/Safe'
@@ -9,6 +9,17 @@ import Button from '@components/core/Button'
 
 const App = () => {
   const notistackRef = useRef()
+
+  useEffect(() => {
+    const displayPreference = window.localStorage.getItem('theme')
+    if (displayPreference === 'dark') {
+      document.documentElement.classList.toggle('dark-mode')
+      document.querySelectorAll('.inverted').forEach((result) => {
+        result.classList.toggle('dark-mode')
+      })
+    }
+  })
+
   return (
     <SnackbarProvider
       maxSnack={10}

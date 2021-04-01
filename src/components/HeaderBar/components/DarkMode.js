@@ -38,8 +38,6 @@ const DarkMode = () => {
       window.localStorage.setItem('theme', 'light')
       setTheme('light')
     }
-
-    console.log(theme)
   }
 
   return (
