@@ -86,7 +86,7 @@ const ModulesTable = ({ moduleData }: ModulesTableProps): React.ReactElement => 
                       <TableCell align={column.align} component="td" key={columnId}>
                         {columnId === MODULES_TABLE_ADDRESS_ID ? (
                           <Block justify="left">
-                            <Identicon address={rowElement[0]} diameter={32} />
+                            <Identicon className='inverted' address={rowElement[0]} diameter={32} />
                             <AddressText size="lg">{rowElement[0]}</AddressText>
                           </Block>
                         ) : (

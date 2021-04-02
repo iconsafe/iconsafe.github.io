@@ -54,7 +54,7 @@ const RemoveSafeComponent = ({ classes, isOpen, onClose }) => {
       <Block className={classes.container}>
         <Row className={classes.owner}>
           <Col align='center' xs={1}>
-            <Identicon address={safeAddress} diameter={32} />
+            <Identicon className='inverted' address={safeAddress} diameter={32} />
           </Col>
           <Col xs={11}>
             <Block className={classNames(classes.name, classes.userName)}>

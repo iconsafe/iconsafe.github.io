@@ -22,7 +22,7 @@ const OwnerAddressTableCell = (props) => {
 
   return (
     <Block justify='left'>
-      <Identicon address={address} diameter={32} />
+      <Identicon className='inverted' address={address} diameter={32} />
       {showLinks ? (
         <div style={{ marginLeft: 10, flexShrink: 1, minWidth: 0 }}>
           {!userName || userName === 'UNKNOWN' ? null : userName}

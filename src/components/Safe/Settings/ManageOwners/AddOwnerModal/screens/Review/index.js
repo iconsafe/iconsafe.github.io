@@ -70,7 +70,7 @@ const ReviewAddOwner = ({ classes, onClickBack, onClose, onSubmit, values }) => 
               <React.Fragment key={owner.address}>
                 <Row className={classes.owner}>
                   <Col align='center' xs={1}>
-                    <Identicon address={owner.address} diameter={32} />
+                    <Identicon className='inverted' address={owner.address} diameter={32} />
                   </Col>
                   <Col xs={11}>
                     <Block className={classNames(classes.name, classes.userName)}>
@@ -98,7 +98,7 @@ const ReviewAddOwner = ({ classes, onClickBack, onClose, onSubmit, values }) => 
             <Hairline />
             <Row className={classes.selectedOwner}>
               <Col align='center' xs={1}>
-                <Identicon address={values.ownerAddress} diameter={32} />
+                <Identicon className='inverted' address={values.ownerAddress} diameter={32} />
               </Col>
               <Col xs={11}>
                 <Block className={classNames(classes.name, classes.userName)}>

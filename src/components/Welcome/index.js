@@ -170,7 +170,7 @@ const Welcome = () => {
         <Row className={classes.container}>
           <Col xs={4} className={classes.textLeft}>
 
-            <Img src={logoImg} />
+            <Img className='inverted' src={logoImg} />
 
             <Heading align='left' margin='lg' tag='h1' weight='bold' className={classes.textLeftContent}>
               The first multisig wallet <br /> to manage digital assets <br /> on ICON for

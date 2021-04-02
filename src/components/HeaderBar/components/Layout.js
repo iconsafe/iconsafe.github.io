@@ -16,6 +16,7 @@ import Divider from '@components/core/Divider'
 import Img from '@components/core/Img'
 import Row from '@components/core/Row'
 import { border, headerHeight, md, screenSm, sm } from '@src/theme/variables'
+import DarkMode from '@components/HeaderBar/components/DarkMode/DarkMode'
 
 const logo = require('../assets/logo-big-vertical.png')
 
@@ -61,10 +62,11 @@ const Layout = openHoc(({ classes, clickAway, open, providerDetails, providerInf
     <Row className={classes.summary}>
       <Col className={classes.logo} middle='xs' start='xs'>
         <Link to='/'>
-          <Img src={logo} />
+          <Img className='inverted' src={logo} />
         </Link>
       </Col>
       <Spacer />
+      <DarkMode />
       <Provider
         info={providerInfo}
         open={open}
