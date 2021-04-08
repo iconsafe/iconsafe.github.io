@@ -95,6 +95,9 @@ const SelectWalletDialog = ({ msw, onClose, selectedValue, open }) => {
   const onClickProviderLedger = () => {
     msw.login(WALLET_PROVIDER.LEDGER).then(address => {
       onLogin(address, WALLET_PROVIDER.LEDGER)
+    }).catch(error => {
+      console.error(error)
+      alert("Cannot connect to your Ledger")
     })
   }
 

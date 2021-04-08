@@ -69,11 +69,37 @@ export class Ancilia {
         })
 
       case WALLET_PROVIDER.LEDGER:
-        return Transport.create().then(transport => {
+        return Transport.create().then(async transport => {
+          const AMOUNT_ADDRESS_DISPLAYED = 10
           transport.setDebugMode(false);
           const icx = new AppIcx(transport);
-          return icx.getAddress(`${this.BASE_PATH}/0'`, false, true).then(ledger => {
-            return do_login(ledger.address.toString(), provider)
+
+          alert('Please wait for few seconds after clicking OK.');
+
+          const addresses = []
+          for (let i = 0; i < AMOUNT_ADDRESS_DISPLAYED; i++) {
+            const ledger = await icx.getAddress(`${this.BASE_PATH}/${i}'`, false, true)
+            addresses.push(ledger.address.toString())
+          }
+
+          return Promise.all(addresses.map(address => {
+            return Promise.all([this.icxBalance(address), this.getStake(address)]).then(([availableBalance, stake]) => {
+              const { staked, unstaking } = stake;
+              const balance = availableBalance.plus(staked).plus(unstaking || 0);
+              return {
+                balance: balance,
+                address: address
+              }
+            })
+          })).then(addresses => {
+            const addressesDisplay = addresses.map((address, index) => {
+              const displayBigInt = (balance) => {
+                return parseFloat(balance.toFixed(2)).toString()
+              }
+              return `${index + 1}: ${address.address} (${displayBigInt(this.convertDecimalsToUnit(address.balance, 18))} ICX)`
+            })
+            const wid = parseInt(prompt(`Please input the ID of the address you want to select: \n\n${addressesDisplay.join("\n")}\n`))
+            return do_login(addresses[wid - 1].address.toString(), provider)
           })
         })
 
