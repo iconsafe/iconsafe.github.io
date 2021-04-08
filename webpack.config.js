@@ -103,6 +103,7 @@ module.exports = (env, argv) => {
     },
     plugins: [
       new webpack.ProvidePlugin({
+        Buffer: ['buffer', 'Buffer'],
         process: 'process/browser'
       }),
       new HtmlWebpackPlugin({

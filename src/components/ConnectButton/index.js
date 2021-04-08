@@ -77,8 +77,25 @@ const SelectWalletDialog = ({ msw, onClose, selectedValue, open }) => {
     onClose(selectedValue)
   }
 
+  const onLogin = (address, provider) => {
+    dispatch(dispatchers.setWalletConnected(address))
+    dispatch(dispatchers.setWalletProvider(provider))
+    onClose(address)
+    Promise.all([msw.get_wallet_owner_uid(address)]).then(([connectedWalletOwnerUid]) => {
+      dispatch(dispatchers.setConnectedWalletOwnerUid(connectedWalletOwnerUid))
+      msw.get_wallet_owner(connectedWalletOwnerUid).then(connectedWalletOwner => {
+        dispatch(dispatchers.setConnectedWalletOwner(connectedWalletOwner))
+      })
+    }).catch(error => {
+      if (error.includes('WalletOwnerDoesntExist')) {
+      }
+    })
+  }
+
   const onClickProviderLedger = () => {
-    window.alert('Not yet implemented')
+    msw.login(WALLET_PROVIDER.LEDGER).then(address => {
+      onLogin(address, WALLET_PROVIDER.LEDGER)
+    })
   }
 
   const onClickProviderMagic = () => {
@@ -87,18 +104,7 @@ const SelectWalletDialog = ({ msw, onClose, selectedValue, open }) => {
 
   const onClickProviderICONex = () => {
     msw.login(WALLET_PROVIDER.ICONEX).then(address => {
-      dispatch(dispatchers.setWalletConnected(address))
-      dispatch(dispatchers.setWalletProvider('ICONex'))
-      onClose(address)
-      Promise.all([msw.get_wallet_owner_uid(address)]).then(([connectedWalletOwnerUid]) => {
-        dispatch(dispatchers.setConnectedWalletOwnerUid(connectedWalletOwnerUid))
-        msw.get_wallet_owner(connectedWalletOwnerUid).then(connectedWalletOwner => {
-          dispatch(dispatchers.setConnectedWalletOwner(connectedWalletOwner))
-        })
-      }).catch(error => {
-        if (error.includes('WalletOwnerDoesntExist')) {
-        }
-      })
+      onLogin(address, WALLET_PROVIDER.ICONEX)
     }).catch(error => {
       // silently catch user cancellation
       console.log(error)

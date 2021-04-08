@@ -1,4 +1,6 @@
-import IconService, { IconConverter } from 'icon-sdk-js'
+import IconService, { IconConverter, IconUtil } from 'icon-sdk-js'
+import Transport from '@ledgerhq/hw-transport-webusb';
+import AppIcx from '@ledgerhq/hw-app-icx';
 
 // ================================================
 // Constants
@@ -31,28 +33,48 @@ class NotLoggedInWallet extends Error { }
 // ================================================
 //  Ancilia Implementation
 export class Ancilia {
+  BASE_PATH = `44'/4801368'/0'/0'`;
+
   constructor(network) {
     this._nid = this.__getNetworkInfo(network).nid
     this._network = network
+    this._wallet = null
     this.recoverSession()
   }
 
   // Session ============================================================
   recoverSession () {
     if (this.isLoggedIn()) {
-      this._walletAddress = this.getLoggedInWallet()
+      this._wallet = this.getLoggedInWallet()
     }
   }
 
   login (provider) {
+
+    const do_login = (address, provider) => {
+      if (!address) throw new LoggedInCancelled()
+      window.localStorage.setItem(WALLET_LOCAL_STORAGE_KEY, address)
+      window.localStorage.setItem(WALLET_LOCAL_STORAGE_PROVIDER, provider)
+      this._wallet = {
+        address: address,
+        provider: provider
+      }
+      return address
+    }
+
     switch (provider) {
       case WALLET_PROVIDER.ICONEX:
         return this.iconexAskAddress().then(address => {
-          if (!address) throw new LoggedInCancelled()
-          window.localStorage.setItem(WALLET_LOCAL_STORAGE_KEY, address)
-          window.localStorage.setItem(WALLET_LOCAL_STORAGE_PROVIDER, WALLET_PROVIDER.ICONEX)
-          this._walletAddress = address
-          return address
+          return do_login(address, provider)
+        })
+
+      case WALLET_PROVIDER.LEDGER:
+        return Transport.create().then(transport => {
+          transport.setDebugMode(false);
+          const icx = new AppIcx(transport);
+          return icx.getAddress(`${this.BASE_PATH}/0'`, false, true).then(ledger => {
+            return do_login(ledger.address.toString(), provider)
+          })
         })
 
       default:
@@ -83,6 +105,7 @@ export class Ancilia {
   logout () {
     window.localStorage.removeItem(WALLET_LOCAL_STORAGE_KEY)
     window.localStorage.removeItem(WALLET_LOCAL_STORAGE_PROVIDER)
+    this._wallet = null
   }
 
   // Network Meta ============================================================
@@ -273,7 +296,7 @@ export class Ancilia {
   }
 
   iconexTransferIcx (to, amount) {
-    return this.__iconexIcxTransferTx(this._walletAddress, to, amount)
+    return this.__iconexIcxTransferTx(this._wallet.address, to, amount)
   }
 
   iconexTransferIrc2 (to, contract, value, data = null) {
@@ -287,20 +310,44 @@ export class Ancilia {
       params._data = IconConverter.toHex(JSON.stringify(data))
     }
 
-    return this.__iconexCallRWTx(this._walletAddress, contract, 'transfer', 0, params)
+    return this.__iconexCallRWTx(this._wallet.address, contract, 'transfer', 0, params)
   }
 
   // ======================================================================================
   // Following classes are private because they are lower level methods at a protocol level
+  async __signTransaction (transaction) {
+    const rawTransaction = IconConverter.toRawTransaction(transaction);
+
+    switch (this._wallet.provider) {
+      case WALLET_PROVIDER.LEDGER:
+        const hashKey = IconUtil.generateHashKey(rawTransaction);
+        const transport = await Transport.create();
+        const icx = new AppIcx(transport);
+        const { signedRawTxBase64 } = await icx.signTransaction(`${this.BASE_PATH}/0'`, hashKey);
+        rawTransaction.signature = signedRawTxBase64;
+        const signedTransaction = {
+          getProperties: () => rawTransaction,
+          getSignature: () => signedRawTxBase64,
+        };
+        return this.__getIconService().sendTransaction(signedTransaction).execute();
+
+      case WALLET_PROVIDER.ICONEX:
+        const jsonRpcQuery = {
+          jsonrpc: '2.0',
+          method: 'icx_sendTransaction',
+          params: rawTransaction,
+          id: 1234
+        }
+        return this.__iconexJsonRpc(jsonRpcQuery)
+
+      default:
+        console.error("Unsupported wallet : ", this._wallet.provider)
+    }
+  }
+
   __iconexCallRWTxEx (from, to, method, value, stepLimit, params) {
     const transaction = this.__buildCallRWTx(from, to, method, value, stepLimit, params)
-    const jsonRpcQuery = {
-      jsonrpc: '2.0',
-      method: 'icx_sendTransaction',
-      params: IconConverter.toRawTransaction(transaction),
-      id: 1234
-    }
-    return this.__iconexJsonRpc(jsonRpcQuery)
+    return this.__signTransaction(transaction)
   }
 
   __iconexDeployTx (from, scoreFileBytes, scoreParams) {

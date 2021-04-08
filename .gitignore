@@ -6,3 +6,4 @@ dist/
 .idea
 dist
 dist/index.html
+yarn-error.log

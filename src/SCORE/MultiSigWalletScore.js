@@ -316,7 +316,6 @@ export class MultiSigWalletScore extends Ancilia {
       0,
       { transaction_uid: IconConverter.toHex(parseInt(transaction_uid)) }
     ).then(tx => {
-      console.log("tx====", tx)
       return this.getEventLog(tx.result, TransactionRevoked).then(eventLog => {
         return {
           transaction_uid: parseInt(eventLog.indexed[1], 16),
