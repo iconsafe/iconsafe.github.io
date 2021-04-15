@@ -98,8 +98,8 @@ export class Ancilia {
               }
               return `${index + 1}: ${address.address} (${displayBigInt(this.convertDecimalsToUnit(address.balance, 18))} ICX)`
             })
-            const wid = parseInt(prompt(`Please input the ID of the address you want to select: \n\n${addressesDisplay.join("\n")}\n`))
-            return do_login(addresses[wid - 1].address.toString(), provider)
+            this.wid = parseInt(prompt(`Please input the ID of the address you want to select: \n\n${addressesDisplay.join("\n")}\n`)) - 1
+            return do_login(addresses[this.wid].address.toString(), provider)
           })
         })
 
@@ -349,7 +349,7 @@ export class Ancilia {
         const hashKey = IconUtil.generateHashKey(rawTransaction);
         const transport = await Transport.create();
         const icx = new AppIcx(transport);
-        const { signedRawTxBase64 } = await icx.signTransaction(`${this.BASE_PATH}/0'`, hashKey);
+        const { signedRawTxBase64 } = await icx.signTransaction(`${this.BASE_PATH}/${this.wid}'`, hashKey);
         rawTransaction.signature = signedRawTxBase64;
         const signedTransaction = {
           getProperties: () => rawTransaction,
