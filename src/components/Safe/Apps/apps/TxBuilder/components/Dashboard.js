@@ -231,12 +231,12 @@ const Dashboard = ({ subTransactions, setSubTransactions }) => {
                       {contractMethod.inputs.map((input, index) => (
                         <TextInput
                           key={index}
-                          isRequired={!input.default}
+                          isRequired={input.default === undefined}
                           className={classes.addressInput}
                           name={`scoreCallMethodParameter-${index}`}
-                          value={`${input.name || ''} (${input.type}) ${(input.default) ? ' (Optional)' : ''}`}
-                          placeholder={`${input.name || ''} (${input.type}) ${(input.default) ? ' (Optional)' : ''}`}
-                          text={`${input.name || ''} (${input.type}) ${(input.default) ? ' (Optional)' : ''}`}
+                          value={`${input.name || ''} (${input.type}) ${(input.default === undefined) ? '' : ' (Optional)'}`}
+                          placeholder={`${input.name || ''} (${input.type}) ${(input.default === undefined) ? '' : ' (Optional)'}`}
+                          text={`${input.name || ''} (${input.type}) ${(input.default === undefined) ? '' : ' (Optional)'}`}
                           fieldMutator={(value) => { mutators.setScoreCallMethodParameters(value, index) }}
                         />
                       ))}
