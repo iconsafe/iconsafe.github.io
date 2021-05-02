@@ -246,9 +246,9 @@ export default function EnhancedTable ({ rows, additionalChild }) {
                         onClick={() => handleClick(row)}
                         tabIndex={-1}
                       >
-                        <TableCell component='th' id={labelId} scope='row'>
-                          <Img style={{ paddingRight: '8px', verticalAlign: 'bottom' }} height={20} src={getTokenIcon(row.symbol).src} alt={row.symbol} />
-                          {row.symbol}
+                        <TableCell component='th' id={labelId} scope='row' style={{ display: 'flex', alignItems: 'center' }}>
+                          <Img height={24} src={getTokenIcon(row.symbol).src} alt={row.symbol} />
+                          <span style={{ paddingLeft: '8px' }}>{row.symbol}</span>
                         </TableCell>
                         <TableCell align='left'>
                           {parseFloat(displayUnit(row.balance.plus(row.unstaking ? row.iiss.unstaking : 0), row.decimals)).toLocaleString()}
