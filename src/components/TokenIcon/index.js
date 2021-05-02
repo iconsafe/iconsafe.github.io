@@ -8,6 +8,7 @@ import metxIcon from './icons/metx.png'
 import seedIcon from './icons/seed.png'
 import balnIcon from './icons/baln.png'
 import bnUsdIcon from './icons/bnusd.svg'
+import sIcxIcon from './icons/sicx.svg'
 import upIcon from './icons/up.png'
 import UnknownIcon from './icons/unknown.png'
 import TokenPlaceholder from '@src/assets/icons/token_placeholder.svg'
@@ -59,6 +60,10 @@ const TOKENS = {
   },
   BNUSD: {
     src: bnUsdIcon,
+    height: 25
+  },
+  SICX: {
+    src: sIcxIcon,
     height: 25
   },
   GENERIC_TOKEN: {
