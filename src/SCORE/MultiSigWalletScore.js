@@ -133,8 +133,8 @@ export class MultiSigWalletScore extends Ancilia {
 
   // --- VersionManager ---
   get_versions_number () {
-    return this.__iconexCallROTx(this._scoreAddress, 'get_domain').then(domain => {
-      const promises = Object.entries(domain).map(k => this.__iconexCallROTx(k[1], 'get_version_number'))
+    return this.__callROTx(this._scoreAddress, 'get_domain').then(domain => {
+      const promises = Object.entries(domain).map(k => this.__callROTx(k[1], 'get_version_number'))
       return Promise.all(promises).then(result => {
         return Object.entries(domain).map(k => {
           const entry = result.shift()
@@ -146,13 +146,13 @@ export class MultiSigWalletScore extends Ancilia {
 
   // --- SettingsManager ---
   get_safe_name () {
-    return this.__iconexCallROTx(this._scoreAddress, 'get_safe_name')
+    return this.__callROTx(this._scoreAddress, 'get_safe_name')
   }
 
   set_safe_name (safe_name) {
     const wallet = this.getLoggedInWallet(true).address
 
-    return this.__iconexCallRWTx(
+    return this.__callRWTx(
       wallet,
       this._scoreAddress,
       'set_safe_name',
@@ -163,7 +163,7 @@ export class MultiSigWalletScore extends Ancilia {
 
   // --- AddressRegistrar ---
   resolve_many (names) {
-    return this.__iconexCallROTx(this._scoreAddress, 'resolve_many', {
+    return this.__callROTx(this._scoreAddress, 'resolve_many', {
       names: names
     }).then(json => {
       return json
@@ -171,7 +171,7 @@ export class MultiSigWalletScore extends Ancilia {
   }
 
   resolve (name) {
-    return this.__iconexCallROTx(this._scoreAddress, 'resolve', {
+    return this.__callROTx(this._scoreAddress, 'resolve', {
       name: name
     }).then(json => {
       return json
@@ -180,7 +180,7 @@ export class MultiSigWalletScore extends Ancilia {
 
   // --- BalanceHistoryManager ---
   get_balance_history (balance_history_uid) {
-    return this.__iconexCallROTx(this._scoreAddress, 'get_balance_history', {
+    return this.__callROTx(this._scoreAddress, 'get_balance_history', {
       balance_history_uid: IconConverter.toHex(parseInt(balance_history_uid))
     }).then(json => {
       return new BalanceHistory(json)
@@ -188,14 +188,14 @@ export class MultiSigWalletScore extends Ancilia {
   }
 
   get_balance_trackers () {
-    return this.__iconexCallROTx(this._scoreAddress, 'get_balance_trackers', {
+    return this.__callROTx(this._scoreAddress, 'get_balance_trackers', {
     }).then(json => {
       return json
     })
   }
 
   get_token_balance_history (token, offset = 0) {
-    return this.__iconexCallROTx(this._scoreAddress, 'get_token_balance_history', {
+    return this.__callROTx(this._scoreAddress, 'get_token_balance_history', {
       token: token,
       offset: IconConverter.toHex(parseInt(offset))
     }).then(jsons => {
@@ -208,7 +208,7 @@ export class MultiSigWalletScore extends Ancilia {
   add_balance_tracker (token) {
     const wallet = this.getLoggedInWallet(true).address
 
-    return this.__iconexCallRWTx(
+    return this.__callRWTx(
       wallet,
       this._scoreAddress,
       'add_balance_tracker',
@@ -220,7 +220,7 @@ export class MultiSigWalletScore extends Ancilia {
   remove_balance_tracker (token) {
     const wallet = this.getLoggedInWallet(true).address
 
-    return this.__iconexCallRWTx(
+    return this.__callRWTx(
       wallet,
       this._scoreAddress,
       'remove_balance_tracker',
@@ -250,7 +250,7 @@ export class MultiSigWalletScore extends Ancilia {
   submit_transaction (sub_transactions) {
     const wallet = this.getLoggedInWallet(true).address
 
-    return this.__iconexCallRWTx(
+    return this.__callRWTx(
       wallet,
       this._scoreAddress,
       'submit_transaction',
@@ -271,7 +271,7 @@ export class MultiSigWalletScore extends Ancilia {
   confirm_transaction (transaction_uid) {
     const wallet = this.getLoggedInWallet(true).address
 
-    return this.__iconexCallRWTx(
+    return this.__callRWTx(
       wallet,
       this._scoreAddress,
       'confirm_transaction',
@@ -291,7 +291,7 @@ export class MultiSigWalletScore extends Ancilia {
   reject_transaction (transaction_uid) {
     const wallet = this.getLoggedInWallet(true).address
 
-    return this.__iconexCallRWTx(
+    return this.__callRWTx(
       wallet,
       this._scoreAddress,
       'reject_transaction',
@@ -309,7 +309,7 @@ export class MultiSigWalletScore extends Ancilia {
   revoke_transaction (transaction_uid) {
     const wallet = this.getLoggedInWallet(true).address
 
-    return this.__iconexCallRWTx(
+    return this.__callRWTx(
       wallet,
       this._scoreAddress,
       'revoke_transaction',
@@ -328,7 +328,7 @@ export class MultiSigWalletScore extends Ancilia {
   cancel_transaction (transaction_uid) {
     const wallet = this.getLoggedInWallet(true).address
 
-    return this.__iconexCallRWTx(
+    return this.__callRWTx(
       wallet,
       this._scoreAddress,
       'cancel_transaction',
@@ -347,7 +347,7 @@ export class MultiSigWalletScore extends Ancilia {
   claim_iscore () {
     const wallet = this.getLoggedInWallet(true).address
 
-    return this.__iconexCallRWTx(
+    return this.__callRWTx(
       wallet,
       this._scoreAddress,
       'claim_iscore',
@@ -372,7 +372,7 @@ export class MultiSigWalletScore extends Ancilia {
   }
 
   get_transaction (transaction_uid) {
-    return this.__iconexCallROTx(
+    return this.__callROTx(
       this._scoreAddress,
       'get_transaction',
       { transaction_uid: IconConverter.toHex(parseInt(transaction_uid)) }
@@ -382,25 +382,25 @@ export class MultiSigWalletScore extends Ancilia {
   }
 
   get_waiting_transactions_count () {
-    return this.__iconexCallROTx(this._scoreAddress, 'get_waiting_transactions_count').then(result => {
+    return this.__callROTx(this._scoreAddress, 'get_waiting_transactions_count').then(result => {
       return parseInt(result)
     })
   }
 
   get_all_transactions_count () {
-    return this.__iconexCallROTx(this._scoreAddress, 'get_all_transactions_count').then(result => {
+    return this.__callROTx(this._scoreAddress, 'get_all_transactions_count').then(result => {
       return parseInt(result)
     })
   }
 
   get_executed_transactions_count () {
-    return this.__iconexCallROTx(this._scoreAddress, 'get_executed_transactions_count').then(result => {
+    return this.__callROTx(this._scoreAddress, 'get_executed_transactions_count').then(result => {
       return parseInt(result)
     })
   }
 
   get_waiting_transactions (offset) {
-    return this.__iconexCallROTx(this._scoreAddress, 'get_waiting_transactions', {
+    return this.__callROTx(this._scoreAddress, 'get_waiting_transactions', {
       offset: IconConverter.toHex(parseInt(offset))
     }).then(jsons => {
       return jsons.map(json => {
@@ -410,7 +410,7 @@ export class MultiSigWalletScore extends Ancilia {
   }
 
   get_all_transactions (offset) {
-    return this.__iconexCallROTx(this._scoreAddress, 'get_all_transactions', {
+    return this.__callROTx(this._scoreAddress, 'get_all_transactions', {
       offset: IconConverter.toHex(parseInt(offset))
     }).then(jsons => {
       return jsons.map(json => {
@@ -420,7 +420,7 @@ export class MultiSigWalletScore extends Ancilia {
   }
 
   get_executed_transactions (offset) {
-    return this.__iconexCallROTx(this._scoreAddress, 'get_executed_transactions', {
+    return this.__callROTx(this._scoreAddress, 'get_executed_transactions', {
       offset: IconConverter.toHex(parseInt(offset))
     }).then(jsons => {
       return jsons.map(json => {
@@ -431,7 +431,7 @@ export class MultiSigWalletScore extends Ancilia {
 
   // --- WalletOwnerManager ---
   get_wallet_owners (offset) {
-    return this.__iconexCallROTx(this._scoreAddress, 'get_wallet_owners', {
+    return this.__callROTx(this._scoreAddress, 'get_wallet_owners', {
       offset: IconConverter.toHex(parseInt(offset))
     }).then(jsons => {
       return jsons.map(json => {
@@ -441,7 +441,7 @@ export class MultiSigWalletScore extends Ancilia {
   }
 
   get_wallet_owner (wallet_owner_uid) {
-    return this.__iconexCallROTx(this._scoreAddress, 'get_wallet_owner', {
+    return this.__callROTx(this._scoreAddress, 'get_wallet_owner', {
       wallet_owner_uid: IconConverter.toHex(parseInt(wallet_owner_uid))
     }).then(json => {
       return new WalletOwner(json)
@@ -449,7 +449,7 @@ export class MultiSigWalletScore extends Ancilia {
   }
 
   get_wallet_owner_uid (address) {
-    return this.__iconexCallROTx(this._scoreAddress, 'get_wallet_owner_uid',
+    return this.__callROTx(this._scoreAddress, 'get_wallet_owner_uid',
       { address: address }
     ).then(result => {
       return parseInt(result)
@@ -457,13 +457,13 @@ export class MultiSigWalletScore extends Ancilia {
   }
 
   get_wallet_owners_count () {
-    return this.__iconexCallROTx(this._scoreAddress, 'get_wallet_owners_count').then(result => {
+    return this.__callROTx(this._scoreAddress, 'get_wallet_owners_count').then(result => {
       return parseInt(result)
     })
   }
 
   is_wallet_owner (address) {
-    return this.__iconexCallROTx(this._scoreAddress, 'is_wallet_owner',
+    return this.__callROTx(this._scoreAddress, 'is_wallet_owner',
       { address: address }
     ).then(result => {
       return parseInt(result) !== 0
@@ -471,7 +471,7 @@ export class MultiSigWalletScore extends Ancilia {
   }
 
   get_wallet_owners_required () {
-    return this.__iconexCallROTx(this._scoreAddress, 'get_wallet_owners_required').then(result => {
+    return this.__callROTx(this._scoreAddress, 'get_wallet_owners_required').then(result => {
       return parseInt(result)
     })
   }
@@ -567,7 +567,7 @@ export class MultiSigWalletScore extends Ancilia {
 
   // --- Event Manager ---
   get_events (offset = 0) {
-    return this.__iconexCallROTx(
+    return this.__callROTx(
       this._scoreAddress,
       'get_events',
       { offset: IconConverter.toHex(parseInt(offset)) }

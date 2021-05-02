@@ -6,6 +6,7 @@ import AppIcx from '@ledgerhq/hw-app-icx';
 // Constants
 const WALLET_LOCAL_STORAGE_KEY = '__Ancilia_WALLET_LOCAL_STORAGE_KEY'
 const WALLET_LOCAL_STORAGE_PROVIDER = '__Ancilia_WALLET_LOCAL_STORAGE_PROVIDER'
+const WALLET_LOCAL_STORAGE_WID = '__Ancilia_WALLET_LOCAL_STORAGE_WID'
 export const SCORE_INSTALL_ADDRESS = 'cx0000000000000000000000000000000000000000'
 
 export const IconNetworks = {
@@ -51,13 +52,15 @@ export class Ancilia {
 
   login (provider) {
 
-    const do_login = (address, provider) => {
+    const do_login = (address, provider, wid) => {
       if (!address) throw new LoggedInCancelled()
       window.localStorage.setItem(WALLET_LOCAL_STORAGE_KEY, address)
       window.localStorage.setItem(WALLET_LOCAL_STORAGE_PROVIDER, provider)
+      window.localStorage.setItem(WALLET_LOCAL_STORAGE_WID, wid)
       this._wallet = {
         address: address,
-        provider: provider
+        provider: provider,
+        wid: wid
       }
       return address
     }
@@ -98,8 +101,8 @@ export class Ancilia {
               }
               return `${index + 1}: ${address.address} (${displayBigInt(this.convertDecimalsToUnit(address.balance, 18))} ICX)`
             })
-            this.wid = parseInt(prompt(`Please input the ID of the address you want to select: \n\n${addressesDisplay.join("\n")}\n`)) - 1
-            return do_login(addresses[this.wid].address.toString(), provider)
+            const wid = parseInt(prompt(`Please input the ID of the address you want to select: \n\n${addressesDisplay.join("\n")}\n`)) - 1
+            return do_login(addresses[wid].address.toString(), provider, wid)
           })
         })
 
@@ -123,7 +126,8 @@ export class Ancilia {
     } else {
       return {
         address: window.localStorage.getItem(WALLET_LOCAL_STORAGE_KEY),
-        provider: window.localStorage.getItem(WALLET_LOCAL_STORAGE_PROVIDER)
+        provider: window.localStorage.getItem(WALLET_LOCAL_STORAGE_PROVIDER),
+        wid: window.localStorage.getItem(WALLET_LOCAL_STORAGE_WID)
       }
     }
   }
@@ -131,6 +135,7 @@ export class Ancilia {
   logout () {
     window.localStorage.removeItem(WALLET_LOCAL_STORAGE_KEY)
     window.localStorage.removeItem(WALLET_LOCAL_STORAGE_PROVIDER)
+    window.localStorage.removeItem(WALLET_LOCAL_STORAGE_WID)
     this._wallet = null
   }
 
@@ -163,7 +168,7 @@ export class Ancilia {
 
   // Generic Contract Interface ============================================================
   getName (contract) {
-    return this.__iconexCallROTx(contract, 'name')
+    return this.__callROTx(contract, 'name')
   }
 
   // IISS Interface ===================================================================
@@ -244,21 +249,21 @@ export class Ancilia {
 
   // IRC2 Token Interface ============================================================
   irc2Decimals (contract) {
-    return this.__iconexCallROTx(contract, 'decimals').then(decimals => {
+    return this.__callROTx(contract, 'decimals').then(decimals => {
       return parseInt(decimals)
     })
   }
 
   irc2Name (contract) {
-    return this.__iconexCallROTx(contract, 'name')
+    return this.__callROTx(contract, 'name')
   }
 
   irc2Symbol (contract) {
-    return this.__iconexCallROTx(contract, 'symbol')
+    return this.__callROTx(contract, 'symbol')
   }
 
   irc2Balance (address, contract) {
-    return this.__iconexCallROTx(contract, 'balanceOf', { _owner: address }).then(balance => {
+    return this.__callROTx(contract, 'balanceOf', { _owner: address }).then(balance => {
       return IconConverter.toBigNumber(balance)
     })
   }
@@ -336,7 +341,7 @@ export class Ancilia {
       params._data = IconConverter.toHex(JSON.stringify(data))
     }
 
-    return this.__iconexCallRWTx(this._wallet.address, contract, 'transfer', 0, params)
+    return this.__callRWTx(this._wallet.address, contract, 'transfer', 0, params)
   }
 
   // ======================================================================================
@@ -349,9 +354,10 @@ export class Ancilia {
         const hashKey = IconUtil.generateHashKey(rawTransaction);
         const transport = await Transport.create();
         const icx = new AppIcx(transport);
-        const { signedRawTxBase64 } = await icx.signTransaction(`${this.BASE_PATH}/${this.wid}'`, hashKey);
+        const { signedRawTxBase64 } = await icx.signTransaction(`${this.BASE_PATH}/${this._wallet.wid}'`, hashKey);
         rawTransaction.signature = signedRawTxBase64;
         const signedTransaction = {
+          getRawTransaction: () => rawTransaction,
           getProperties: () => rawTransaction,
           getSignature: () => signedRawTxBase64,
         };
@@ -371,7 +377,7 @@ export class Ancilia {
     }
   }
 
-  __iconexCallRWTxEx (from, to, method, value, stepLimit, params) {
+  __callRWTxEx (from, to, method, value, stepLimit, params) {
     const transaction = this.__buildCallRWTx(from, to, method, value, stepLimit, params)
     return this.__signTransaction(transaction)
   }
@@ -400,13 +406,13 @@ export class Ancilia {
     return this.__iconexJsonRpc(jsonRpcQuery)
   }
 
-  __iconexCallRWTx (from, to, method, value, params) {
+  __callRWTx (from, to, method, value, params) {
     return this.__estimateStep(from, to, method, value, params).then(stepLimit => {
       // Step Estimation may be a little wrong, increase it a bit
-      return this.__iconexCallRWTxEx(from, to, method, value, stepLimit * 5, params)
+      return this.__callRWTxEx(from, to, method, value, stepLimit * 5, params)
     }).catch(() => {
       // The estimation failed for some reason. Try to call it with a fixed steplimit
-      return this.__iconexCallRWTxEx(from, to, method, value, 100000000, params)
+      return this.__callRWTxEx(from, to, method, value, 100000000, params)
     })
   }
 
@@ -516,7 +522,7 @@ export class Ancilia {
     }
   }
 
-  __iconexCallROTx (to, method, params) {
+  __callROTx (to, method, params) {
     const transaction = this.__buildCallROTx(to, method, params)
     return this.__getIconService().call(transaction).execute()
   }
