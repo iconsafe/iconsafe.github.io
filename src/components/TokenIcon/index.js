@@ -6,6 +6,8 @@ import Ac3Icon from './icons/ac3.png'
 import uethIcon from './icons/ueth.png'
 import metxIcon from './icons/metx.png'
 import seedIcon from './icons/seed.png'
+import balnIcon from './icons/baln.png'
+import bnUsdIcon from './icons/bnusd.svg'
 import upIcon from './icons/up.png'
 import UnknownIcon from './icons/unknown.png'
 import TokenPlaceholder from '@src/assets/icons/token_placeholder.svg'
@@ -49,6 +51,14 @@ const TOKENS = {
   },
   SEED: {
     src: seedIcon,
+    height: 25
+  },
+  BALN: {
+    src: balnIcon,
+    height: 25
+  },
+  BNUSD: {
+    src: bnUsdIcon,
     height: 25
   },
   GENERIC_TOKEN: {
