@@ -40,7 +40,7 @@ const TokenBalance = ({ token }) => {
       let chart = balanceChart
       let areaSeries = balanceAreaSeries
       if (!chart) {
-        const chartWidth = containerRef.current.clientWidth
+        const chartWidth = containerRef.current.clientWidth - 15
 
         chart = createChart(chartRef.current, {
           width: chartWidth,
