@@ -63,38 +63,6 @@ export const IncomingTxDescription = ({ tx }) => {
       </>)
   }
 
-  const getIissOperations = () => {
-    return (
-      <>
-        <ListItem button onClick={handleClickSafeOperations}>
-          <ListItemIcon style={{ marginRight: '5px' }}>
-            <SettingsIcon />
-          </ListItemIcon>
-          <ListItemText primary='IISS Operations' />
-          {openedSafeOperations ? <ExpandLess /> : <ExpandMore />}
-        </ListItem>
-
-        <Collapse
-          in={openedSafeOperations} timeout='auto' unmountOnExit
-        >
-          <List
-            component='div'
-            disablePadding
-          >
-            {tx.iissOperations.map((subtx, index) => (
-              <ListItem
-                key={`${tx.created_txhash}-${index}`}
-                className={classes.nested}
-              >
-                <IissOperationDescription tx={subtx} />
-              </ListItem>
-            ))}
-          </List>
-        </Collapse>
-      </>
-    )
-  }
-
   return (
     <Block className={classes.txDataContainer}>
       <Paper style={{ overflow: 'auto' }}>
@@ -108,7 +76,6 @@ export const IncomingTxDescription = ({ tx }) => {
           }
           className={classes.root}
         >
-          {tx.iissOperations?.length > 0 && getIissOperations()}
           {tx.tokens.length > 0 && getTokenTransfers()}
         </List>
       </Paper>

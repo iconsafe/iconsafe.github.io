@@ -1,3 +1,6 @@
+import React from 'react'
+import Img from '@components/core/Img'
+
 import IcxIcon from './icons/icx.svg'
 import TapIcon from './icons/tap.png'
 import SportsIcon from './icons/sports.png'
@@ -83,3 +86,12 @@ export const getTokenIcon = (token) => {
     return TOKENS.UNKNOWN
   }
 }
+
+export const TokenIcon = ({ token, width, height }) => (
+  <Img
+    alt='Token image'
+    height={height}
+    width={width}
+    src={getTokenIcon(token).src}
+  />
+)

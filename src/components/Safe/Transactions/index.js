@@ -14,6 +14,7 @@ import { getSymbolAndDecimalsFromContract } from '@src/utils/ancilia'
 import { getTransactionState, getMultiSigWalletAPI } from '@src/utils/msw'
 import { Loader, LoadingContainer } from '@components/ICON'
 import { SCORE_INSTALL_ADDRESS } from '@src/SCORE/Ancilia'
+import { BALANCED_SCORES } from '@src/SCORE/Balanced'
 
 import { IconConverter } from 'icon-sdk-js'
 
@@ -151,6 +152,10 @@ export const convertTransactionToDisplay = async (transaction, safeAddress) => {
             return subtx.destination === SCORE_INSTALL_ADDRESS
           })
 
+          const balancedOperations = transaction.sub_transactions.filter(subtx => {
+            return Object.values(BALANCED_SCORES).includes(subtx.destination)
+          })
+
           return {
             uid: transaction.uid,
             type: transaction.type,
@@ -159,6 +164,7 @@ export const convertTransactionToDisplay = async (transaction, safeAddress) => {
             tokens: tokensArray,
             safeOperations: safeOperations,
             iissOperations: iissOperations,
+            balancedOperations: balancedOperations,
             subTx: transaction.sub_transactions,
             confirmations: transaction.confirmations,
             rejections: transaction.rejections,

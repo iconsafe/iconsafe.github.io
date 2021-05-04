@@ -1,6 +1,7 @@
 import { makeStyles } from '@material-ui/core/styles'
 import React, { useState } from 'react'
 import { styles } from './styles'
+import BalancedOperationDescription from '@components/Safe/Transactions/TransactionDetails/BalancedOperationDescription'
 import IissOperationDescription from '@components/Safe/Transactions/TransactionDetails/IissOperationDescription'
 import WalletOperationDescription from '@components/Safe/Transactions/TransactionDetails/WalletOperationDescription'
 import TokenTransferDescription from '@components/Safe/Transactions/TransactionDetails/TokenTransferDescription'
@@ -18,6 +19,8 @@ import ExpandMore from '@material-ui/icons/ExpandMore'
 import Collapse from '@material-ui/core/Collapse'
 import ViewListIcon from '@material-ui/icons/ViewList'
 import SettingsIcon from '@material-ui/icons/Settings'
+import AccountBalanceIcon from '@material-ui/icons/AccountBalance'
+import { TokenIcon } from '@components/TokenIcon'
 
 const useStyles = makeStyles(styles)
 
@@ -117,7 +120,7 @@ export const OutgoingTxDescription = ({ tx, defaultOpenedRawMethodCalls = false 
       <>
         <ListItem button onClick={handleClickSafeOperations}>
           <ListItemIcon style={{ marginRight: '5px' }}>
-            <SettingsIcon />
+            <AccountBalanceIcon />
           </ListItemIcon>
           <ListItemText primary='IISS Operations' />
           {openedSafeOperations ? <ExpandLess /> : <ExpandMore />}
@@ -136,6 +139,38 @@ export const OutgoingTxDescription = ({ tx, defaultOpenedRawMethodCalls = false 
                 className={classes.nested}
               >
                 <IissOperationDescription tx={subtx} />
+              </ListItem>
+            ))}
+          </List>
+        </Collapse>
+      </>
+    )
+  }
+
+  const getBalancedOperations = () => {
+    return (
+      <>
+        <ListItem button onClick={handleClickSafeOperations}>
+          <ListItemIcon style={{ marginRight: '5px' }}>
+            <TokenIcon token={"BALN"} width={24} height={24} />
+          </ListItemIcon>
+          <ListItemText primary='Balanced Operations' />
+          {openedSafeOperations ? <ExpandLess /> : <ExpandMore />}
+        </ListItem>
+
+        <Collapse
+          in={openedSafeOperations} timeout='auto' unmountOnExit
+        >
+          <List
+            component='div'
+            disablePadding
+          >
+            {tx.balancedOperations.map((subtx, index) => (
+              <ListItem
+                key={`${tx.created_txhash}-${index}`}
+                className={classes.nested}
+              >
+                <BalancedOperationDescription tx={subtx} />
               </ListItem>
             ))}
           </List>
@@ -199,6 +234,7 @@ export const OutgoingTxDescription = ({ tx, defaultOpenedRawMethodCalls = false 
           {tx.tokens?.length > 0 && getTokenTransfers()}
           {tx.safeOperations?.length > 0 && getSafeOperations()}
           {tx.iissOperations?.length > 0 && getIissOperations()}
+          {tx.balancedOperations?.length > 0 && getBalancedOperations()}
           {tx.subTx?.length > 0 && getSubTx()}
         </List>
       </Paper>
