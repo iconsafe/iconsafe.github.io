@@ -165,16 +165,12 @@ export class MultiSigWalletScore extends Ancilia {
   resolve_many (names) {
     return this.__callROTx(this._scoreAddress, 'resolve_many', {
       names: names
-    }).then(json => {
-      return json
     })
   }
 
   resolve (name) {
     return this.__callROTx(this._scoreAddress, 'resolve', {
       name: name
-    }).then(json => {
-      return json
     })
   }
 

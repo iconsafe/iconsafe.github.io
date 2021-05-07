@@ -2,6 +2,7 @@
 import { getTokenSymbol, getTokenDecimals, getTokenPrice, ICX_TOKEN_ADDRESS, ZERO } from '@src/utils/icon'
 import { IconConverter } from 'icon-sdk-js'
 import * as dispatchers from '@src/store/actions'
+import { BALANCED_SCORES } from '@src/SCORE/Balanced'
 
 export const refreshMultisigBalances = (msw, domainNames) =>
   async (dispatch, getState) => {
@@ -21,6 +22,7 @@ export const refreshMultisigBalances = (msw, domainNames) =>
           value: price === '?' ? price : balance.multipliedBy(price)
         }
 
+        // ICX Special logic
         if (token === ICX_TOKEN_ADDRESS && domainNames) {
           // Stake && unstake
           return msw.getStake(domainNames.TRANSACTION_MANAGER_PROXY).then(stake => {
@@ -34,9 +36,15 @@ export const refreshMultisigBalances = (msw, domainNames) =>
             }
             return result
           })
-        } else {
-          return result
         }
+
+        // BALN Special logic
+        if (token === BALANCED_SCORES['baln'] && domainNames) {
+          // Stake && unstake
+        }
+
+        return result
+
       })
     }
     Promise.all([msw.get_balance_trackers()]).then(([tokens]) => {

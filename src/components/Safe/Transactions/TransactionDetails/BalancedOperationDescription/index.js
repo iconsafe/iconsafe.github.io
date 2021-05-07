@@ -39,7 +39,7 @@ const BalancedOperationDescription = ({ tx }) => {
         return (
           <div className={classes.content}>
             {!tx.amount.isZero() && <><Bold>Deposit</Bold> <Span className={classes.cyanText}> {displayUnit(tx.amount, 18)} ICX</Span> as collateral<br /></>}
-            {tx.params && <><Bold>Deposit</Bold> {displayUnit(getTxParam(tx, '_amount').value, 18)} {getTxParam(tx, '_asset').value}</>}
+            {tx.params && <><Bold>Borrow</Bold> {displayUnit(getTxParam(tx, '_amount').value, 18)} {getTxParam(tx, '_asset').value}</>}
           </div>
         )
 

@@ -3,6 +3,7 @@ import { makeStyles } from '@material-ui/core/styles'
 import Paper from '@material-ui/core/Paper'
 import cn from 'classnames'
 import { useSelector } from 'react-redux'
+import Balanced from './apps/Balanced'
 import IRC2Transfer from './apps/IRC2Transfer'
 import ICXTransfer from './apps/ICXTransfer'
 import TxBuilder from './apps/TxBuilder'
@@ -32,15 +33,17 @@ const useStyles = makeStyles(styles)
 
 const txBuilderImg = require('./assets/tx-builder.svg')
 const iissImg = require('./assets/iiss.svg')
-const flagImg = require('./assets/flag.svg')
 const irc2Img = require('./assets/irc2.svg')
 const icx = require('./assets/icon-iconex.svg')
+const balanced = require('./assets/baln.png')
 
 const APPS = {
   ICX_TRANSFER: { index: 1, title: 'ICX Transfer', img: icx },
   ICX_STACKING: { index: 2, title: 'ICX Staking', img: iissImg },
   IRC2_TRANSFER: { index: 3, title: 'IRC2 Transfer', img: irc2Img },
-  TX_BUILDER: { index: 4, title: 'Transaction Builder', img: txBuilderImg }
+  BALANCED: { index: 4, title: 'Balanced', img: balanced },
+  // Keep it last
+  TX_BUILDER: { index: 5, title: 'Transaction Builder', img: txBuilderImg },
 }
 
 const INITIAL_STATE = {
@@ -107,6 +110,13 @@ const Apps = () => {
       case APPS.IRC2_TRANSFER.index:
         return (
           <IRC2Transfer
+            subTransactions={subTransactions}
+            setSubTransactions={setSubTransactions}
+          />
+        )
+      case APPS.BALANCED.index:
+        return (
+          <Balanced
             subTransactions={subTransactions}
             setSubTransactions={setSubTransactions}
           />

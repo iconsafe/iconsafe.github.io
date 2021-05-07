@@ -1,3 +1,6 @@
+import { Ancilia } from './Ancilia'
+import { IconConverter } from 'icon-sdk-js'
+
 export const BALANCED_SCORES = {
   "loans": "cx66d4d90f5f113eba575bf793570135f9b10cece1",
   "staking": "cx43e2eec79eb76293c298f2b17aec06097be606e0",
@@ -12,4 +15,17 @@ export const BALANCED_SCORES = {
   "bnUSD": "cx88fd7df7ddff82f7cc735c871dc519838cb235bb",
   "baln": "cxf61cd5a45dc9f91c15aa65831a30a90d59a09619",
   "bwt": "cxcfe9d1f83fa871e903008471cca786662437e58d",
+}
+
+export class Balanced extends Ancilia {
+
+  constructor(network) {
+    super(network)
+  }
+
+  getBalnHolding (_holder) {
+    return this.__callROTx(BALANCED_SCORES['rewards'], 'getBalnHolding', {
+      _holder: _holder
+    }).then(result => IconConverter.toBigNumber(result))
+  }
 }
