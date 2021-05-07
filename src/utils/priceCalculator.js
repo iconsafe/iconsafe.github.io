@@ -1,3 +1,6 @@
+import { getAnciliaAPI } from '@src/utils/ancilia'
+import { BALANCED_SCORES } from '@src/SCORE/Balanced'
+
 const icxCalculator = async (token) => {
   try {
     const response = await fetch(priceEndpoints[token].endpoint)
@@ -8,13 +11,18 @@ const icxCalculator = async (token) => {
   }
 }
 
-const tapCalculator = async (token) => {
-  // Proof of Concept
+const balnCalculator = async (token) => {
   try {
-    return '?'
+    const response = await getAnciliaAPI().__callROTx(BALANCED_SCORES.dex, 'getBalnPrice')
+    return (parseInt(response) * Math.pow(10, -18)).toFixed(2).toString()
   } catch (error) {
     return '?'
   }
+}
+
+const bnUsdCalculator = async (token) => {
+  // Complex logic
+  return '1'
 }
 
 const priceEndpoints = {
@@ -22,14 +30,14 @@ const priceEndpoints = {
     endpoint: 'https://api.binance.com/api/v3/ticker/24hr?symbol=ICXUSDT',
     calculator: icxCalculator
   },
-  cxc0b5b52c9f8b4251a47e91dda3bd61e5512cd782: { // TAP Mainnet
-    endpoint: undefined,
-    calculator: tapCalculator
+  cxf61cd5a45dc9f91c15aa65831a30a90d59a09619: { // BALN Mainnet
+    endpoint: '',
+    calculator: balnCalculator
   },
-  cx9f59037c900880af1c96e6c3db137259360b33d4: { // TAP Yeouido
-    endpoint: undefined,
-    calculator: tapCalculator
-  }
+  cx88fd7df7ddff82f7cc735c871dc519838cb235bb: { // bnUSD Mainnet
+    endpoint: '',
+    calculator: bnUsdCalculator
+  },
 }
 
 export const tokenPriceCalculator = async (token) => {
