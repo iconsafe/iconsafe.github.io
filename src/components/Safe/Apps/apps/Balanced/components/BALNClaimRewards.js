@@ -24,7 +24,7 @@ const StyledText = styled(Text)`
 
 const useStyles = makeStyles(styles)
 
-const BALNClaimRewards = ({ subTransactions, setSubTransactions }) => {
+const BALNClaimRewards = ({ subTransactions, setSubTransactions, setClaimedReward }) => {
   const classes = useStyles()
   const balanced = getBalancedAPI()
   const [availableReward, setAvailableReward] = useState(0)
@@ -56,10 +56,12 @@ const BALNClaimRewards = ({ subTransactions, setSubTransactions }) => {
   }, [JSON.stringify(domainNames)])
 
   const onSubmitClaim = (values) => {
-    const subtx = new SubOutgoingTransaction(BALANCED_SCORES['rewards'], 'claimRewards', [], 0, `Claim ${availableReward} BALN`
-    )
+    const subtx = new SubOutgoingTransaction(BALANCED_SCORES['rewards'], 'claimRewards', [], 0, `Claim ${availableReward} BALN`)
     subTransactions.push(subtx)
     setSubTransactions([...subTransactions])
+    balanced.getBalnHolding(domainNames.TRANSACTION_MANAGER_PROXY).then(reward => {
+      setClaimedReward(reward)
+    })
   }
 
   return (

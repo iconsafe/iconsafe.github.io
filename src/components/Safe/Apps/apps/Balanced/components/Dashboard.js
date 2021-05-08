@@ -5,29 +5,16 @@ import { styles } from './style'
 import { makeStyles } from '@material-ui/core/styles'
 import WidgetWrapper from '@components/Safe/Apps/components/WidgetWrapper'
 import Hairline from '@components/core/Hairline'
-import { IconConverter } from 'icon-sdk-js'
 import { ZERO } from '@src/utils/icon'
 
 import BALNStaking from './BALNStaking'
-import ICXDelegation from './ICXDelegation'
 import BALNClaimRewards from './BALNClaimRewards'
 
 const useStyles = makeStyles(styles)
 
 const Dashboard = ({ subTransactions, setSubTransactions }) => {
   const classes = useStyles()
-  const safeAddress = useSelector((state) => state.safeAddress)
-  const msw = getMultiSigWalletAPI(safeAddress)
-
-  function sumVotes (delegates) {
-    return delegates.reduce((sum, delegate) => {
-      const votes = IconConverter.toBigNumber(msw.convertUnitToDecimals(delegate.votes, 18))
-      return sum.plus(votes.isNaN() ? ZERO : votes)
-    }, ZERO)
-  }
-
-  const [selectedDelegates, setSelectedDelegates] = useState([])
-  const sumDelegates = sumVotes(selectedDelegates)
+  const [claimedReward, setClaimedReward] = useState(ZERO)
 
   return (
     <WidgetWrapper>
@@ -35,6 +22,7 @@ const Dashboard = ({ subTransactions, setSubTransactions }) => {
       <BALNClaimRewards
         subTransactions={subTransactions}
         setSubTransactions={setSubTransactions}
+        setClaimedReward={setClaimedReward}
       />
 
       <Hairline className={classes.sectionSep} />
@@ -42,15 +30,7 @@ const Dashboard = ({ subTransactions, setSubTransactions }) => {
       <BALNStaking
         subTransactions={subTransactions}
         setSubTransactions={setSubTransactions}
-        sumDelegates={sumDelegates}
-      />
-
-      <Hairline className={classes.sectionSep} />
-
-      <ICXDelegation
-        subTransactions={subTransactions}
-        setSubTransactions={setSubTransactions}
-        selectedDelegates={selectedDelegates} setSelectedDelegates={setSelectedDelegates} sumVotes={sumVotes}
+        claimedReward={claimedReward}
       />
 
     </WidgetWrapper>

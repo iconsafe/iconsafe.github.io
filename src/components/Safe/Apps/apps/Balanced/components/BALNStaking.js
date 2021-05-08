@@ -33,14 +33,11 @@ const StyledText = styled(Text)`
 const useStyles = makeStyles(styles)
 const WITHHOLD_BALANCE = 3
 
-const BALNStaking = ({
-  subTransactions, setSubTransactions,
-  sumDelegates
-}) => {
+const BALNStaking = ({subTransactions, setSubTransactions, claimedReward}) => {
   const classes = useStyles()
-  const [balnMaxStacked, setIcxMaxStacked] = useState(0)
-  const [balnStaked, setIcxStaked] = useState(0)
-  const [initialIcxStaked, setIcxInitialStaked] = useState(0)
+  const [balnMaxStacked, seBalnMaxStacked] = useState(0)
+  const [balnStaked, seBalnStaked] = useState(0)
+  const [initialIcxStaked, seBalnInitialStaked] = useState(0)
   const multisigBalances = useSelector((state) => state.multisigBalances)
   const safeAddress = useSelector((state) => state.safeAddress)
   const msw = getMultiSigWalletAPI(safeAddress)
@@ -58,20 +55,18 @@ const BALNStaking = ({
     { value: Math.trunc(90 * (balnMaxStacked / 100)) },
     { value: Math.trunc(100 * (balnMaxStacked / 100)) }
   ]
-  const sumDelegatesFloat = parseFloat(displayUnit(sumDelegates, 18)).toFixed(5)
 
   useEffect(() => {
     if (!multisigBalances) return
     const balnBalance = multisigBalances.filter(balance => balance.token === BALANCED_SCORES['baln'])[0]
     console.log(balnBalance)
-    // const balnStaked = balnBalance.iiss
-    // const balnBalanceFloat = parseFloat(displayUnit(balnBalance.balance, 18)).toFixed(5)
-    // const balnStakedFloat = parseFloat(displayUnit(balnStaked.staked ? balnStaked.staked : 0, 18)).toFixed(5)
-    // const maxStacked = balnBalanceFloat - WITHHOLD_BALANCE
-    // setIcxMaxStacked(maxStacked < 0 ? 0 : maxStacked)
-    // setIcxInitialStaked(balnStakedFloat)
-    // setIcxStaked(balnStakedFloat)
-  }, [JSON.stringify(multisigBalances)])
+    const balnStaked = balnBalance.baln.staked
+    const maxStacked = parseFloat(displayUnit(balnBalance.balance.plus(claimedReward), 18)).toFixed(5)
+    const balnStakedFloat = parseFloat(displayUnit(balnStaked.staked ? balnStaked.staked : 0, 18)).toFixed(5)
+    seBalnMaxStacked(maxStacked < 0 ? 0 : maxStacked)
+    seBalnInitialStaked(balnStakedFloat)
+    seBalnStaked(balnStakedFloat)
+  }, [JSON.stringify(multisigBalances), claimedReward])
 
   function valuetext (value) {
     return `${value}`
@@ -79,17 +74,10 @@ const BALNStaking = ({
   const balnStakedPercent = balnMaxStacked === 0 ? 0 : (balnStaked / balnMaxStacked * 100).toFixed(2)
 
   function getStakeInfoBoxTitle () {
-    if (balnStaked < sumDelegatesFloat) {
-      return `Delegated = ${sumDelegatesFloat} BALN, wanted stake = ${balnStaked} BALN.`
-    }
     return null
   }
 
   function getStakeInfoBox () {
-    if (balnStaked < sumDelegatesFloat) {
-      return 'ERROR : Your stake needs to be greater or equal to your delegation.'
-    }
-
     if (balnStaked < initialIcxStaked) {
       return `Unstaking -${initialIcxStaked - balnStaked} BALN from the staked BALN.`
     }
@@ -98,18 +86,15 @@ const BALNStaking = ({
   }
 
   function getStakeIconBox () {
-    if (balnStaked < sumDelegatesFloat) {
-      return 'error'
-    }
     if (balnStaked < initialIcxStaked) {
       return 'warning'
     }
     return 'info'
   }
 
-  const submitIcxStake = () => {
-    const subtx = new SubOutgoingTransaction(SCORE_INSTALL_ADDRESS, 'setStake', [
-      { name: 'value', type: 'int', value: IconConverter.toHex(msw.convertUnitToDecimals(balnStaked, 18)) }
+  const submiBalnStake = () => {
+    const subtx = new SubOutgoingTransaction(BALANCED_SCORES['baln'], 'stake', [
+      { name: '_value', type: 'int', value: IconConverter.toHex(msw.convertUnitToDecimals(balnStaked, 18)) }
     ], 0, `Set stake amount to ${balnStaked} BALN`
     )
     subTransactions.push(subtx)
@@ -119,12 +104,12 @@ const BALNStaking = ({
   const handleCheckboxChange = (event) => {
     setCheckboxMax(event.target.checked)
     if (event.target.checked) {
-      setIcxStaked(balnMaxStacked)
+      seBalnStaked(balnMaxStacked)
     }
   }
 
   const handleSliderChange = (event, newValue) => {
-    setIcxStaked(newValue)
+    seBalnStaked(newValue)
   }
 
   const handleInputChange = (event) => {
@@ -132,14 +117,14 @@ const BALNStaking = ({
     if (isNaN(number)) {
       number = 0
     }
-    setIcxStaked(event.target.value === '' ? '' : number)
+    seBalnStaked(event.target.value === '' ? '' : number)
   }
 
   const handleBlur = () => {
     if (balnStaked < 0) {
-      setIcxStaked(0)
+      seBalnStaked(0)
     } else if (balnStaked > balnMaxStacked) {
-      setIcxStaked(balnMaxStacked)
+      seBalnStaked(balnMaxStacked)
     }
   }
 
@@ -148,13 +133,13 @@ const BALNStaking = ({
   }
 
   return (
-    <GnoForm formMutators={{}} onSubmit={(values) => submitIcxStake(values)}>
+    <GnoForm formMutators={{}} onSubmit={(values) => submiBalnStake(values)}>
       {(...args) => {
         // const mutators = args[3]
 
         return (
           <div className={classes.section}>
-            <StyledTitle size='md'>BALN Staking (WIP)</StyledTitle>
+            <StyledTitle size='md'>BALN Staking</StyledTitle>
 
             <StyledText size='sm'>
               Adjust the amount of BALN you want to stake from the multisig wallet. The staking app will automatically keep at least {WITHHOLD_BALANCE} BALN in the balance.

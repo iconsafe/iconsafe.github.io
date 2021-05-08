@@ -28,4 +28,20 @@ export class Balanced extends Ancilia {
       _holder: _holder
     }).then(result => IconConverter.toBigNumber(result))
   }
+
+  balnStakedBalanceOf (_owner) {
+    return this.__callROTx(BALANCED_SCORES['baln'], 'stakedBalanceOf', {
+      _owner: _owner
+    }).then(result => IconConverter.toBigNumber(result))
+  }
+  balnUnstakedBalanceOf (_owner) {
+    return this.__callROTx(BALANCED_SCORES['baln'], 'unstakedBalanceOf', {
+      _owner: _owner
+    }).then(result => IconConverter.toBigNumber(result))
+  }
+  balnAvailableBalanceOf (_owner) {
+    return this.__callROTx(BALANCED_SCORES['baln'], 'availableBalanceOf', {
+      _owner: _owner
+    }).then(result => IconConverter.toBigNumber(result))
+  }
 }
