@@ -15,11 +15,9 @@ import Input from '@material-ui/core/Input'
 import { BALANCED_SCORES } from '@src/SCORE/Balanced'
 import { displayUnit } from '@src/utils/icon'
 import { nFormatter } from '@src/utils/misc'
-
 import { Text, Title } from '@components/ICON'
 import GnoForm from '@components/core/GnoForm'
 import { SubOutgoingTransaction } from '@src/SCORE/MultiSigWalletScore'
-import { SCORE_INSTALL_ADDRESS } from '@src/SCORE/Ancilia'
 
 const StyledTitle = styled(Title)`
   margin-top: 0px;
@@ -31,7 +29,6 @@ const StyledText = styled(Text)`
 `
 
 const useStyles = makeStyles(styles)
-const WITHHOLD_BALANCE = 3
 
 const BALNStaking = ({subTransactions, setSubTransactions, claimedReward}) => {
   const classes = useStyles()
@@ -62,7 +59,7 @@ const BALNStaking = ({subTransactions, setSubTransactions, claimedReward}) => {
     console.log(balnBalance)
     const balnStaked = balnBalance.baln.staked
     const maxStacked = parseFloat(displayUnit(balnBalance.balance.plus(claimedReward), 18)).toFixed(5)
-    const balnStakedFloat = parseFloat(displayUnit(balnStaked.staked ? balnStaked.staked : 0, 18)).toFixed(5)
+    const balnStakedFloat = parseFloat(displayUnit(balnStaked ? balnStaked : 0, 18)).toFixed(5)
     seBalnMaxStacked(maxStacked < 0 ? 0 : maxStacked)
     seBalnInitialStaked(balnStakedFloat)
     seBalnStaked(balnStakedFloat)
@@ -142,7 +139,7 @@ const BALNStaking = ({subTransactions, setSubTransactions, claimedReward}) => {
             <StyledTitle size='md'>BALN Staking</StyledTitle>
 
             <StyledText size='sm'>
-              Adjust the amount of BALN you want to stake from the multisig wallet. The staking app will automatically keep at least {WITHHOLD_BALANCE} BALN in the balance.
+              Adjust the amount of BALN you want to stake from the multisig wallet.
             </StyledText>
 
             <Col style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
