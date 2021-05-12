@@ -27,6 +27,7 @@ const StyledTitle = styled(Title)`
 const StyledText = styled(Text)`
   margin-bottom: 15px;
 `
+const WITHHOLD_BALANCE = 0.1
 
 const useStyles = makeStyles(styles)
 
@@ -56,9 +57,8 @@ const BALNStaking = ({subTransactions, setSubTransactions, claimedReward}) => {
   useEffect(() => {
     if (!multisigBalances) return
     const balnBalance = multisigBalances.filter(balance => balance.token === BALANCED_SCORES['baln'])[0]
-    console.log(balnBalance)
     const balnStaked = balnBalance.baln.staked
-    const maxStacked = parseFloat(displayUnit(balnBalance.balance.plus(claimedReward), 18)).toFixed(5)
+    const maxStacked = (parseFloat(displayUnit(balnBalance.balance.plus(claimedReward), 18)) - WITHHOLD_BALANCE).toFixed(5)
     const balnStakedFloat = parseFloat(displayUnit(balnStaked ? balnStaked : 0, 18)).toFixed(5)
     seBalnMaxStacked(maxStacked < 0 ? 0 : maxStacked)
     seBalnInitialStaked(balnStakedFloat)
