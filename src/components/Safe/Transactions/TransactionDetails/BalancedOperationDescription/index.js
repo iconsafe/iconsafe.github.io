@@ -50,6 +50,13 @@ const BalancedOperationDescription = ({ tx }) => {
           </div>
         )
 
+      case 'returnAsset':
+        return (
+          <div className={classes.content}>
+            <Bold>Pay back</Bold> <Span className={classes.cyanText}> {displayUnit(getTxParam(tx, '_value').value, 18)} bnUSD</Span> of the loan
+          </div>
+        )
+
       case 'stake':
         return (
           <div className={classes.content}>
