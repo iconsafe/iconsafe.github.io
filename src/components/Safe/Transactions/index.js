@@ -117,7 +117,9 @@ export const convertTransactionToDisplay = async (transaction, safeAddress) => {
                 })
                 .filter(subtx => {
                   // Detect IRC2 transfer
-                  return (subtx.method_name === 'transfer' &&
+                  return (
+                    subtx.destination === address &&
+                    subtx.method_name === 'transfer' &&
                     subtx.params[0].name === '_to' &&
                     subtx.params[1].name === '_value')
                 })
