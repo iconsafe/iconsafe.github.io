@@ -21,13 +21,26 @@ const TokenBalance = ({ token }) => {
   const [balanceChart, setBalanceChart] = useState(null)
   const [balanceAreaSeries, setBalanceAreaSeries] = useState(null)
 
+  const dateToChartTime = (date) => {
+    return Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), date.getHours(), date.getMinutes(), date.getSeconds(), 0) / 1000;
+  };
+
   useEffect(() => {
     msw.get_token_balance_history(token.token).then(history => {
+      let previous = -1
       const result = history.reverse().map(entry => {
         const token = multisigBalances.filter(balance => balance.token === entry.token)[0]
+        let timestamp = Math.trunc(parseInt(entry.timestamp) / 1000 / 1000)
+        const value = parseFloat(displayUnit(entry.balance, token.decimals))
+        if (timestamp == previous) {
+          // lightweight charts bugs if two timestamps are at the same time
+          // increase it slightly
+          timestamp++;
+        }
+        previous = timestamp
         return [
-          parseInt(entry.timestamp) / 1000 / 1000,
-          parseFloat(displayUnit(entry.balance, token.decimals))
+          dateToChartTime(new Date(timestamp * 1000)),
+          value
         ]
       })
 
@@ -49,9 +62,11 @@ const TokenBalance = ({ token }) => {
             borderVisible: false
           },
           timeScale: {
-            borderVisible: false
+            borderVisible: false,
+            timeVisible: true
           }
         })
+        
         areaSeries = chart.addAreaSeries()
 
         const theme = {
@@ -91,6 +106,7 @@ const TokenBalance = ({ token }) => {
         setBalanceAreaSeries(areaSeries)
       }
 
+      console.log(data.map(entry => ({ time: entry[0], value: entry[1] })))
       areaSeries.setData(data.map(entry => ({ time: entry[0], value: entry[1] })))
       chart.timeScale().fitContent()
     }

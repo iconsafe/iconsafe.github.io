@@ -34,7 +34,6 @@ const BalancedOperationDescription = ({ tx }) => {
   }
 
   const getContent = async () => {
-    console.log(tx)
     switch (tx.method_name) {
       case 'depositAndBorrow':
         return (
