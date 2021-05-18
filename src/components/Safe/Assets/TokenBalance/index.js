@@ -106,7 +106,6 @@ const TokenBalance = ({ token }) => {
         setBalanceAreaSeries(areaSeries)
       }
 
-      console.log(data.map(entry => ({ time: entry[0], value: entry[1] })))
       areaSeries.setData(data.map(entry => ({ time: entry[0], value: entry[1] })))
       chart.timeScale().fitContent()
     }
