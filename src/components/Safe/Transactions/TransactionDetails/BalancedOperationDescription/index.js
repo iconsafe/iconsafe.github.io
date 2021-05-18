@@ -8,6 +8,7 @@ import Span from '@components/core/Span'
 import { styles } from './styles'
 import { makeStyles } from '@material-ui/core/styles'
 import { displayUnit } from '@src/utils/icon'
+import { BALANCED_SCORES, BALANCED_TOKENS } from '@src/SCORE/Balanced'
 
 const useStyles = makeStyles(styles)
 
@@ -33,9 +34,9 @@ const BalancedOperationDescription = ({ tx }) => {
   }
 
   const getContent = async () => {
+    console.log(tx)
     switch (tx.method_name) {
       case 'depositAndBorrow':
-        console.log(tx)
         return (
           <div className={classes.content}>
             {!tx.amount.isZero() && <><Bold>Deposit</Bold> <Span className={classes.cyanText}> {displayUnit(tx.amount, 18)} ICX</Span> as collateral<br /></>}
@@ -57,6 +58,37 @@ const BalancedOperationDescription = ({ tx }) => {
           </div>
         )
 
+      case 'transfer':
+        switch (getTxParam(tx, '_to').value) {
+          case BALANCED_SCORES['dex']:
+            const output = JSON.parse(Buffer.from(getTxParam(tx, '_data').value.replace('0x', ''), 'hex').toString("utf8"));
+
+            switch (output.method) {
+              case "_swap":
+                return (
+                  <div className={classes.content}>
+                    <Bold>Trade <Span className={classes.cyanText}> {displayUnit(getTxParam(tx, '_value').value, 18)} {BALANCED_TOKENS[tx.destination]} </Span></Bold> 
+                    on the DEX and receive at least 
+                    <Bold> <Span className={classes.cyanText}> {displayUnit(output.params.minimumReceive, 18)} {BALANCED_TOKENS[output.params.toToken]} </Span></Bold>
+                  </div>
+                )
+
+              default:
+                return `Unsupported DEX operation "${output.method}" !`
+            }
+
+            
+          case BALANCED_SCORES['loans']:
+                return (
+                  <div className={classes.content}>
+                    <Bold>Deposit <Span className={classes.cyanText}> {displayUnit(getTxParam(tx, '_value').value, 18)} {BALANCED_TOKENS[tx.destination]} </Span></Bold> as collateral
+                  </div>
+                )
+
+          default:
+            return `Unsupported operation "${output.method}" !`
+      }
+
       case 'stake':
         return (
           <div className={classes.content}>
@@ -66,7 +98,7 @@ const BalancedOperationDescription = ({ tx }) => {
         )
 
       default:
-        return `Unsupported operation ${tx.method_name} !`
+        return `Unsupported operation "${tx.method_name}" !`
     }
   }
 

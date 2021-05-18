@@ -97,7 +97,7 @@ const WalletOperationDescription = ({ tx }) => {
         })
 
       default:
-        return `Unsupported operation ${tx.method_name} !`
+        return `Unsupported operation "${tx.method_name}" !`
     }
   }
 

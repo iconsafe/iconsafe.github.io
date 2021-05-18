@@ -17,6 +17,12 @@ export const BALANCED_SCORES = {
   "bwt": "cxcfe9d1f83fa871e903008471cca786662437e58d",
 }
 
+export const BALANCED_TOKENS = {
+  "cx88fd7df7ddff82f7cc735c871dc519838cb235bb": "bnUSD",
+  "cx2609b924e33ef00b648a409245c7ea394c467824": "sICX",
+  "cxf61cd5a45dc9f91c15aa65831a30a90d59a09619": "BALN",
+}
+
 export class Balanced extends Ancilia {
 
   constructor(network) {
