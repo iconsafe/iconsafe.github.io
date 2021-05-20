@@ -24,6 +24,9 @@ export const WALLET_PROVIDER = {
   MAGIC: 'MAGIC'
 }
 
+// MAX_ITERATION_LOOP is also defined in SCORELib contract
+export const MAX_ITERATION_LOOP = 100
+
 // ================================================
 //  Exceptions
 class UnconfirmedTransaction extends Error { }
@@ -570,6 +573,30 @@ export class Ancilia {
       }
     })
   }
+
+  async __callWithOffset(contract, method, params = {}) {
+      let result = []
+      let offset = 0
+      let running = true
+
+      while (running) {
+          params['offset'] = IconConverter.toHex(offset)
+          try {
+              const items = await this.__callROTx(contract, method, params)
+              result = result.concat(items)
+              offset += MAX_ITERATION_LOOP
+          } catch (error) {
+              console.error(error)
+              if (error.includes('StopIteration')) {
+                  running = false
+              }
+              else throw error
+          }
+      }
+
+      return result
+  }
+
 
   // ======================================================================================
   // Meta methods

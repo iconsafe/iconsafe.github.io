@@ -406,7 +406,7 @@ export class MultiSigWalletScore extends Ancilia {
   }
 
   get_all_transactions (offset) {
-    return this.__callROTx(this._scoreAddress, 'get_all_transactions', {
+    return this.__callWithOffset(this._scoreAddress, 'get_all_transactions', {
       offset: IconConverter.toHex(parseInt(offset))
     }).then(jsons => {
       return jsons.map(json => {
