@@ -57,6 +57,13 @@ const BalancedOperationDescription = ({ tx }) => {
           </div>
         )
 
+      case 'withdrawCollateral':
+        return (
+          <div className={classes.content}>
+            <Bold>Withdraw</Bold> <Span className={classes.cyanText}> {displayUnit(getTxParam(tx, '_value').value, 18)} ICX</Span> from the collateral.
+          </div>
+        )
+
       case 'transfer':
         switch (getTxParam(tx, '_to').value) {
           case BALANCED_SCORES['dex']:
