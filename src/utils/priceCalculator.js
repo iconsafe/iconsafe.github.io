@@ -38,6 +38,10 @@ const priceEndpoints = {
     endpoint: '',
     calculator: bnUsdCalculator
   },
+  cx2609b924e33ef00b648a409245c7ea394c467824: { // sICX Mainnet
+    endpoint: 'https://api.binance.com/api/v3/ticker/24hr?symbol=ICXUSDT',
+    calculator: icxCalculator
+  }
 }
 
 export const tokenPriceCalculator = async (token) => {
