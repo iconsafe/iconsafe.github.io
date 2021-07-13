@@ -586,11 +586,7 @@ export class Ancilia {
               result = result.concat(items)
               offset += MAX_ITERATION_LOOP
           } catch (error) {
-              console.error(error)
-              if (error.includes('StopIteration')) {
-                  running = false
-              }
-              else throw error
+            running = false
           }
       }
 

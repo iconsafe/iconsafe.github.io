@@ -17,8 +17,6 @@ import wallet from '@src/assets/icons/wallet.svg'
 import GnoForm from '@components/core/GnoForm'
 import Hairline from '@components/core/Hairline'
 import Bold from '@components/core/Bold'
-import CopyBtn from '@components/core/CopyBtn'
-import TrackerOpenIcon from '@components/core/IconTrackerBtn/img/tracker-open.svg'
 
 import Dialog from '@material-ui/core/Dialog'
 import MuiDialogTitle from '@material-ui/core/DialogTitle'
