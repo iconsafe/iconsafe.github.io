@@ -31,7 +31,7 @@ const WITHHOLD_BALANCE = 0.1
 
 const useStyles = makeStyles(styles)
 
-const BALNStaking = ({subTransactions, setSubTransactions, claimedReward}) => {
+const BALNStaking = ({ subTransactions, setSubTransactions, claimedReward }) => {
   const classes = useStyles()
   const [balnMaxStacked, seBalnMaxStacked] = useState(0)
   const [balnStaked, seBalnStaked] = useState(0)
@@ -57,12 +57,14 @@ const BALNStaking = ({subTransactions, setSubTransactions, claimedReward}) => {
   useEffect(() => {
     if (!multisigBalances) return
     const balnBalance = multisigBalances.filter(balance => balance.token === BALANCED_SCORES['baln'])[0]
-    const balnStaked = balnBalance.baln.staked
-    const maxStacked = (parseFloat(displayUnit(balnBalance.balance.plus(claimedReward), 18)) - WITHHOLD_BALANCE).toFixed(5)
-    const balnStakedFloat = parseFloat(displayUnit(balnStaked ? balnStaked : 0, 18)).toFixed(5)
-    seBalnMaxStacked(maxStacked < 0 ? 0 : maxStacked)
-    seBalnInitialStaked(balnStakedFloat)
-    seBalnStaked(balnStakedFloat)
+    if (balnBalance) {
+      const balnStaked = balnBalance.baln.staked
+      const maxStacked = (parseFloat(displayUnit(balnBalance.balance.plus(claimedReward), 18)) - WITHHOLD_BALANCE).toFixed(5)
+      const balnStakedFloat = parseFloat(displayUnit(balnStaked ? balnStaked : 0, 18)).toFixed(5)
+      seBalnMaxStacked(maxStacked < 0 ? 0 : maxStacked)
+      seBalnInitialStaked(balnStakedFloat)
+      seBalnStaked(balnStakedFloat)
+    }
   }, [JSON.stringify(multisigBalances), claimedReward])
 
   function valuetext (value) {

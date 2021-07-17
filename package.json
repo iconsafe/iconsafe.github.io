@@ -1,7 +1,7 @@
 {
   "homepage": "http://iconsafe.github.io",
   "name": "iconsafe",
-  "version": "1.4.1",
+  "version": "1.4.2",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -43,7 +43,7 @@
     "icon-sdk-js": "0.0.18",
     "image-webpack-loader": "^7.0.1",
     "mini-css-extract-plugin": "^1.2.0",
-    "node-sass": "^5.0.0",
+    "node-sass": "^6.0.1",
     "react": "^17.0.1",
     "react-countdown-now": "^2.1.1",
     "react-dom": "^17.0.1",
