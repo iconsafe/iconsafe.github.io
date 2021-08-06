@@ -1,7 +1,7 @@
 {
   "homepage": "http://iconsafe.github.io",
   "name": "iconsafe",
-  "version": "1.4.2",
+  "version": "1.4.3",
   "description": "",
   "main": "index.js",
   "scripts": {
