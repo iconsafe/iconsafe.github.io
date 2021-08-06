@@ -155,7 +155,31 @@ export const convertTransactionToDisplay = async (transaction, safeAddress) => {
           })
 
           const balancedOperations = transaction.sub_transactions.filter(subtx => {
-            return Object.values(BALANCED_SCORES).includes(subtx.destination)
+                            
+            const getTxParam = (tx, name) => {
+              try {
+                return tx.params.filter(param => param.name === name)[0]
+              } catch {
+                return null
+              }
+            }
+
+            const isBalancedFilteredOutTx = (tx) => {
+              if (tx.method_name === 'transfer') {
+                switch (getTxParam(tx, '_to').value) {
+                  case BALANCED_SCORES['dex']:
+                  case BALANCED_SCORES['loans']:
+                    return false;
+                  default:
+                    return true;
+                }
+              }
+
+              return false;
+            }
+
+            const valid = Object.values(BALANCED_SCORES).includes(subtx.destination)
+            return valid && !isBalancedFilteredOutTx(subtx)
           })
 
           return {

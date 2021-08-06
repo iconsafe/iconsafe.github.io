@@ -92,7 +92,7 @@ const BalancedOperationDescription = ({ tx }) => {
                 )
 
           default:
-            return `Unsupported operation "${output.method}" !`
+            return `Transfer ${displayUnit(getTxParam(tx, '_value').value, 18)} BALN to "${getTxParam(tx, '_to').value}"`
       }
 
       case 'stake':

@@ -64,7 +64,7 @@ export const OutgoingTxDescription = ({ tx, defaultOpenedRawMethodCalls = false 
           >
             {tx.subTx.map((subtx, index) => (
               <ListItem
-                key={`${tx.created_txhash}-${index}`}
+                key={`subtx-${tx.created_txhash}-${index}`}
                 className={classes.nested}
               >
                 SubTx {index + 1}
@@ -103,7 +103,7 @@ export const OutgoingTxDescription = ({ tx, defaultOpenedRawMethodCalls = false 
           >
             {tx.safeOperations.map((subtx, index) => (
               <ListItem
-                key={`${tx.created_txhash}-${index}`}
+                key={`iconsafe-${tx.created_txhash}-${index}`}
                 className={classes.nested}
               >
                 <WalletOperationDescription tx={subtx} />
@@ -135,7 +135,7 @@ export const OutgoingTxDescription = ({ tx, defaultOpenedRawMethodCalls = false 
           >
             {tx.iissOperations.map((subtx, index) => (
               <ListItem
-                key={`${tx.created_txhash}-${index}`}
+                key={`iiss-${tx.created_txhash}-${index}`}
                 className={classes.nested}
               >
                 <IissOperationDescription tx={subtx} />
@@ -167,7 +167,7 @@ export const OutgoingTxDescription = ({ tx, defaultOpenedRawMethodCalls = false 
           >
             {tx.balancedOperations.map((subtx, index) => (
               <ListItem
-                key={`${tx.created_txhash}-${index}`}
+                key={`balanced-${tx.created_txhash}-${index}`}
                 className={classes.nested}
               >
                 <BalancedOperationDescription tx={subtx} />
@@ -195,7 +195,7 @@ export const OutgoingTxDescription = ({ tx, defaultOpenedRawMethodCalls = false 
         >
           {tx.tokens.map((token, index) => (
             <List
-              key={`${tx.created_txhash}-${index}`} component='div' disablePadding
+              key={`tokens-${tx.created_txhash}-${index}`} component='div' disablePadding
             >
               {token.transfers.map((transfer, index) => (
                 <ListItem
