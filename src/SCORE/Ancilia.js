@@ -250,6 +250,28 @@ export class Ancilia {
     }
   }
 
+  /**
+   * @param {string} address a wallet address
+   * @returns {Promise<Bond[]>}
+   */
+  async getBonds (address) {
+    const builder = new IconService.IconBuilder.CallBuilder()
+    const getDelegationCall = builder
+        .to(SCORE_INSTALL_ADDRESS)
+        .method('getBond')
+        .params({ address })
+        .build()
+    const result = await this.__getIconService().call(getDelegationCall).execute()
+
+    return {
+      bonds: result.bonds.map(({ address, value }) => ({
+        address,
+        value: IconConverter.toBigNumber(value)
+      })),
+      totalBonded: IconConverter.toBigNumber(result.totalBonded)
+    }
+  }
+
   // IRC2 Token Interface ============================================================
   irc2Decimals (contract) {
     return this.__callROTx(contract, 'decimals').then(decimals => {

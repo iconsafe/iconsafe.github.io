@@ -68,6 +68,20 @@ const IissOperationDescription = ({ tx }) => {
         )
       }
 
+      case 'setBond': {
+        const preps = await msw.getPReps()
+        const bonds = JSON.parse(tx.params[0].value)
+        const bondsContent = (bonds.length > 0)
+            ? bonds.map(bond => displayDelegation(preps, bond))
+            : 'Remove bond from all P-Reps'
+
+        return (
+            <div className={classes.content}>
+              {bondsContent}
+            </div>
+        )
+      }
+
       default:
         return `Unsupported operation "${tx.method_name}" !`
     }
