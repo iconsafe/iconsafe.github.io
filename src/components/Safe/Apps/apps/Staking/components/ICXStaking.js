@@ -33,8 +33,7 @@ const useStyles = makeStyles(styles)
 const WITHHOLD_BALANCE = 3
 
 const ICXStaking = ({
-  subTransactions, setSubTransactions,
-  sumDelegates
+  subTransactions, setSubTransactions, sumVotesAndBonds
 }) => {
   const classes = useStyles()
   const [icxMaxStacked, setIcxMaxStacked] = useState(0)
@@ -57,7 +56,7 @@ const ICXStaking = ({
     { value: Math.trunc(90 * (icxMaxStacked / 100)) },
     { value: Math.trunc(100 * (icxMaxStacked / 100)) }
   ]
-  const sumDelegatesFloat = parseFloat(displayUnit(sumDelegates, 18)).toFixed(5)
+  const sumDelegatesFloat = parseFloat(displayUnit(sumVotesAndBonds, 18)).toFixed(5)
 
   useEffect(() => {
     if (!multisigBalances) return
@@ -69,7 +68,7 @@ const ICXStaking = ({
     setIcxMaxStacked(maxStacked < 0 ? 0 : maxStacked)
     setIcxInitialStaked(icxStakedFloat)
     setIcxStaked(icxStakedFloat)
-  }, [JSON.stringify(multisigBalances)])
+  }, [JSON.stringify(multisigBalances), sumVotesAndBonds])
 
   function valuetext (value) {
     return `${value}`

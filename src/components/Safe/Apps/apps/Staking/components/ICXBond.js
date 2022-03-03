@@ -31,9 +31,9 @@ const StyledText = styled(Text)`
 
 const useStyles = makeStyles(styles)
 
-const ICXStaking = ({
+const ICXBond = ({
   subTransactions, setSubTransactions,
-  selectedDelegates, setSelectedDelegates,
+  selectedBonders, setSelectedBonders,
   sumVotesAndBonds
 }) => {
   const classes = useStyles()
@@ -44,8 +44,8 @@ const ICXStaking = ({
   const [pRepOptions, setPRepOptions] = useState(null)
   const [preps, setPreps] = useState(null)
 
-  const tooManyVotes = staked && selectedDelegates ? IconConverter.toBigNumber(sumVotesAndBonds).gt(staked) : false
-  const selectedMaxDelegates = selectedDelegates.length === 100
+  const tooManyVotes = staked && selectedBonders ? IconConverter.toBigNumber(sumVotesAndBonds).gt(staked) : false
+  const selectedMaxDelegates = selectedBonders.length === 100
   const multisigBalances = useSelector((state) => state.multisigBalances)
 
   useEffect(() => {
@@ -59,16 +59,16 @@ const ICXStaking = ({
         }))
         setPRepOptions(shuffle(pRepOptions))
 
-        // Delegation
-        msw.getDelegations(domainNames.TRANSACTION_MANAGER_PROXY).then(delegations => {
-          const formattedDelegations = delegations.delegations.map(delegation => {
+        // Bonds
+        msw.getBonds(domainNames.TRANSACTION_MANAGER_PROXY).then(bonds => {
+          const formattedBonds = bonds.bonds.map(bond => {
             return {
-              value: delegation.address,
-              label: pReps.find(prep => prep.address === delegation.address).name,
-              votes: msw.convertDecimalsToUnit(delegation.value, 18)
+              value: bond.address,
+              label: pReps.find(prep => prep.address === bond.address).name,
+              bond: msw.convertDecimalsToUnit(bond.value, 18)
             }
           })
-          setSelectedDelegates(formattedDelegations)
+          setSelectedBonders(formattedBonds)
         })
       })
 
@@ -81,7 +81,7 @@ const ICXStaking = ({
   }, [JSON.stringify(domainNames), JSON.stringify(multisigBalances)])
 
   const onSubmitAddress = (values) => {
-    const formattedDelegation = selectedDelegates.map(delegate => {
+    const formattedDelegation = selectedBonders.map(delegate => {
       return {
         type: 'TypedDict',
         value: JSON.stringify({
@@ -96,51 +96,53 @@ const ICXStaking = ({
       return value ? value.name : address
     }
 
-    const subtx = new SubOutgoingTransaction(SCORE_INSTALL_ADDRESS, 'setDelegation', [
-      { name: 'delegations', type: 'List', value: JSON.stringify(formattedDelegation) }
-    ], 0, `Update delegation to ${selectedDelegates.map(delegate => getPrepName(preps, delegate.value)).join(', ')}`
+    const subtx = new SubOutgoingTransaction(SCORE_INSTALL_ADDRESS, 'setBond', [
+      { name: 'bonds', type: 'List', value: JSON.stringify(formattedDelegation) }
+    ], 0, `Update bond to ${selectedBonders.map(delegate => getPrepName(preps, delegate.value)).join(', ')}`
     )
     subTransactions.push(subtx)
     setSubTransactions([...subTransactions])
   }
 
-  function handleSelectDelegates (selectedPReps) {
-    const newSelectedDelegates = (selectedPReps || []).map(pRep => {
-      const delegation = selectedDelegates.find(delegation => delegation.value === pRep.value)
-      const votes = delegation ? delegation.votes : ZERO
-      return { ...pRep, votes: votes }
+  function handleSelectBonders (selectedPReps) {
+    const newSelectedBonders = (selectedPReps || []).map(pRep => {
+      const delegation = selectedBonders.find(delegation => delegation.value === pRep.value)
+      const bondValue = delegation ? delegation.bond : ZERO
+      return { ...pRep, bond: bondValue }
     })
-    setSelectedDelegates(newSelectedDelegates)
+
+    setSelectedBonders(newSelectedBonders)
   }
 
-  function createVotesChangeHandler (selectedDelegate, parseValue) {
+  function createBondChangeHandler (selectedDelegate, parseValue) {
     return event => {
-      let votesValue = event.target.value
+      let bondValue = event.target.value
       if (parseValue) {
-        votesValue = IconConverter.toBigNumber(event.target.value)
+        bondValue = IconConverter.toBigNumber(event.target.value)
       }
-      selectedDelegate.votes = parseValue && votesValue.isNaN() ? ZERO : votesValue
+      // debugger
+      selectedDelegate.bond = parseValue && bondValue.isNaN() ? ZERO : bondValue
 
-      const index = selectedDelegates.findIndex(
+      const index = selectedBonders.findIndex(
         delegate => delegate.value === selectedDelegate.value
       )
 
-      setSelectedDelegates([
-        ...selectedDelegates.slice(0, index),
+      setSelectedBonders([
+        ...selectedBonders.slice(0, index),
         selectedDelegate,
-        ...selectedDelegates.slice(index + 1)
+        ...selectedBonders.slice(index + 1)
       ])
     }
   }
 
-  function createRemoveDelegateHandler (selectedDelegate) {
+  function createRemoveBondHandler (selectedDelegate) {
     return () => {
-      const index = selectedDelegates.findIndex(
+      const index = selectedBonders.findIndex(
         delegate => delegate.value === selectedDelegate.value
       )
-      setSelectedDelegates([
-        ...selectedDelegates.slice(0, index),
-        ...selectedDelegates.slice(index + 1)
+      setSelectedBonders([
+        ...selectedBonders.slice(0, index),
+        ...selectedBonders.slice(index + 1)
       ])
     }
   }
@@ -152,21 +154,21 @@ const ICXStaking = ({
 
         return (
           <div className={classes.section}>
-            <StyledTitle size='md'>ICX Delegation</StyledTitle>
+            <StyledTitle size='md'>ICX Bond</StyledTitle>
 
             <StyledText size='sm'>
-              Choose P-Rep candidates from the dropdown list then set how much of your staked ICX to delegate to each.
+              Choose P-Rep candidates from the dropdown list then set how much of your staked ICX to bond to each.
             </StyledText>
 
             <Col style={{ marginTop: '20px', display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
 
               <div className={classes.select}>
                 <Select
-                  id='selectedDelegates'
-                  name='selectedDelegates'
+                  id='selectedBonders'
+                  name='selectedBonders'
                   options={pRepOptions}
-                  value={selectedDelegates}
-                  onChange={handleSelectDelegates}
+                  value={selectedBonders}
+                  onChange={handleSelectBonders}
                   isMulti
                   isClearable={false}
                   controlShouldRenderValue={false}
@@ -182,32 +184,32 @@ const ICXStaking = ({
             </Col>
 
             <Col className={classes.votes}>
-              {selectedDelegates.length > 0 && (
+              {selectedBonders.length > 0 && (
                 <table className={classes.delegateTable}>
                   <thead>
                     <tr>
                       <th className={classes.prepname}>P-Rep candidate</th>
-                      <th className={classes.prepvotes}>Votes</th>
+                      <th className={classes.prepvotes}>Bond</th>
                       <th className={classes.cancelx}>&nbsp;</th>
                     </tr>
                   </thead>
                   <tbody>
-                    {selectedDelegates.map(selectedDelegate => (
+                    {selectedBonders.map(selectedDelegate => (
                       <tr key={selectedDelegate.value}>
                         <td>{selectedDelegate.label}</td>
                         <td>
                           <Input
                             inputProps={{ className: classes.delegateInput }}
                             type='text'
-                            value={selectedDelegate.votes}
-                            onChange={createVotesChangeHandler(selectedDelegate, false)}
-                            onBlur={createVotesChangeHandler(selectedDelegate, true)}
+                            value={selectedDelegate.bond}
+                            onChange={createBondChangeHandler(selectedDelegate, false)}
+                            onBlur={createBondChangeHandler(selectedDelegate, true)}
                           />
                         </td>
                         <td>
                           <Button
                             type='button'
-                            onClick={createRemoveDelegateHandler(selectedDelegate)}
+                            onClick={createRemoveBondHandler(selectedDelegate)}
                             title='Remove delegation'
                           >
                             <FontAwesomeIcon icon={faTimes} />
@@ -245,4 +247,4 @@ const ICXStaking = ({
   )
 }
 
-export default ICXStaking
+export default ICXBond
